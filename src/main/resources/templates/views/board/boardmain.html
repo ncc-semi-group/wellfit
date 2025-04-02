@@ -6,22 +6,30 @@
 <head>
     <th:block layout:fragment="css">
     <style>
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+        }
+        
         .container {
             width: 375px;
             background-color: white;
-            min-height: 100vh;
+            min-height: 90vh;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
         /* Top search bar styles */
-        .search-bar {
+         .search-bar {
             display: flex;
             align-items: center;
             padding: 10px 15px;
             border-bottom: 1px solid #e0e0e0;
             transition: transform 0.3s ease;
         }
+
 
         .search-bar.hidden {
             transform: translateY(-100%);
@@ -45,7 +53,7 @@
             color: #888;
         }
 
-        .search-tag {
+          .search-tag {
             width: 25px;
             height: 25px;
             background-color: transparent;
@@ -189,7 +197,7 @@
         /* Profile Modal Styles */
         .profile-modal {
             position: fixed;
-            bottom: 0;
+            bottom: 40px;
             left: 0;
             right: 0;
             margin: 0 auto;
@@ -338,25 +346,14 @@
     </th:block>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="container">
-        <div class="search-bar">
-            <div class="search-options">
-                <span class="search-option active">전체</span>
-                <span class="search-option inactive">팔로잉</span>
-                <span class="search-option inactive">인기</span>
-            </div>
-            <button class="search-tag">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-            </button>
-        </div>
 
-        <!-- Category Tabs -->
+
+
+<div layout:fragment="content">
+<div th:replace="fragments/board/SearchBar :: search-bar('all')"></div>
+
+    <div class="container">
+         <!-- Category Tabs -->
         <div class="category-tabs">
             <button class="category-tab active">전체</button>
             <button class="category-tab">식단</button>
@@ -380,7 +377,7 @@
         </div>
 
         <!-- Post Image -->
-        <img src="images/고릴라.png" alt="Post Image" class="post-image">
+        <img src="/images/고릴라.png" alt="Post Image" class="post-image">
 
         <!-- Post Actions -->
         <div class="post-actions">
