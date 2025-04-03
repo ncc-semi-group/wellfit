@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="data.mapper.UserPageMapper">
+    <select id="getUserProfile" resultType="UserDto">
+        SELECT 
+            u.id,
+            u.email,
+            u.nickname,
+            u.profile_image as profileImage,
+            u.gender,
+            u.height,
+            u.current_weight as currentWeight,
+            u.age,
+            u.activity_level as activityLevel,
+            u.goal_weight as goalWeight,
+            u.type,
+            u.my_intro as myIntro,
+            (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
+            (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
+            (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2
+        FROM user u
+        WHERE u.id = #{userId}
+    </select>
+    
+    <select id="getOtherUsers" resultType="UserDto">
+        SELECT 
+            u.id,
+            u.email,
+            u.nickname,
+            u.profile_image as profileImage,
+            u.gender,
+            u.my_intro as myIntro,
+            (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
+            (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
+            (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2
+        FROM user u
+        WHERE u.id != #{currentUserId}
+        ORDER BY u.nickname
+    </select>
+</mapper>

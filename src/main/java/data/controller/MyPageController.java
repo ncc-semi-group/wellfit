@@ -3,20 +3,27 @@ package data.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import data.dto.BadgeDto;
+import data.dto.BoardDto;
+import data.dto.CommentDto;
 import data.dto.UserBadgeDto;
 import data.dto.UserDto;
 import data.service.BadgeService;
+import data.service.BoardLikeService;
+import data.service.BoardService;
+import data.service.CommentService;
 import data.service.UserBadgeService;
 import data.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +36,9 @@ public class MyPageController {
 	final UserService userService;
 	final UserBadgeService userBadgeService;
 	final BadgeService badgeService;
+	final BoardService boardService;
+	final CommentService commentService;
+	final BoardLikeService boardLikeService;
 	
 	@Value("${file.upload-dir}")
 	private String uploadDir;
@@ -47,8 +57,8 @@ public class MyPageController {
 				.count();
 		dto.setBadgeCount(badgeCount);
 	
-		// 좋아요 목록 가져오기
-		List<UserDto> likeList = userService.getLikeList(id);
+		// 좋아요 목록 가져오기 (태그별로 그룹화)
+		List<Map<String, Object>> likeList = boardLikeService.getLikesByTag(id);
 		model.addAttribute("dto", dto);
 		model.addAttribute("likeList", likeList);
 		
@@ -128,4 +138,49 @@ public class MyPageController {
 		model.addAttribute("badgeList", allBadges);
 		return "views/mypage/mypageBadge";
 	}
+	
+	
+	@GetMapping("/mypageActive")
+	public String getMyBoards(@RequestParam(value="id", required = false) int id, Model model, HttpSession session) {
+		// 세션에서 현재 로그인한 사용자 ID 가져오기
+		Integer userId = (Integer) session.getAttribute("userId");
+		if (userId == null) {
+			return "redirect:/login";  // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+		}
+
+		// 사용자의 게시물 목록 조회
+		List<BoardDto> boardList = boardService.getSelectUserId(userId);
+		model.addAttribute("boardList", boardList);
+		
+		return "views/mypage/mypageActive";
+	}
+	
+	@GetMapping("/mypageComment")
+	public String getMyComments(@RequestParam(value = "id",required=false) int id, Model model, HttpSession session) {
+	    // 세션에서 현재 로그인한 사용자 ID 가져오기
+	    Integer userId = (Integer) session.getAttribute("userId");
+	    if (userId == null) {
+	        return "redirect:/login";  // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+	    }
+
+	    // 사용자의 댓글 목록 조회
+	    List<CommentDto> commentList = commentService.getSelectUserId(userId);
+	    model.addAttribute("commentList", commentList);
+	    
+	    return "views/mypage/mypageComment";
+	}
+	
+    @GetMapping("/mypageLike")
+    public String mypageLike(@RequestParam("tag") String tag, Model model) {
+        //테스트용
+        int userId = 1;
+        
+        // 해당 태그의 좋아요 게시물 목록 조회
+        List<BoardDto> posts = boardLikeService.getLikedBoardsByTag(userId, tag);
+        
+        model.addAttribute("tag", tag);
+        model.addAttribute("posts", posts);
+        
+        return "views/mypage/mypageLike";
+    }
 }

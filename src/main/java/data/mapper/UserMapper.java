@@ -14,4 +14,5 @@ public interface UserMapper {
 	public void mypageUpdateUser(UserDto dto);
 	public void mypageupdateProfileImage(@Param("id") int id, @Param("imageUrl") String imageUrl);
 	public void updateUser(UserDto dto);
+	public UserDto getUserById(String id);
 }

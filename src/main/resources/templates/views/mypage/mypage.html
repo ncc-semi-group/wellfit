@@ -116,6 +116,7 @@
             display: flex;
             overflow: auto;
             white-space: nowrap;
+            padding-left : 1rem;
         }
         /*스크롤바 숨기기*/
         .like-list-in::-webkit-scrollbar {
@@ -132,31 +133,10 @@
             border-radius: 10% 10% 0% 0%;
             border: 1px solid #ccc;
             background-color: #C5EBE2;
-            padding-left: 2rem;
-        }
-        .list2 {
-            width: 6.2rem;
-            height: 4.3rem;
-            border-radius: 10% 10% 0% 0%;
-            border: 1px solid #ccc;
-            background-color: #0AA3A6;
-            padding-left: 2rem;
-        }
-        .list3 {
-            width: 6.2rem;
-            height: 4.3rem;
-            border-radius: 10% 10% 0% 0%;
-            border: 1px solid #ccc;
-            background-color: #3C707E;
-            padding-left: 2rem;
-        }
-        .list4 {
-            width: 6.2rem;
-            height: 4.3rem;
-            border-radius: 10% 10% 0% 0%;
-            border: 1px solid #ccc;
-            background-color: #FFD200;
-            padding-left: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
         }
 
         .list1-in {
@@ -165,13 +145,33 @@
             border-radius: 0% 0% 10% 10%;
             border: 1px solid #ccc;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tag-text {
+            font-size: 0.9rem;
+            color: #000;
+            display: block;
+            text-align: center;
+            margin: 0 auto;
+            padding: 0.3rem 0;
+        }
+
+        .like-count {
+            font-size: 0.9rem;
+            color: #333;
+            text-align: center;
+            margin: 0 auto;
+            padding: 0;
         }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="header">
-        <i class="bi bi-arrow-left back-btn" onclick = "history.back()"></i>
+        <i class="bi bi-arrow-left back-btn"></i>
         <h3 class="title">마이페이지</h3>
 		<i class="bi bi-pencil-square update-btn"></i>
 		<script>
@@ -261,17 +261,28 @@
             <div class="like-list">
                 <h5 class="h5">내 좋아요 목록</h5>
                 <div class="like-list-in">
-                    <div class="like-list-inn" th:if="${likeList != null}" th:each="like : ${likeList}">
-                        <div th:class="${like.type}">
-                        </div>
-                        <div class="list1-in">
-                            <h6 th:text="${like.title}"></h6>
+                    <div th:if="${likeList != null and !likeList.empty}" th:each="like : ${likeList}">
+                        <div class="like-list-inn">
+                            <div class="list1">
+                                <h6 class="like-count" th:text="${like.likeCount + '개'}"></h6>
+                            </div>
+                            <div class="list1-in">
+                                <span class="tag-text" th:text="${'#' + like.tag}"></span>
+                            </div>
                         </div>
                     </div>
-                    <div th:unless="${likeList != null}" class="text-center p-3">
+                    <div th:if="${likeList == null or likeList.empty}" class="text-center p-3">
                         <p>좋아요 목록이 없습니다.</p>
                     </div>
                 </div>
+                <script>
+                    $(document).ready(function() {
+                        $('.like-list-inn').click(function() {
+                            var tag = $(this).find('.tag-text').text().substring(1); // '#' 제거
+                            window.location.href = '/mypageLike?tag=' + encodeURIComponent(tag);
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>

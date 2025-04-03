@@ -58,8 +58,12 @@
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 			gap: 20px;
-			padding: 20px;
+			padding: 10px;
 			margin-bottom : 2rem;
+		}
+		
+		.badge {
+			margin : 1rem;
 		}
 		
 		
@@ -117,7 +121,12 @@
 <body>
 <div layout:fragment="content">
 	<div class="header">
-        <i class="bi bi-arrow-left back-btn" onclick="history.back()"></i>
+        <i class="bi bi-arrow-left back-btn"></i>
+        <script>
+        	$('.back-btn').click(function(){
+        		window.location.href = '/mypage';
+        	})
+        </script>
 		<h3 class="title">나의 뱃지</h3>
 	</div>
 	<div class="box-title">

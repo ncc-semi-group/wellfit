@@ -90,4 +90,12 @@ public class UserService {
         }
         return false;
     }
+
+    public UserDto login(String id, String password) {
+        UserDto user = userMapper.getUserById(id);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
+    }
 }

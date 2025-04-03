@@ -53,4 +53,10 @@
         ORDER BY b.created_at DESC
         LIMIT 10
     </select>
+
+    <select id="getUserById" parameterType="string" resultType="UserDto">
+        SELECT id, email, password, nickname as userId, profile_image as profileImage, gender
+        FROM user
+        WHERE email = #{id}
+    </select>
 </mapper>

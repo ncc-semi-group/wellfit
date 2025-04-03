@@ -32,6 +32,8 @@ public class UserDto {
 	private int postCount;
 	private int commentCount;
 	private String myIntro;
+	private int userId1;
+	private int userId2;
 	
 	// 좋아요 목록용 필드
 	private String title;

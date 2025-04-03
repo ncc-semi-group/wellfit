@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 목록</title>
+    <style>
+        .user-list-container {
+            padding: 20px;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .user-profile-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .user-info {
+            flex-grow: 1;
+        }
+        
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .user-stats {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="user-list-container">
+        <h2>다른 사용자</h2>
+        <div th:each="user : ${users}" class="user-item" 
+             th:onclick="'window.location.href=\'/userpage/' + ${user.id} + '\''">
+            <img th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
+                user.profileImage : 
+                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" class="user-profile-image" alt="프로필 이미지">
+            <div class="user-info">
+                <div class="user-name" th:text="${user.nickname}">사용자 이름</div>
+                <div class="user-stats">
+                    친구 <span th:text="${user.friendCount}"></span> ·
+                    팔로워 <span th:text="${user.achievementCount}"></span> ·
+                    팔로잉 <span th:text="${user.badgeCount}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
