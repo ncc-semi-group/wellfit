@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.BoardService;
 import com.example.demo.dto.BoardDto;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api")
@@ -21,4 +23,12 @@ public class PostController {
 	public List<BoardDto> getPosts() {
 		return boardService.getAllBoards(); // 데이터베이스에서 게시물 정보를 가져옵니다.
 	}
+	
+	@GetMapping("/with-details")
+	public List<BoardDto> getAllBoardsWithDetails() 
+	{
+		return boardService.getAllBoardWithDetails();
+	
+	}
+	
 }

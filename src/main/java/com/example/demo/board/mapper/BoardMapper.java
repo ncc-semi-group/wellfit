@@ -22,4 +22,6 @@ public interface BoardMapper {
 
 	// 게시판 삭제
 	public void deleteBoard(@Param("id") int id);
+	
+	public List<BoardDto> selectAllBoardsWithDetails();
 }

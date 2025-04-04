@@ -1,8 +1,7 @@
 package com.example.demo.dto;
 
-
-
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -16,9 +15,8 @@ public class BoardDto {
 	private int userId;
 	private Timestamp createdAt;
 	private String content;
-	
+	private int likesCount;
+	private int commentCount;
+	private UserDto user;
+	private List<BoardImageDto> images;
 }
-
-
-
-

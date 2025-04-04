@@ -39,4 +39,9 @@ public class BoardService {
 	public void deleteBoard(int id) {
 		boardMapper.deleteBoard(id);
 	}
+	
+	
+	public List<BoardDto> getAllBoardWithDetails(){
+		return boardMapper.selectAllBoardsWithDetails();
+	}
 }
