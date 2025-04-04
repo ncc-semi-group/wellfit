@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({"data.*"})
-@MapperScan("data.mapper")
+@ComponentScan({"data.*", "*.controller", "com.example.demo"})
+@MapperScan({"com.example.demo.badge.mapper", "com.example.demo.board.mapper", "com.example.demo.user.mapper", "com.example.demo.comment.mapper", ""})
 public class WellfitApplication {
 
 	public static void main(String[] args) {

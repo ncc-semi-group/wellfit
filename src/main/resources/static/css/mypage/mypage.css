@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+/*뒤로가기 버튼 + 제목 */
+.header {
+	padding: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.back-btn {
+	font-size: 1.8rem;
+	margin-right: 1rem;
+}
+
+.title {
+	display: inline-block;
+	padding-top: 0.7rem;
+	font-size: 1.5rem;
+}
+
+.update-btn {
+	font-size: 1.8rem;
+	margin-left: auto; /*오른쪽 정렬*/
+}
+
+/* 프로필 사진 라인 */
+.profile {
+	padding-left: 2rem;
+	display: flex;
+}
+
+.my-profile-image {
+	border-radius: 100%;
+	width: 5rem;
+	height: 5rem;
+	object-fit: cover;
+}
+
+.profile-in {
+	padding-left: 1.3rem;
+}
+
+.my-intro {
+	padding-left: 2rem;
+	padding-top: 0.7rem;
+}
+
+/*내 업적 부분*/
+.achievement {
+	background-color: #E2F5F0;
+	padding: 1rem;
+}
+
+.achievement-in {
+	display: flex;
+}
+
+.ach-image {
+	width: 6rem;
+	height: 6rem;
+	margin-left: 1rem;
+	margin-bottom: 1.3rem;
+}
+
+.badge-cnt1 {
+	width: 15rem;
+	height: 12rem;
+	text-align: center;
+}
+
+.badge-cnt2 {
+	width: 15rem;
+	height: 12rem;
+	text-align: center;
+}
+
+/* 나의 활동 부분 */
+.h5 {
+	padding: 1rem 1rem 0.2rem 1rem;
+}
+
+.box {
+	display: flex;
+}
+
+.box-up {
+	padding: 1rem;
+	background-color: #005666;
+	box-shadow: 4px 4px 5px #ccc;
+	width: 50%;
+	height: 3.5rem;
+	color: #fff;
+	text-align: center;
+}
+
+/*내 좋아요 목록*/
+.like-list {
+	border: 1px solid #ccc;
+	padding-bottom: 1.5rem;
+	box-shadow: 2px 2px 5px 1px #ccc;
+}
+
+.like-list-in {
+	display: flex;
+	overflow: auto;
+	white-space: nowrap;
+	padding-left: 1rem;
+}
+/*스크롤바 숨기기*/
+.like-list-in::-webkit-scrollbar {
+	display: none;
+}
+
+.like-list-inn {
+	padding-right: 0.7rem;
+}
+
+.list1 {
+	width: 6.2rem;
+	height: 4.3rem;
+	border-radius: 10% 10% 0% 0%;
+	border: 1px solid #ccc;
+	background-color: #C5EBE2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+}
+
+.list1-in {
+	width: 6.2rem;
+	height: 1.7rem;
+	border-radius: 0% 0% 10% 10%;
+	border: 1px solid #ccc;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tag-text {
+	font-size: 0.9rem;
+	color: #000;
+	display: block;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0.3rem 0;
+}
+
+.like-count {
+	font-size: 0.9rem;
+	color: #333;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0;
+}

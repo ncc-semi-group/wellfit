@@ -10,7 +10,7 @@
 <!-- 네비게이션 바 fragment -->
 <footer th:fragment="navigationBar" class="mobile-nav-bar">
     <div class="nav-container">
-        <a th:href="@{/}" class="nav-item" th:classappend="${currentPage == 'test'} ? 'active' : ''">
+        <a th:href="@{/}" class="nav-item" th:classappend="${currentPage == 'home'} ? 'active' : ''">
             <div class="nav-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />

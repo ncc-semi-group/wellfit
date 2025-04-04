@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+.header {
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.back-btn {
+	font-size: 1.5rem;
+	margin-right: 1rem;
+	color: #333;
+	cursor: pointer;
+}
+
+.title {
+	font-size: 1.3rem;
+	margin: 0;
+	color: #333;
+}
+
+.category-title {
+	padding: 1rem;
+	font-size: 1.1rem;
+	color: #666;
+	border-bottom: 1px solid #eee;
+}
+
+.posts-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	padding: 1px;
+	background-color: #fff;
+}
+
+.post-item {
+	position: relative;
+	overflow: hidden;
+	width: 8.5rem;
+	height: 7.5rem;
+	padding-left: 1rem;
+}
+
+.post-image {
+	width: 7.5rem;
+	height: 7.5rem;
+	object-fit: cover;
+}
+
+.multiple-images-icon {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	color: white;
+	text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+	font-size: 1.2rem;
+}
+
+.no-posts {
+	grid-column: 1/-1;
+	text-align: center;
+	padding: 2rem;
+	color: #666;
+}

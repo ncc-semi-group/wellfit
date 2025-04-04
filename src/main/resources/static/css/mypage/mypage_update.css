@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+.header {
+	padding: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.back-btn {
+	font-size: 1.8rem;
+	margin-right: 1rem;
+}
+
+.title {
+	display: inline-block;
+	padding-top: 0.7rem;
+	font-size: 1.5rem;
+}
+
+.profile-section {
+	padding: 20px;
+}
+
+.profile-image {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-bottom: 20px;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.btn-update {
+	background-color: #005666;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.btn-update:hover {
+	background-color: #003d47;
+}

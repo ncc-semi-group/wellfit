@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+/*뒤로가기 버튼 + 제목 */
+.header {
+	padding: 2rem;
+	display: flex;
+	align-items: center;
+}
+
+.back-btn {
+	font-size: 1.8rem;
+	margin-right: 1rem;
+}
+
+.title {
+	display: inline-block;
+	padding-top: 0.7rem;
+	font-size: 1.5rem;
+}
+
+/*상단 뱃지*/
+.box-title {
+	width: 6.2rem;
+	height: 1.7rem;
+	border-radius: 20px;
+	border: 1px solid #8AA7AF;
+	background-color: #D7E1E4;
+	text-align: center;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.box-title h6 {
+	margin: 0;
+	line-height: 1.7rem;
+}
+
+/*뱃지 리스트*/
+.badge-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 20px;
+	padding: 10px;
+	margin-bottom: 2rem;
+}
+
+.badge {
+	margin: 1rem;
+}
+
+.badge-item {
+	text-align: center;
+	padding: 15px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	background-color: #fff;
+	transition: transform 0.2s;
+}
+
+.badge-item:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.badge-image {
+	width: 100px;
+	height: 100px;
+	object-fit: contain;
+	margin-bottom: 10px;
+}
+
+.badge-item.not-achieved {
+	opacity: 0.5;
+}
+
+.badge-name {
+	font-size: 1.1rem;
+	margin-bottom: 5px;
+	color: #005666;
+}
+
+.badge-content {
+	font-size: 0.9rem;
+	color: #666;
+}
+
+.progress-container {
+	margin-top: 10px;
+}
+
+.progress {
+	height: 10px;
+	border-radius: 5px;
+	background-color: #e9ecef;
+}
+
+.progress-bar {
+	background-color: #005666;
+}

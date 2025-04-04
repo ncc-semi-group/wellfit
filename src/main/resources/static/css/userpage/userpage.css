@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+.profile-container {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+/*뒤로가기 버튼 + 제목 */
+.profile-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+	z-index: 1000;
+	position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: calc(16px + env(safe-area-inset-top, 0));
+    padding-left : 1rem;
+    height: 70px;
+}
+
+.back-btn {
+    font-size: 24px;
+    cursor: pointer;
+    padding-right : 1rem;
+}
+
+
+/* 나머지 기존 스타일 유지 */
+
+.profile-title {
+	margin: 0;
+	color: #005666;
+}
+
+.profile-content {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.my-profile-image {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 20px;
+}
+
+.profile-info {
+	flex: 1;
+}
+
+.profile-name {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.info {
+	color: #666;
+	margin-bottom: 20px;
+}
+
+.user_intro {
+	margin-bottom: 20px;
+}
+
+.profile-stats {
+	display: flex;
+	justify-content: space-around;
+}
+
+.stat-item {
+	text-align: center;
+}
+
+.stat-number {
+	font-size: 18px;
+	font-weight: bold;
+	color: #005666;
+}
+
+.stat-label {
+	font-size: 14px;
+	color: #666;
+}
+
+.box {
+	display: flex;
+	padding-top: 1.5rem;
+}
+
+/*상단 뱃지*/
+.box-title1 {
+	width: 8rem;
+	height: 2rem;
+	border-radius: 20px;
+	border: 1px solid #8AA7AF;
+	background-color: #D7E1E4;
+	text-align: center;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.box-title1 h6 {
+	margin: 0;
+	line-height: 1.7rem;
+}
+
+.box-title2 {
+	width: 8rem;
+	height: 2rem;
+	border-radius: 20px;
+	border: 1px solid #8AA7AF;
+	background-color: #fff;
+	text-align: center;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.box-title2 h6 {
+	margin: 0;
+	line-height: 1.7rem;
+}
+
+/* 캘린더 스타일 추가 */
+.calendar-container {
+	margin-top: 20px;
+}
+
+#calendar {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.fc-day-grid-event {
+	border-radius: 20px;
+	padding: 2px 5px;
+}
+
+.fc-today {
+	background-color: #f8f9fa !important;
+}
+
+.exercise-event {
+	background-color: #005666;
+	border-color: #005666;
+	color: white;
+}

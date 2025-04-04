@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.comment.mapper.CommentMapper">
+	<resultMap id="CommentResultMap" type="CommentDto">
+		<id property="id" column="comment_id"/>
+		<result property="boardId" column="board_id"/>
+		<result property="userId" column="user_id"/>
+		<result property="comment" column="comment"/>
+		<result property="parentId" column="parent_id"/>
+		<result property="createdAt" column="created_at"/>
+		<result property="nickname" column="nickname"/>
+		<collection property="hashtags" ofType="HashtagDto">
+			<id property="id" column="tag_id"/>
+			<result property="tag" column="tag"/>
+		</collection>
+	</resultMap>
+
+	<select id="getSelectUserId" parameterType="int" resultMap="CommentResultMap">
+		SELECT 
+			c.id as comment_id,
+			c.board_id,
+			c.user_id,
+			c.comment,
+			c.parent_id,
+			c.created_at,
+			u.nickname,
+			h.id as tag_id,
+			h.tag
+		FROM comment c
+		JOIN board b ON c.board_id = b.id
+		JOIN user u ON c.user_id = u.id
+		LEFT JOIN board_hashtag bh ON b.id = bh.board_id
+		LEFT JOIN hashtag h ON bh.tag_id = h.id
+		WHERE c.user_id = #{userId}
+		ORDER BY c.created_at DESC
+	</select>
+
+</mapper>
