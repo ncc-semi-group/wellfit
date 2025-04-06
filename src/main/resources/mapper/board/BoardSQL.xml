@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.board.mapper.BoardMapper">
+
+    
+    
+    
+    
+    
+    <!-- 모든 게시판 목록 조회 -->
+    <select id="selectAllBoards" resultType="BoardDto">
+        SELECT id, user_id AS userId, created_at AS createdAt, content
+        FROM board
+    </select>
+
+    <!-- 특정 게시판 조회 (ID로 검색) -->
+    <select id="selectBoardById" parameterType="int" resultType="BoardDto">
+        SELECT id, user_id AS userId, created_at AS createdAt, content
+        FROM board
+        WHERE id = #{id}
+    </select>
+
+    <!-- 게시판 추가 -->
+    <insert id="insertBoard" parameterType="BoardDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO board (user_id, created_at, content)
+        VALUES (#{userId}, #{createdAt}, #{content})
+    </insert>
+
+    <!-- 게시판 수정 -->
+    <update id="updateBoard" parameterType="BoardDto">
+        UPDATE board
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시판 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM board
+        WHERE id = #{id}
+    </delete>
+
+
+
+    <!-- 게시판 상세 정보 조회 (이미지, 좋아요 수 포함) -->
+    <select id="selectBoardDetail" parameterType="int" resultType="BoardDto">
+        SELECT
+            b.id AS board_id,
+            b.created_at AS board_created_at,
+            b.content AS board_content,
+            u.id AS user_id,
+            u.nickname AS user_nickname,
+            u.profile_image AS user_profile_image,
+            u.my_intro AS my_intro,
+            COUNT(DISTINCT bl.id) AS likes_count,
+            bi.id AS image_id,
+            bi.file_name
+        FROM board b
+        JOIN user u ON b.user_id = u.id
+        LEFT JOIN board_like bl ON b.id = bl.board_id
+        LEFT JOIN board_image bi ON b.id = bi.board_id
+        WHERE b.id = #{boardId}
+        GROUP BY b.id, u.id, bi.id, bi.file_name
+        ORDER BY b.created_at ASC
+    </select>
+
+
+
+<resultMap id="BoardDetailResultMap" type="BoardDto">
+    <id property="id" column="id"/>
+    <result property="createdAt" column="createdAt"/>
+    <result property="content" column="content"/>
+    <result property="likesCount" column="likesCount"/>
+    <result property="commentCount" column="commentCount"/>  <!-- 댓글 갯수 추가 -->
+    
+    <!-- User 정보 매핑 -->
+    <association property="user" javaType="UserDto">
+        <id property="id" column="userId"/>
+        <result property="nickname" column="userNickname"/>
+        <result property="profileImage" column="userProfileImage"/>
+        <result property="myIntro" column="myIntro"/>
+    </association>
+
+    <!-- 이미지 목록 매핑 (1:N 관계) -->
+    <collection property="images" ofType="BoardImageDto">
+        <id property="id" column="imageId"/>
+        <result property="fileName" column="fileName"/>
+    </collection>
+
+</resultMap>
+
+
+
+
+
+<select id="selectAllBoardsWithDetails" resultMap="BoardDetailResultMap">
+    SELECT
+        b.id AS id,
+        b.created_at AS createdAt,
+        b.content AS content,
+        u.id AS userId,
+        u.nickname AS userNickname,
+        u.profile_image AS userProfileImage,
+        u.my_intro AS myIntro,
+        COUNT(DISTINCT bl.id) AS likesCount,
+        COUNT(c.id) AS commentCount,  -- 댓글 갯수를 카운트
+        bi.id AS imageId,
+        bi.file_name AS fileName
+    FROM board b
+    JOIN user u ON b.user_id = u.id
+    LEFT JOIN board_like bl ON b.id = bl.board_id
+    LEFT JOIN board_image bi ON b.id = bi.board_id
+    LEFT JOIN comment c ON b.id = c.board_id  -- 댓글 테이블과 조인
+    GROUP BY b.id, u.id, bi.id, bi.file_name
+    ORDER BY b.created_at DESC
+</select>
+
+
+
+
+
+
+
+
+
+
+
+<resultMap id="CommentResultMap" type="CommentDto">
+    <id property="id" column="id"/>
+    <result property="parentId" column="parentId"/>
+    <result property="boardId" column="boardId"/>
+    <result property="comment" column="comment"/>
+    <result property="createdAt" column="createdAt"/>
+    
+    <!-- 댓글 작성자 정보 -->
+    <association property="user" javaType="UserDto">
+        <id property="id" column="userId"/>
+        <result property="nickname" column="userNickname"/>
+        <result property="profileImage" column="userProfileImage"/>
+    </association>
+</resultMap>
+
+
+
+<select id="selectCommentsByBoardId" resultMap="CommentResultMap">
+    SELECT 
+        c.id, c.parent_id AS parentId, c.board_id AS boardId, 
+        c.user_id AS userId, c.comment, c.created_at AS createdAt,
+        u.nickname AS userNickname, u.profile_image AS userProfileImage
+    FROM comment c
+    JOIN user u ON c.user_id = u.id
+    WHERE c.board_id = #{boardId}
+    ORDER BY c.created_at ASC
+</select>
+
+
+</mapper>
