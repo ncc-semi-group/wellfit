@@ -45,7 +45,7 @@ public class MyPageController {
 	private String uploadDir;
 	
 	@GetMapping("/mypage")
-	public String mypage(Model model, HttpSession session) {
+	public String goMypage(HttpSession session, Model model) {
 		// 세션에서 로그인한 사용자의 ID를 가져옴
 		Integer userId = (Integer) session.getAttribute("userId");
 		
@@ -56,9 +56,12 @@ public class MyPageController {
 		
 		// 사용자 정보와 좋아요 목록을 가져옴
 		UserDto userDto = userService.getSelectUser(userId);
+		List<BoardLikeDto> likeList = boardLikeService.getLikesByTag(userId);
 		if (userDto != null) {
 			model.addAttribute("dto", userDto);
-			model.addAttribute("likeList", userService.getLikeList(userId));
+			model.addAttribute("likeList", likeList);
+			model.addAttribute("showHeader", false);
+			
 			return "views/mypage/mypage";
 		} else {
 			return "redirect:/login";
