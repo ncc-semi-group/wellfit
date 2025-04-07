@@ -74,10 +74,10 @@
                     <div th:if="${likeList != null and !likeList.empty}" th:each="like : ${likeList}">
                         <div class="like-list-inn">
                             <div class="list1">
-                                <h6 class="like-count" th:text="${like.likeCount + '개'}"></h6>
+                                <h6 class="like-count" th:text="${like['likeCount'] + '개'}"></h6>
                             </div>
                             <div class="list1-in">
-                                <span class="tag-text" th:text="${'#' + like.tag}"></span>
+                                <span class="tag-text" th:text="${'#' + like['tag']}"></span>
                             </div>
                         </div>
                     </div>

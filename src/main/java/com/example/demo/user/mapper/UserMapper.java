@@ -14,5 +14,21 @@ public interface UserMapper {
 	public void mypageUpdateUser(UserDto dto);
 	public void mypageupdateProfileImage(@Param("id") int id, @Param("imageUrl") String imageUrl);
 	public void updateUser(UserDto dto);
-	public UserDto getUserById(String id);
+	
+	public UserDto getUserById(String email);
+	// 사용자 추가
+		public void insertUser(UserDto userDto);
+
+		// 사용자 정보 조회
+		public UserDto selectUserById(@Param("id") int id);
+
+		// 이메일로 사용자 조회
+		public UserDto selectUserByEmail(@Param("email") String email);
+
+
+		// 사용자 목록 조회
+		List<UserDto> selectAllUsers();
+
+		// 사용자 삭제
+		public void deleteUser(@Param("id") int id);
 }

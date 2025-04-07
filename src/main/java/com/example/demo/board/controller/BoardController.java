@@ -1,18 +1,37 @@
 package com.example.demo.board.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.board.service.BoardImageService;
+import com.example.demo.board.service.BoardService;
+import com.example.demo.dto.BoardDto;
+import com.example.demo.dto.BoardImageDto;
+import com.example.demo.dto.UserDto;
+import com.example.demo.user.service.UserPageService;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class BoardController {
 
+    @Autowired
+    private BoardService boardService;
+    @Autowired
+    private BoardImageService boardImageService;
+    @Autowired
+    private UserPageService userPageService;
+
     @GetMapping("/feed/all")
     public String board(Model model) {
+        List<BoardDto> posts = boardService.getAllBoardWithDetails();
+        model.addAttribute("posts", posts);
         model.addAttribute("showHeader", false);
         model.addAttribute("currentPage", "community");
         return "views/board/boardmain";
@@ -52,5 +71,26 @@ public class BoardController {
     public String boardmost(Model model) {
         model.addAttribute("currentPage", "community");
         return "views/board/boardmost";
+    }
+
+    @GetMapping("/board/detail/{boardId}")
+    public String boardDetail(@PathVariable("boardId") int boardId, Model model) {
+        try {
+            BoardDto post = boardService.getBoardById(boardId);
+            
+            if (post != null) {
+                model.addAttribute("post", post);
+                model.addAttribute("showHeader", false);
+                model.addAttribute("currentPage", "record");
+                return "views/board/boarddetail";
+            } else {
+                model.addAttribute("error", "게시물을 찾을 수 없습니다.");
+                return "redirect:/feed/all";
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // 로그 확인을 위해 추가
+            model.addAttribute("error", "게시물을 찾을 수 없습니다.");
+            return "redirect:/feed/all";
+        }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.badge.service.BadgeService;
 import com.example.demo.badge.service.UserBadgeService;
+import com.example.demo.board.service.BoardLikeService;
 import com.example.demo.dto.BadgeDto;
 import com.example.demo.dto.UserBadgeDto;
 import com.example.demo.dto.UserDto;
@@ -25,6 +26,7 @@ public class UserPageController {
     private final UserPageService userPageService;
     private final UserBadgeService userBadgeService;
     private final BadgeService badgeService;
+    private final BoardLikeService boardLikeService;
 
     @GetMapping("/userpage/{userId}")
     public String userPage(@PathVariable("userId") int userId, Model model, HttpSession session) {

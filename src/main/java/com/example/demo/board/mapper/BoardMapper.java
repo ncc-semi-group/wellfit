@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-package com.example.demo.board.mapper;
-
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
-
-import com.example.demo.dto.BoardDto;
-
-@Mapper
-public interface BoardMapper {
-	public List<BoardDto> getSelectUserId(int userId);
-}
-=======
 package com.example.demo.board.mapper;
 
 import com.example.demo.dto.BoardDto;
@@ -26,7 +12,7 @@ public interface BoardMapper {
 	public List<BoardDto> selectAllBoards();
 
 	// 특정 게시판 조회 (ID로 검색)
-	public BoardDto selectBoardById(@Param("id") int id);
+	//public BoardDto selectBoardById(@Param("id") int id);
 
 	// 게시판 추가
 	public void insertBoard(BoardDto boardDto);
@@ -38,5 +24,9 @@ public interface BoardMapper {
 	public void deleteBoard(@Param("id") int id);
 	
 	public List<BoardDto> selectAllBoardsWithDetails();
+	
+	public List<BoardDto> getSelectUserId(@Param("userId") int userId);
+
+	// 게시물 상세 정보 조회 (이미지, 좋아요 수 포함)
+	public BoardDto selectBoardDetail(int boardId);
 }
->>>>>>> refs/remotes/origin/bsh

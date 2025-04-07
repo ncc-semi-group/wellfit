@@ -2,6 +2,9 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.CommentMapper;
 import com.example.demo.dto.CommentDto;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,4 +44,8 @@ public class CommentService {
     public void deleteComment(int id) {
         commentMapper.deleteComment(id);
     }
+    
+	public List<CommentDto> getSelectUserId(int userId){
+		return commentMapper.getSelectUserId(userId);
+	}
 }

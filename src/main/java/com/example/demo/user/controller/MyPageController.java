@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,9 +18,10 @@ import com.example.demo.badge.service.BadgeService;
 import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.board.service.BoardLikeService;
 import com.example.demo.board.service.BoardService;
-import com.example.demo.comment.service.CommentService;
+import com.example.demo.board.service.CommentService;
 import com.example.demo.dto.BadgeDto;
 import com.example.demo.dto.BoardDto;
+import com.example.demo.dto.BoardLikeDto;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.UserBadgeDto;
 import com.example.demo.dto.UserDto;
@@ -59,7 +59,7 @@ public class MyPageController {
 		dto.setBadgeCount(badgeCount);
 	
 		// 좋아요 목록 가져오기 (태그별로 그룹화)
-		List<Map<String, Object>> likeList = boardLikeService.getLikesByTag(id);
+		List<BoardLikeDto> likeList = boardLikeService.getLikesByTag(id);
 		model.addAttribute("dto", dto);
 		model.addAttribute("likeList", likeList);
 		model.addAttribute("showHeader", false);

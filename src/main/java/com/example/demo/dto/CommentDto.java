@@ -1,31 +1,8 @@
-<<<<<<< HEAD
 package com.example.demo.dto;
+
 
 import java.sql.Timestamp;
 import java.util.List;
-
-import org.apache.ibatis.type.Alias;
-
-import lombok.Data;
-
-@Data
-@Alias("CommentDto")
-public class CommentDto {
-	private int id;
-	private int boardId;
-	private int userId;
-	private String comment;
-	private int parentId;
-	private Timestamp createdAt; //댓글 등록 날짜
-	
-	private List<HashtagDto> hashtags;
-	private String nickname;
-}
-=======
-package com.example.demo.dto;
-
-
-import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
 
@@ -41,8 +18,7 @@ public class CommentDto {
     private String comment;           // 댓글 내용
     private int parentId;         // 부모 댓글 ID (대댓글에 사용)
     private Timestamp createdAt;  // 생성 시간 
-
-    
-    
+	
+	private List<HashtagDto> hashtags;
+	private String nickname;   
 }
->>>>>>> refs/remotes/origin/bsh

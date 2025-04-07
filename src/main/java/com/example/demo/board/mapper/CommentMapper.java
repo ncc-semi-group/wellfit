@@ -22,4 +22,7 @@ public interface CommentMapper {
 
 	// 댓글 삭제
 	public void deleteComment(@Param("id") int id);
+	
+
+	public List<CommentDto> getSelectUserId(int userId);
 }

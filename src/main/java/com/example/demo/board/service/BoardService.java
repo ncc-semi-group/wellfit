@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-package com.example.demo.board.service;
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.example.demo.board.mapper.BoardMapper;
-import com.example.demo.dto.BoardDto;
-
-import lombok.AllArgsConstructor;
-
-@Service
-@AllArgsConstructor
-public class BoardService {
-	BoardMapper boardMapper;
-	
-	public List<BoardDto> getSelectUserId(int userId){
-		return boardMapper.getSelectUserId(userId);
-	}
-}
-=======
 package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardMapper;
@@ -44,7 +22,7 @@ public class BoardService {
 
 	// 특정 게시판 조회
 	public BoardDto getBoardById(int id) {
-		return boardMapper.selectBoardById(id);
+		return boardMapper.selectBoardDetail(id);
 	}
 
 	// 게시판 추가
@@ -61,10 +39,12 @@ public class BoardService {
 	public void deleteBoard(int id) {
 		boardMapper.deleteBoard(id);
 	}
-	
-	
+
 	public List<BoardDto> getAllBoardWithDetails(){
 		return boardMapper.selectAllBoardsWithDetails();
 	}
+
+	public List<BoardDto> getSelectUserId(int userId){
+		return boardMapper.getSelectUserId(userId);
+	}
 }
->>>>>>> refs/remotes/origin/bsh

@@ -1,26 +1,11 @@
-<<<<<<< HEAD
 package com.example.demo.board.mapper;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.BoardDto;
-
-@Mapper
-public interface BoardLikeMapper {
-    List<Map<String, Object>> getLikesByTag(int userId);
-    List<BoardDto> getLikedBoardsByTag(Map<String, Object> params);
-    List<String> getBoardImages(int boardId);
-} 
-=======
-package com.example.demo.board.mapper;
-
 import com.example.demo.dto.BoardLikeDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface BoardLikeMapper {
@@ -39,5 +24,9 @@ public interface BoardLikeMapper {
 
 	// 특정 게시판에 좋아요한 사용자 목록 조회
 	public List<BoardLikeDto> selectUsersWhoLikedBoard(@Param("boardId") int boardId);
+	
+	public List<BoardLikeDto> getLikesByTag(@Param("userId") int userId);
+	List<BoardDto> getLikedBoardsByTag(Map<String, Object> params);
+    public List<String> getBoardImages(int boardId);
+
 }
->>>>>>> refs/remotes/origin/bsh
