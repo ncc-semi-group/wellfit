@@ -31,4 +31,89 @@ $(document).ready(function() {
         var tag = $(this).find('.tag-text').text().substring(1);
         window.location.href = '/mypageLike?tag=' + encodeURIComponent(tag);
     });
+
+    // 캘린더 초기화
+    const userId = $('.badge-cnt1').data('user-id');
+    let currentDate = new Date();
+    
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        
+        fetch(`/api/daily-statistics/${userId}/monthly?year=${year}&month=${month}`)
+            .then(response => response.json())
+            .then(statistics => {
+                const calendar = $('#calendar');
+                calendar.empty();
+                
+                // 요일 헤더 추가
+                const days = ['일', '월', '화', '수', '목', '금', '토'];
+                days.forEach(day => {
+                    calendar.append($('<div>')
+                        .addClass('calendar-day-header')
+                        .text(day));
+                });
+                
+                // 달력 날짜 채우기
+                const firstDay = new Date(year, month - 1, 1);
+                const lastDay = new Date(year, month, 0);
+                const prevLastDay = new Date(year, month - 1, 0);
+                
+                // 이전 달의 마지막 날짜들
+                for (let i = 0; i < firstDay.getDay(); i++) {
+                    const prevDate = prevLastDay.getDate() - firstDay.getDay() + i + 1;
+                    calendar.append($('<div>')
+                        .addClass('calendar-day other-month')
+                        .append($('<span>')
+                            .addClass('date-number')
+                            .text(prevDate)));
+                }
+                
+                // 현재 달의 날짜들
+                for (let date = 1; date <= lastDay.getDate(); date++) {
+                    const dayDiv = $('<div>').addClass('calendar-day');
+                    const dateSpan = $('<span>').addClass('date-number').text(date);
+                    dayDiv.append(dateSpan);
+                    
+                    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                    const dayStats = statistics.find(s => s.date === dateStr);
+                    
+                    if (dayStats && dayStats.is_achieved === 1) {
+                        const badge = $('<img>')
+                            .addClass('success-badge')
+                            .attr('src', '/images/성공.png')
+                            .attr('alt', '성공');
+                        dayDiv.append(badge);
+                    }
+                    
+                    calendar.append(dayDiv);
+                }
+                
+                // 다음 달의 시작 날짜들
+                const remainingDays = 42 - (firstDay.getDay() + lastDay.getDate()); // 6주 채우기
+                for (let i = 1; i <= remainingDays; i++) {
+                    calendar.append($('<div>')
+                        .addClass('calendar-day other-month')
+                        .append($('<span>')
+                            .addClass('date-number')
+                            .text(i)));
+                }
+            });
+            
+        $('#currentMonth').text(`${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월`);
+    }
+    
+    // 이전/다음 월 버튼 이벤트
+    $('#prevMonth').click(() => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+    
+    $('#nextMonth').click(() => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+    
+    // 초기 캘린더 렌더링
+    renderCalendar();
 });

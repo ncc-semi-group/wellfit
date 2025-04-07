@@ -158,3 +158,124 @@ body * {
 	margin: 0 auto;
 	padding: 0;
 }
+
+/* 캘린더 스타일 */
+.calendar-section {
+	margin: 20px;
+	padding: 20px;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.calendar-container {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+	padding: 0 10px;
+}
+
+.calendar-header button {
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	padding: 5px 15px;
+	color: #333;
+}
+
+#currentMonth {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333;
+}
+
+.calendar {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 1px;
+	background-color: #eee;
+	border: 1px solid #eee;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.calendar-day-header {
+	text-align: center;
+	font-weight: bold;
+	padding: 10px 5px;
+	background: #f8f9fa;
+	color: #333;
+	font-size: 14px;
+}
+
+.calendar-day {
+	aspect-ratio: 1;
+	background: white;
+	padding: 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+	min-height: 50px;
+	position: relative;
+}
+
+.calendar-day.other-month {
+	background: #f9f9f9;
+}
+
+.calendar-day.other-month .date-number {
+	color: #ccc;
+}
+
+.date-number {
+	font-size: 14px;
+	color: #333;
+	position: absolute;
+	top: 5px;
+	left: 8px;
+}
+
+.success-badge {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	object-fit: contain;
+}
+
+.calendar-day:not(.other-month):hover {
+	background: #f8f9fa;
+	cursor: pointer;
+}
+
+/* 일요일 색상 */
+.calendar-day-header:first-child,
+.calendar-day:not(.other-month):nth-child(7n + 1) .date-number {
+	color: #dc3545;
+}
+
+/* 토요일 색상 */
+.calendar-day-header:last-child,
+.calendar-day:not(.other-month):nth-child(7n) .date-number {
+	color: #007bff;
+}
+
+/* 현재 날짜 표시 */
+.calendar-day.today {
+	background: #e8f5e9;
+}
+
+.calendar-day.today .date-number {
+	font-weight: bold;
+	color: #1b5e20;
+}

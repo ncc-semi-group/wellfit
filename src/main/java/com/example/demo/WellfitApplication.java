@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan({"data.*", "*.controller", "com.example.demo"})
-@MapperScan({"com.example.demo.badge.mapper", "com.example.demo.board.mapper", "com.example.demo.user.mapper", "com.example.demo.comment.mapper", ""})
+@MapperScan({"com.example.demo.badge.mapper", "com.example.demo.board.mapper", "com.example.demo.user.mapper", "com.example.demo.comment.mapper", "com.example.demo.daily.mapper", ""})
 public class WellfitApplication {
 
 	public static void main(String[] args) {

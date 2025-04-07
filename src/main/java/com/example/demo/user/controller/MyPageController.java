@@ -45,39 +45,44 @@ public class MyPageController {
 	private String uploadDir;
 	
 	@GetMapping("/mypage")
-	public String goMypage(HttpSession session, Model model) {
-		//테스트용
-		int id = 1;
+	public String mypage(Model model, HttpSession session) {
+		// 세션에서 로그인한 사용자의 ID를 가져옴
+		Integer userId = (Integer) session.getAttribute("userId");
 		
-		UserDto dto = userService.getSelectUser(id);
-			
-		List<UserBadgeDto> badgeList = userBadgeService.getSelectUserId(id);
-			
-		int badgeCount = (int) badgeList.stream()
-				.filter(badge -> badge.getUserBadgeId() != 0 && badge.getIsAchieved() == 1)
-				.count();
-		dto.setBadgeCount(badgeCount);
-	
-		// 좋아요 목록 가져오기 (태그별로 그룹화)
-		List<BoardLikeDto> likeList = boardLikeService.getLikesByTag(id);
-		model.addAttribute("dto", dto);
-		model.addAttribute("likeList", likeList);
-		model.addAttribute("showHeader", false);
+		// 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+		if (userId == null) {
+			return "redirect:/login";
+		}
 		
-		return "views/mypage/mypage";
+		// 사용자 정보와 좋아요 목록을 가져옴
+		UserDto userDto = userService.getSelectUser(userId);
+		if (userDto != null) {
+			model.addAttribute("dto", userDto);
+			model.addAttribute("likeList", userService.getLikeList(userId));
+			return "views/mypage/mypage";
+		} else {
+			return "redirect:/login";
+		}
 	}
 	
 	@GetMapping("/mypageupdate")
 	public String updateForm(HttpSession session, Model model) {
-		//테스트용
-		int id = 1;
+		// 세션에서 로그인한 사용자의 ID를 가져옴
+		Integer userId = (Integer) session.getAttribute("userId");
 		
-		UserDto dto = userService.getSelectUser(id);
-		model.addAttribute("dto", dto);
-		model.addAttribute("showHeader", false);
+		// 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+		if (userId == null) {
+			return "redirect:/login";
+		}
 		
-		return "views/mypage/mypageUpdate";
-		
+		UserDto dto = userService.getSelectUser(userId);
+		if (dto != null) {
+			model.addAttribute("dto", dto);
+			model.addAttribute("showHeader", false);
+			return "views/mypage/mypageUpdate";
+		} else {
+			return "redirect:/login";
+		}
 	}
 	
 	@PostMapping("/update")
@@ -178,16 +183,21 @@ public class MyPageController {
 	}
 	
     @GetMapping("/mypageLike")
-    public String mypageLike(@RequestParam("tag") String tag, Model model) {
-        //테스트용
-        int userId = 1;
+    public String mypageLike(@RequestParam("tag") String tag, Model model, HttpSession session) {
+        // 세션에서 로그인한 사용자의 ID를 가져옴
+        Integer userId = (Integer) session.getAttribute("userId");
+        
+        // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+        if (userId == null) {
+            return "redirect:/login";
+        }
         
         // 해당 태그의 좋아요 게시물 목록 조회
         List<BoardDto> posts = boardLikeService.getLikedBoardsByTag(userId, tag);
         
         model.addAttribute("tag", tag);
         model.addAttribute("posts", posts);
-		model.addAttribute("showHeader", false);
+        model.addAttribute("showHeader", false);
         
         return "views/mypage/mypageLike";
     }
