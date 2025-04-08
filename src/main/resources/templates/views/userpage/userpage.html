@@ -28,7 +28,7 @@
                 (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" alt="프로필 이미지">
             <div class="profile-info">
                 <div class="profile-stats">
-                    <div class="stat-item">
+                    <div class="stat-item friend-link" th:data-user-id="${user.id}">
                         <div class="stat-number" th:text="${user.friendCount}"></div>
                         <div class="stat-label">친구</div>
                     </div>

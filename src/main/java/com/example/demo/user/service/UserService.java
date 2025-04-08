@@ -36,7 +36,6 @@ public class UserService {
 	}
 	
 	public String updateProfileImage(MultipartFile file, int id) throws IOException {
-        
         try {
             // 파일 확장자 확인
             String originalFilename = file.getOriginalFilename();
@@ -48,14 +47,16 @@ public class UserService {
             }
             
             // 파일 이름 생성 (userId + 타임스탬프 + 확장자)
-            String fileName = id + "_" + System.currentTimeMillis() + extension;
+            String fileName = "profile_" + id + "_" + System.currentTimeMillis() + extension;
             
-            // 업로드 디렉토리 생성
-            File directory = new File(uploadDir);
+            // 실제 파일 시스템 경로 설정
+            String projectRoot = System.getProperty("user.dir");
+            String uploadPath = projectRoot + "/src/main/resources/static/images/profile";
+            File directory = new File(uploadPath);
             if (!directory.exists()) {
                 boolean created = directory.mkdirs();
                 if (!created) {
-                    throw new IOException("디렉토리 생성 실패: " + uploadDir);
+                    throw new IOException("디렉토리 생성 실패: " + uploadPath);
                 }
             }
             
@@ -63,16 +64,20 @@ public class UserService {
             File dest = new File(directory, fileName);
             file.transferTo(dest);
             
-            // DB에 저장할 이미지 URL
-            String imageUrl = "/upload/profile/" + fileName;
+            // DB에 저장할 이미지 URL (상대 경로)
+            String imageUrl = "/images/profile/" + fileName;
             
             // DB 업데이트
             userMapper.mypageupdateProfileImage(id, imageUrl);
             
+            System.out.println("프로필 이미지 업데이트 완료 - URL: " + imageUrl);
             return imageUrl;
+            
         } catch (IOException e) {
+            System.err.println("프로필 이미지 업데이트 실패: " + e.getMessage());
             throw e;
         } catch (Exception e) {
+            System.err.println("예상치 못한 오류 발생: " + e.getMessage());
             throw e;
         }
     }
@@ -95,6 +100,8 @@ public class UserService {
         }
         return null;
     }
+    
+    // ==========================
 
     // 사용자 추가
     public void addUser(UserDto userDto) {
@@ -124,5 +131,21 @@ public class UserService {
     // 사용자 삭제
     public void deleteUser(int id) {
         userMapper.deleteUser(id);
+    }
+    
+    // ===================================
+    
+    public List<UserDto> searchUsersByNickname(String nickname) {
+        try {
+            return userMapper.searchUsersByNickname(nickname);
+        } catch (Exception e) {
+            System.out.println("닉네임 검색 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public void insertUser(UserDto userDto) {
+        userMapper.insertUser(userDto);
     }
 }

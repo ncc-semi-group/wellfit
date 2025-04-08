@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/friendpage/friendpage.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="content-container">
+		<div class="search-container">
+			<div class="search-wrapper">
+				<svg xmlns="http://www.w3.org/2000/svg" width="1.7rem" height="1.7rem" fill="#838383" class="bi bi-search" viewBox="0 0 16 16">
+	                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+	            </svg>
+				<input type="text" placeholder="친구 검색" oninput="searchFriendByNickname()" />
+			</div>
+		</div>
+
+		<div class="list-container">
+			<th:block th:each="friend : ${friends}">
+				<div class="friend-wrapper">
+					<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
+						 th:alt="${friend.nickname}"
+						 onerror="this.src='/images/default-profile.jpg'">
+                    <div class="profile">
+                    	<div th:text="${friend.nickname}" class="name"></div>
+                    	<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
+                    </div>
+				</div>
+			</th:block>
+		</div>
+	</div>
+	
+	<!-- JavaScript -->
+	<th:block layout:fragment="script">
+	    <script th:src="@{/js/friendpage/friendpage.js}"></script>
+	</th:block>
+</div>
+</body>
+</html> 

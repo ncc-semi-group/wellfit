@@ -9,6 +9,16 @@ $(document).ready(function() {
             alert('사용자 정보를 찾을 수 없습니다.');
         }
     });
+	
+	// 친구 수 클릭 시 해당 유저의 친구 목록 페이지로 이동
+	$('.friend-link').click(function() {
+	    var userId = $(this).data('user-id');
+	    if (userId) {
+	        window.location.href = '/userpage/friends/' + userId;
+	    } else {
+	        alert('사용자 정보를 찾을 수 없습니다.');
+	    }
+	});
 
     // 캘린더 초기화
     const userId = $('.box-title2').data('user-id');

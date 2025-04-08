@@ -23,7 +23,7 @@
 
     <div class="board-container">
         <div th:if="${boardList != null and !boardList.empty}">
-            <div th:each="board : ${boardList}" class="board-item">
+            <div th:each="board : ${boardList}" class="board-item" th:onclick="|window.location.href='/board/detail/${board.id}'|" style="cursor: pointer;">
                 <div class="board-content" th:text="${board.content}"></div>
                 <div class="board-footer">
                     <div class="board-date" th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></div>

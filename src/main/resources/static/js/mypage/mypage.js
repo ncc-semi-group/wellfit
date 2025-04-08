@@ -4,6 +4,11 @@ $(document).ready(function() {
         window.location.href = '/mypageupdate';
     });
 
+    // 친구 수 클릭 시 '/friendpage'로 이동
+    $('#friend-link').click(function() {
+        window.location.href = '/friendpage';
+    });
+
     // 'badge-cnt1' 버튼 클릭 시 사용자 ID를 이용해 '/mypageBadge?id=...'로 이동
     $('.badge-cnt1').click(function() {
         var userId = $(this).data('user-id'); // HTML에서 'data-user-id' 속성을 읽음

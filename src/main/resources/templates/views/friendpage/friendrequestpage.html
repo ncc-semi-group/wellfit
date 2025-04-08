@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/friendpage/friendrequestpage.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="content-container">
+		<div class="catagory-container">
+			<div class="catagory">
+				<a href="javascript:void(0);" class="on" id="add-friend-btn">친구 추가</a> 
+				<a href="javascript:void(0);" class="off" id="accept-friend-btn">요청 수락</a>
+			</div>
+			<a th:href="@{/friendpage}" class="btn-back"> 
+				<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" fill="currentColor" stroke="currentColor" stroke-width="0.8" class="bi bi-arrow-left" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+				</svg>
+			</a>
+		</div>
+
+		<div id="content">
+			<div id="friends-add" class="content-section">
+				<div class="search-container">
+					<svg xmlns="http://www.w3.org/2000/svg" width="1.7rem" height="1.7rem" fill="#838383" class="bi bi-search" viewBox="0 0 16 16">
+				        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+				    </svg>
+					<input type="text" id="searchInput" placeholder="닉네임으로 검색"
+						onkeydown="handleKeyDown(event)" autocomplete="off" />
+				</div>
+
+				<div class="list-container" id="friendList">
+					<div style="padding: 1rem;">검색 결과가 없습니다.</div>
+				</div>
+
+				<div class="recommand-friend-container">
+					<div class="comment">추천 친구</div>
+					<div class="recommand-friend-wrappers">
+						<th:block th:if="${#lists.isEmpty(recommandFriends)}">
+							<div style="padding: 1rem;">추천 친구가 없습니다.</div>
+						</th:block>
+						<th:block th:if="${not #lists.isEmpty(recommandFriends)}" th:each="friend : ${recommandFriends}">
+							<div class="recommand-friend-wrapper">
+								<div class="comment">Wellfit의 추천</div>
+								<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
+									th:alt="${friend.nickname}"
+									onerror="this.src='/images/default-profile.jpg'">
+								<div th:text="${friend.nickname}" class="name"></div>
+								<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
+							</div>
+						</th:block>
+					</div>
+				</div>
+			</div>
+			<div id="friends-accept" class="content-section hidden">
+				<div class="list-container2">
+					<th:block th:if="${#lists.isEmpty(requests)}">
+						<div class="no-request">친구 요청이 없습니다.</div>
+					</th:block>
+					<th:block th:each="req : ${requests}">
+						<div class="friend-accept-wrapper">
+							<img th:src="${senderMap[req.senderId] != null && senderMap[req.senderId].profileImage != null && senderMap[req.senderId].profileImage != '' ? senderMap[req.senderId].profileImage : '/images/default-profile.jpg'}"
+								th:alt="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}"
+								onerror="this.src='/images/default-profile.jpg'">
+							<div class="profile">
+								<div th:text="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}" class="name"></div>
+								<div th:text="${req.requestMessage != null ? req.requestMessage : '요청 메시지가 없습니다.'}" class="intro"></div>
+							</div>
+							<div class="button-container">
+								<button class="btn-accept"
+									th:onclick="|acceptFriendRequest(${req.id}, ${req.userId}, ${req.senderId})|">수락</button>
+								<button class="btn-refuse"
+									th:onclick="|rejectFriendRequest(${req.id})|">거절</button>
+							</div>
+						</div>
+					</th:block>
+				</div>
+				<div class="content-container-bottom"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JavaScript -->
+	<th:block layout:fragment="script">
+		<script th:src="@{/js/friendpage/friendrequestpage.js}"></script>
+	</th:block>
+</div>
+</body>
+</html>

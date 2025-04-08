@@ -24,7 +24,7 @@
 
     <div class="comment-container">
         <div th:if="${commentList != null and !commentList.empty}">
-            <div th:each="comment : ${commentList}" class="comment-item">
+            <div th:each="comment : ${commentList}" class="comment-item" th:onclick="|window.location.href='/board/detail/${comment.boardId}'|" style="cursor: pointer;">
                 <div class="comment-content" th:text="${comment.comment}"></div>
                 <div class="board-footer">
                     <div class="comment-date" th:text="${#dates.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
