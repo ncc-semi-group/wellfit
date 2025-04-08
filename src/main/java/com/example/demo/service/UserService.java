@@ -14,8 +14,7 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserDto login(String email, String password) {
-        UserDto user = userMapper.getUserById(email);
-        System.out.println(user.getPassword() + password);
+        UserDto user = userMapper.getUserById1(email);
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }

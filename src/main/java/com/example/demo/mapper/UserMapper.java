@@ -15,5 +15,5 @@ public interface UserMapper {
     void insertUser(UserDto user);
     void deleteUser(@Param("id") int id);
     List<UserDto> searchUsersByNickname(@Param("nickname") String nickname);
-    UserDto getUserById(String email);
+    UserDto getUserById1(String email);
 }

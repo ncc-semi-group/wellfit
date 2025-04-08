@@ -39,7 +39,7 @@ function updateFriendList(friends) {
         const friendElement = document.createElement('div');
         friendElement.classList.add('friend-wrapper');
         friendElement.innerHTML = `
-            <img src="${friend.profileImage}" alt="${friend.nickname}" />
+		<img src="${friend.profileImage}" alt="${friend.nickname}" />
             <div class="profile">
                 <div class="name">${friend.nickname}</div>
                 <div class="intro">${friend.myIntro}</div>

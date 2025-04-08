@@ -55,7 +55,7 @@ function searchFriend() {
 	
 			listContainer.innerHTML = data.map(user => `
 				<div class="friend-wrapper">
-					<img src="${user.profileImage || 'default.png'}" alt="${user.nickname}">
+					<img src="/images/${user.profileImage}" />
 					<div class="profile">
 						<div class="name">${user.nickname}</div>
 						<div class="intro">${user.myIntro}</div>

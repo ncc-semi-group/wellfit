@@ -44,7 +44,7 @@ public class FriendshipController {
     }
 
     // 친구 요청/수락 페이지
-    @GetMapping("/friends_request")
+    @GetMapping("/friendrequestpage")
     public String friendRequest(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
