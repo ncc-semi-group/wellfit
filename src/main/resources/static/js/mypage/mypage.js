@@ -40,9 +40,17 @@ $(document).ready(function() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth() + 1;
         
+        console.log('Fetching calendar data for:', { userId, year, month });
+        
         fetch(`/api/daily-statistics/${userId}/monthly?year=${year}&month=${month}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(statistics => {
+                console.log('Calendar data received:', statistics);
                 const calendar = $('#calendar');
                 calendar.empty();
                 
@@ -78,11 +86,18 @@ $(document).ready(function() {
                     const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
                     const dayStats = statistics.find(s => s.date === dateStr);
                     
-                    if (dayStats && dayStats.is_achieved === 1) {
+                    if (dayStats && (dayStats.is_achieved === true || dayStats.is_achieved === 1)) {
+                        console.log('Adding badge for date:', dateStr);
                         const badge = $('<img>')
                             .addClass('success-badge')
                             .attr('src', '/images/성공.png')
-                            .attr('alt', '성공');
+                            .attr('alt', '성공')
+                            .on('error', function() {
+                                console.error('Failed to load image:', this.src);
+                            })
+                            .on('load', function() {
+                                console.log('Successfully loaded image:', this.src);
+                            });
                         dayDiv.append(badge);
                     }
                     
@@ -90,14 +105,17 @@ $(document).ready(function() {
                 }
                 
                 // 다음 달의 시작 날짜들
-                const remainingDays = 42 - (firstDay.getDay() + lastDay.getDate()); // 6주 채우기
-                for (let i = 1; i <= remainingDays; i++) {
+                const remainingDays = 7 - ((firstDay.getDay() + lastDay.getDate()) % 7); // 한 줄만 채우기
+                for (let i = 1; i <= (remainingDays === 7 ? 0 : remainingDays); i++) {
                     calendar.append($('<div>')
                         .addClass('calendar-day other-month')
                         .append($('<span>')
                             .addClass('date-number')
                             .text(i)));
                 }
+            })
+            .catch(error => {
+                console.error('Error fetching calendar data:', error);
             });
             
         $('#currentMonth').text(`${currentDate.getFullYear()}년 ${currentDate.getMonth() + 1}월`);

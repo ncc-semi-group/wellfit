@@ -32,7 +32,7 @@
     </select>
     
     <update id="mypageUpdateUser" parameterType="UserDto">
-        UPDATE users
+        UPDATE user
         SET 
             email = #{email}, password = #{password}, nickname = #{nickname}, profile_image = #{profileImage}, 
             gender = #{gender}, age = #{age}, height = #{height}, activity_level = #{activityLevel}, 
@@ -74,11 +74,11 @@
 
     <!-- 사용자 목록 조회 -->
     <select id="selectAllUsers" resultType="UserDto">
-        SELECT * FROM users
+        SELECT * FROM user
     </select>
 
     <!-- 사용자 삭제 -->
     <delete id="deleteUser" parameterType="int">
-        DELETE FROM users WHERE id = #{id}
+        DELETE FROM user WHERE id = #{id}
     </delete>
 </mapper>

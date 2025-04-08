@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body * {
+	font-family: 'Jua';
+}
+
 .profile-container {
 	max-width: 600px;
 	margin: 0 auto;
@@ -129,27 +133,112 @@
 	line-height: 1.7rem;
 }
 
-/* 캘린더 스타일 추가 */
-.calendar-container {
+/* 캘린더 스타일 */
+.calendar-section {
 	margin-top: 20px;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#calendar {
-	max-width: 100%;
-	margin: 0 auto;
+.calendar-container {
+	margin-top: 15px;
 }
 
-.fc-day-grid-event {
-	border-radius: 20px;
-	padding: 2px 5px;
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
 }
 
-.fc-today {
-	background-color: #f8f9fa !important;
+.calendar-header button {
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	padding: 5px 15px;
+	color: #333;
 }
 
-.exercise-event {
-	background-color: #005666;
-	border-color: #005666;
-	color: white;
+#currentMonth {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333;
+}
+
+.calendar {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 5px;
+}
+
+.calendar-day-header {
+	text-align: center;
+	font-weight: bold;
+	padding: 10px;
+	background-color: #f8f9fa;
+}
+
+.calendar-day {
+	position: relative;
+	min-height: 60px;
+	padding: 5px;
+	border: 1px solid #dee2e6;
+	text-align: left;
+	overflow: visible;
+}
+
+.date-number {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	font-size: 14px;
+}
+
+.success-badge {
+	position: absolute;
+	top: 60%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 25px;
+	height: 25px;
+	object-fit: contain;
+	display: block;
+	z-index: 1;
+	background-color: transparent;
+	
+}
+
+.other-month {
+	background-color: #f8f9fa;
+	color: #adb5bd;
+}
+
+.calendar-day:not(.other-month):hover {
+	background: #f8f9fa;
+	cursor: pointer;
+}
+
+/* 일요일 색상 */
+.calendar-day-header:first-child,
+.calendar-day:not(.other-month):nth-child(7n + 1) .date-number {
+	color: #dc3545;
+}
+
+/* 토요일 색상 */
+.calendar-day-header:last-child,
+.calendar-day:not(.other-month):nth-child(7n) .date-number {
+	color: #007bff;
+}
+
+/* 현재 날짜 표시 */
+.calendar-day.today {
+	background: #e8f5e9;
+}
+
+.calendar-day.today .date-number {
+	font-weight: bold;
+	color: #1b5e20;
 }
