@@ -9,4 +9,6 @@ import com.example.demo.dto.UserBadgeDto;
 @Mapper
 public interface UserBadgeMapper {
 	public List<UserBadgeDto> getSelectUserId(int userId);
+	public void updateUserBadge(UserBadgeDto userBadge);
+	public void insertUserBadge(UserBadgeDto userBadge);
 }

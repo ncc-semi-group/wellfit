@@ -27,13 +27,25 @@
                 dto.profileImage : 
                 (dto.profileImage != null ? '/images/' + dto.profileImage : '/static/images/default-profile.png')}}" 
                 class="my-profile-image">
-            <div class="profile-in">
-                <h4 class="username" th:text="${dto.nickname}"></h4>
-                <h5 class="info" th:text="${dto.gender == 'male' ? '남성' : '여성'} + ' / ' + ${dto.height} + ' / ' + ${dto.currentWeight}"></h5>
-                <h6 class="friendcnt" th:text="'친구 ' + ${dto.friendCount}"></h6>
+            <div class="profile-info">
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${dto.friendCount}"></div>
+                        <div class="stat-label">친구</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${dto.userId2}"></div>
+                        <div class="stat-label">팔로워</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${dto.userId1}"></div>
+                        <div class="stat-label">팔로잉</div>
+                    </div>
+                </div>
             </div>
         </div>
-
+        <div class="username" th:text="${dto.nickname}"></div>
+        <h5 class="info" th:text="${dto.gender == 'male' ? '남성' : '여성'} + ' / ' + ${dto.height} + ' / ' + ${dto.currentWeight}"></h5>
         <div class="my-intro">
             <h6>소개</h6>
             <h6 th:text="${dto.myIntro}"></h6>

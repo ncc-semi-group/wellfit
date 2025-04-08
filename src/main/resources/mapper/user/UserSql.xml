@@ -8,8 +8,10 @@
         u.goal_weight as goalWeight, u.type,
         u.my_intro as myIntro,
         (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
+        (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
+            (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2,
         (SELECT COUNT(*) FROM user_badge WHERE user_id = u.id AND is_achieved = 1) as badgeCount,
-        (SELECT COUNT(*) FROM exercise_record WHERE user_id = u.id) as achievementCount,
+        (SELECT COUNT(*) FROM daily_statistics WHERE user_id = u.id AND is_achieved = 1) as achievementCount,
         (SELECT COUNT(*) FROM board WHERE user_id = u.id) as postCount,
         (SELECT COUNT(*) FROM comment WHERE user_id = u.id) as commentCount
         FROM user u
