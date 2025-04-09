@@ -36,12 +36,12 @@ function handleKeyDown(event) {
 function searchFriend() {
 	const nickname = document.getElementById("searchInput").value.trim();
 	const listContainer = document.getElementById("friendList");
-	
+
 	if (nickname === '') {
 		listContainer.innerHTML = '';
 		return;
 	}
-	
+
 	fetch(`/search?nickname=${encodeURIComponent(nickname)}`)
 		.then(response => {
 			if (!response.ok) throw new Error("검색 실패");
@@ -52,16 +52,23 @@ function searchFriend() {
 				listContainer.innerHTML = `<div style="padding: 1rem;">검색 결과가 없습니다.</div>`;
 				return;
 			}
-	
-			listContainer.innerHTML = data.map(user => `
-				<div class="friend-wrapper">
-					<img src="/images/${user.profileImage}" />
-					<div class="profile">
-						<div class="name">${user.nickname}</div>
-						<div class="intro">${user.myIntro}</div>
+
+			listContainer.innerHTML = data.map(user => {
+				const imageUrl =
+					user.profileImage.startsWith('http') || user.profileImage.startsWith('/images/')
+						? user.profileImage
+						: `/images/${user.profileImage}`;
+
+				return `
+					<div class="friend-wrapper">
+						<img src="${imageUrl}" />
+						<div class="profile">
+							<div class="name">${user.nickname}</div>
+							<div class="intro">${user.myIntro}</div>
+						</div>
 					</div>
-				</div>
-				`).join('');
+				`;
+			}).join('');
 		})
 		.catch(error => {
 			console.error("검색 중 오류 발생:", error);
