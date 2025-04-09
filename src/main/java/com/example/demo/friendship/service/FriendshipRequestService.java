@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.friendship.service;
 
 import lombok.RequiredArgsConstructor;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.FriendshipRequestDto;
 import com.example.demo.dto.UserDto;
-import com.example.demo.mapper.FriendshipRequestMapper;
+import com.example.demo.friendship.mapper.FriendshipRequestMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +32,7 @@ public class FriendshipRequestService {
         return recommendedFriends.isEmpty() ? Collections.emptyList() : recommendedFriends;
     }
     
-    public List<FriendshipRequestDto> getFriendRequestsByUserId(int userId) {
+    public List<FriendshipRequestDto> getFriendRequestsByUserId(@Param("userId") int userId) {
     	List<FriendshipRequestDto> FriendRequests = friendshipRequestMapper.getFriendRequestsByUserId(userId);
 
         // 결과가 없을 경우 빈 리스트 반환

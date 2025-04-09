@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.friendship.service;
 
 import lombok.RequiredArgsConstructor;
 
@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.FriendshipDto;
 import com.example.demo.dto.UserDto;
-import com.example.demo.mapper.FriendshipMapper;
-import com.example.demo.mapper.FriendshipRequestMapper;
+import com.example.demo.friendship.mapper.FriendshipMapper;
+import com.example.demo.friendship.mapper.FriendshipRequestMapper;
 
 import java.util.List;
 

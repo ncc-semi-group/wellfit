@@ -1,4 +1,4 @@
-package com.example.demo.mapper;
+package com.example.demo.user.mapper;
 
 import java.util.List;
 
@@ -12,8 +12,10 @@ import com.example.demo.dto.UserDto;
 public interface UserMapper {
     List<UserDto> getAllUsers();
     UserDto getUserById(@Param("id") int id);
-    void insertUser(UserDto user);
+    UserDto getUserByEmail(@Param("email") String email);
+    String getSaltByUserId(@Param("userId") int userId);
+    int insertUser(UserDto user);
+    void insertUserSalt(@Param("userId") int userId, @Param("salt") String salt);
     void deleteUser(@Param("id") int id);
     List<UserDto> searchUsersByNickname(@Param("nickname") String nickname);
-    UserDto getUserById1(String email);
 }
