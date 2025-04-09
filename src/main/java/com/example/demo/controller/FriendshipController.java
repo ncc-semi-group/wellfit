@@ -34,7 +34,7 @@ public class FriendshipController {
     public String friendList(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/loginpage";
         }
 
         List<UserDto> friends = friendshipService.getFriendsByUserId(userId);
@@ -48,7 +48,7 @@ public class FriendshipController {
     public String friendRequest(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/loginpage";
         }
 
         List<UserDto> recommandFriends = friendshipRequestService.getRecommendFriends(userId);
