@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.SearchMapper">
+
+    <select id="getFoodRecordsId" parameterType="FoodRecords" resultType="int">
+        select id
+        from food_records
+        where user_id = #{userId}
+          and date = #{date}
+          and meal_type = #{mealType}
+    </select>
+
+    <insert id="addFoodRecords" parameterType="FoodRecords">
+        insert into food_records (user_id, meal_type, date)
+        values (#{userId}, #{mealType}, #{date})
+    </insert>
+
+    <update id="updateFoodRecordsKcal" parameterType="FoodRecords">
+        update food_records
+        set kcal = kcal + #{kcal}
+        where id = #{id}
+    </update>
+
+    <select id="getRecordItemsCount" parameterType="int" resultType="int">
+        select count(*)
+        from record_items
+        where food_records_id = #{foodRecordsId}
+    </select>
+
+    <insert id="addRecordItems" parameterType="RecordItems">
+        insert into record_items (food_records_id, food_id, food_type, amount, serving)
+        values (#{foodRecordsId}, #{foodId}, #{foodType}, #{amount}, #{serving})
+    </insert>
+
+    <select id="getUserFoodFavorites" parameterType="int" resultType="FoodNutrition">
+        <!-- food_type이 'system'인 경우의 조회 -->
+        SELECT
+        ff.id AS id,
+        fn.id AS foodId,
+        'system' AS foodType,
+        fn.name AS name,
+        fn.standard,
+        fn.kcal,
+        fn.protein,
+        fn.fat,
+        fn.carbohydrate,
+        fn.sugar,
+        fn.natrium,
+        fn.cholesterol,
+        fn.saturated_fat AS saturatedFat,
+        fn.trans_fat AS transFat,
+        fn.manufacturer_name AS manufacturerName,
+        fn.serving_size AS servingSize,
+        fn.weight
+        FROM
+        food_favorites ff
+        JOIN
+        food_nutrition fn ON ff.food_id = fn.id
+        WHERE
+        ff.user_id = #{userId} AND ff.food_type = 'system'
+
+        UNION ALL
+
+        <!-- food_type이 'user'인 경우의 조회 -->
+        SELECT
+        ff.id AS id,
+        ifn.id AS foodId,
+        'user' AS foodType,
+        ifn.name AS name,
+        ifn.standard,
+        ifn.kcal,
+        ifn.protein,
+        ifn.fat,
+        ifn.carbohydrate,
+        ifn.sugar,
+        ifn.natrium,
+        ifn.cholesterol,
+        ifn.saturated_fat AS saturatedFat,
+        ifn.trans_fat AS transFat,
+        ifn.manufacturer_name AS manufacturerName,
+        ifn.serving_size AS servingSize,
+        ifn.weight
+        FROM
+        food_favorites ff
+        JOIN
+        individual_food_nutrition ifn ON ff.food_id = ifn.id
+        WHERE
+        ff.user_id = #{userId} AND ff.food_type = 'user'
+    </select>
+
+    <select id="isFoodFavorite" parameterType="FoodFavorites" resultType="int">
+        select count(*)
+        from food_favorites
+        where user_id = #{userId}
+          and food_id = #{foodId}
+          and food_type = #{foodType}
+    </select>
+
+    <insert id="addFoodFavorites" parameterType="FoodFavorites">
+        insert into food_favorites (user_id, food_id, food_type)
+        values (#{userId}, #{foodId}, #{foodType})
+    </insert>
+
+    <delete id="deleteFoodFavorites" parameterType="FoodFavorites">
+        delete
+        from food_favorites
+        where user_id = #{userId}
+          and food_id = #{foodId}
+          and food_type = #{foodType}
+    </delete>
+
+    <select id="getIndividualFoodNutrition" parameterType="int" resultType="FoodNutrition">
+        select id,
+               user_id           as userId,
+               name,
+               standard,
+               kcal,
+               protein,
+               fat,
+               carbohydrate,
+               sugar,
+               natrium,
+               cholesterol,
+               saturated_fat     as saturatedFat,
+               trans_fat         as transFat,
+               manufacturer_name as manufacturerName,
+               serving_size      as servingSize,
+               weight
+        from individual_food_nutrition
+        where user_id = #{userId}
+    </select>
+
+    <select id="getStatisticsCount" parameterType="map" resultType="int">
+        select count(*)
+        from daily_statistics
+        where user_id = #{userId}
+          and date = #{date}
+    </select>
+
+    <insert id="addDailyStatistics" parameterType="map">
+        insert into daily_statistics (user_id, date)
+        values (#{userId}, #{date})
+    </insert>
+
+    <!-- 템플릿 정보 조회 -->
+    <select id="getTemplateWithFoods" parameterType="int" resultMap="templateWithFoodsResultMap">
+        SELECT
+            ft.id AS template_id,
+            ft.name AS template_name,
+            ft.kcal AS template_kcal
+        FROM
+            food_templates ft
+        WHERE
+            ft.user_id = #{userId}
+    </select>
+
+    <!-- 템플릿 정보와 식품 이름 리스트 매핑 -->
+    <resultMap id="templateWithFoodsResultMap" type="TemplateWithFoods">
+        <id property="id" column="template_id" />
+        <result property="name" column="template_name" />
+        <result property="kcal" column="template_kcal" />
+        <collection property="foodNames" ofType="string" column="template_id" select="getFoodNamesForTemplate" />
+    </resultMap>
+
+    <!-- 템플릿 ID로 식품 이름 리스트 조회 -->
+    <select id="getFoodNamesForTemplate" parameterType="int" resultType="string">
+        SELECT
+            CASE
+                WHEN ti.food_type = 'system' THEN fn.name
+                WHEN ti.food_type = 'user' THEN ifn.name
+                ELSE NULL
+                END AS food_name
+        FROM
+            template_items ti
+                LEFT JOIN
+            food_nutrition fn ON ti.food_id = fn.id AND ti.food_type = 'system'
+                LEFT JOIN
+            individual_food_nutrition ifn ON ti.food_id = ifn.id AND ti.food_type = 'user'
+        WHERE
+            ti.food_template_id = #{value}
+          AND
+            CASE
+                WHEN ti.food_type = 'system' THEN fn.name IS NOT NULL
+                WHEN ti.food_type = 'user' THEN ifn.name IS NOT NULL
+                ELSE FALSE
+                END
+    </select>
+
+</mapper>

@@ -34,6 +34,13 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// MySQL Connector
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// elasticsearch
+	implementation 'org.springframework.data:spring-data-elasticsearch:4.0.5.RELEASE'
+
+
 	// thymleaf-layout-dialect
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
 }

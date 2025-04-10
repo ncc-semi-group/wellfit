@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.FoodRecordMapper">
+
+    <select id="getFoodRecordItems" parameterType="int" resultType="FoodNutrition">
+        <!-- food_type이 'system'인 경우의 조회 -->
+        select
+        ri.id as id,
+        ri.amount as amount,
+        ri.serving as serving,
+        fn.id as foodId,
+        'system' as foodType,
+        fn.name as name,
+        fn.standard,
+        fn.kcal,
+        fn.protein,
+        fn.fat,
+        fn.carbohydrate,
+        fn.sugar,
+        fn.natrium,
+        fn.cholesterol,
+        fn.saturated_fat as saturatedFat,
+        fn.trans_fat as transFat,
+        fn.manufacturer_name as manufacturerName
+        from
+        record_items ri
+        join
+        food_nutrition fn on ri.food_id = fn.id
+        where
+        ri.food_records_id = #{foodRecordsId}
+        and ri.food_type = 'system'
+
+        union all
+
+        <!-- food_type이 'user'인 경우의 조회 -->
+        select
+        ri.id as id,
+        ri.amount as amount,
+        ri.serving as serving,
+        ifn.id as foodId,
+        'user' as foodType,
+        ifn.name as name,
+        ifn.standard,
+        ifn.kcal,
+        ifn.protein,
+        ifn.fat,
+        ifn.carbohydrate,
+        ifn.sugar,
+        ifn.natrium,
+        ifn.cholesterol,
+        ifn.saturated_fat as saturatedFat,
+        ifn.trans_fat as transFat,
+        ifn.manufacturer_name as manufacturerName
+        from
+        record_items ri
+        join
+        individual_food_nutrition ifn on ri.food_id = ifn.id
+        where
+        ri.food_records_id = #{foodRecordsId}
+        and ri.food_type = 'user'
+    </select>
+
+    <update id="updateDailyStatisticsFromFoodRecords" parameterType="map">
+        UPDATE daily_statistics ds
+            JOIN (
+                SELECT
+                    fr.user_id,
+                    fr.date,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.kcal * ri.amount / 100 ELSE ifn.kcal * ri.amount / 100 END), 0) as total_kcal,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.protein * ri.amount / 100 ELSE ifn.protein * ri.amount / 100 END), 0) as total_protein,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.fat * ri.amount / 100 ELSE ifn.fat * ri.amount / 100 END), 0) as total_fat,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.carbohydrate * ri.amount / 100 ELSE ifn.carbohydrate * ri.amount / 100 END), 0) as total_carbohydrate,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.sugar * ri.amount / 100 ELSE ifn.sugar * ri.amount / 100 END), 0) as total_sugar,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.natrium * ri.amount / 100 ELSE ifn.natrium * ri.amount / 100 END), 0) as total_natrium,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.cholesterol * ri.amount / 100 ELSE ifn.cholesterol * ri.amount / 100 END), 0) as total_cholesterol,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.saturated_fat * ri.amount / 100 ELSE ifn.saturated_fat * ri.amount / 100 END), 0) as total_saturated_fat,
+                    IFNULL(SUM(CASE WHEN ri.food_type = 'system' THEN fn.trans_fat * ri.amount / 100 ELSE ifn.trans_fat * ri.amount / 100 END), 0) as total_trans_fat
+                FROM food_records fr
+                         LEFT JOIN record_items ri ON fr.id = ri.food_records_id
+                         LEFT JOIN food_nutrition fn ON ri.food_id = fn.id AND ri.food_type = 'system'
+                         LEFT JOIN individual_food_nutrition ifn ON ri.food_id = ifn.id AND ri.food_type = 'user'
+                WHERE fr.user_id = #{userId} AND fr.date = #{date}
+                GROUP BY fr.user_id, fr.date
+            ) as nutrition_sums
+            ON ds.user_id = nutrition_sums.user_id AND ds.date = nutrition_sums.date
+        SET
+            ds.total_kcal = nutrition_sums.total_kcal,
+            ds.total_protein = nutrition_sums.total_protein,
+            ds.total_fat = nutrition_sums.total_fat,
+            ds.total_carbohydrate = nutrition_sums.total_carbohydrate,
+            ds.total_sugar = nutrition_sums.total_sugar,
+            ds.total_natrium = nutrition_sums.total_natrium,
+            ds.total_cholesterol = nutrition_sums.total_cholesterol,
+            ds.total_saturated_fat = nutrition_sums.total_saturated_fat,
+            ds.total_trans_fat = nutrition_sums.total_trans_fat
+        WHERE ds.user_id = #{userId} AND ds.date = #{date}
+    </update>
+
+    <delete id="deleteFoodRecordItems" parameterType="int">
+        delete
+        from record_items
+        where id = #{id}
+    </delete>
+    
+    <insert id="addFoodTemplate" parameterType="map">
+        insert into food_templates (user_id, name, kcal)
+        values (#{userId}, #{name}, #{kcal})
+    </insert>
+
+    <select id="getFoodTemplateId" parameterType="map" resultType="int">
+        select id
+        from food_templates
+        where user_id = #{userId} and name = #{name} and kcal = #{kcal}
+    </select>
+
+    <select id="getFoodRecordItemsOnly" parameterType="int" resultType="TemplateItems">
+        select
+        food_id as foodId,
+        food_type as foodType,
+        amount,
+        serving
+        from record_items
+        where food_records_id = #{foodRecordsId}
+    </select>
+
+    <insert id="addFoodTemplateItems" parameterType="list">
+        insert into template_items (food_template_id, food_id, food_type, amount, serving)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.foodTemplateId}, #{item.foodId}, #{item.foodType}, #{item.amount}, #{item.serving})
+        </foreach>
+    </insert>
+
+</mapper>

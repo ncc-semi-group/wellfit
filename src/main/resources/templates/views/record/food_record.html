@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>식단 기록</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/food_record.css}">
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    
+    <div id="toast-container">
+        <div id="toast-message" class="toast-message">
+            <span id="toast-text"></span>
+        </div>
+    </div>
+    
+    <!-- 헤더 영역 -->
+    <div class="top-layout">
+        <div class="header">
+            <div class="header-top">
+                <div class="back-title-group">
+                    <div class="back-button"><i class="bi bi-arrow-left"></i></div>
+                    <div class="title" th:text="${mealType}" th:attr="data-year=${year},
+                    data-month=${month}, data-day=${day}"></div>
+                </div>
+                <div class="subtitle" id="openNutritionModal">영양소 상세</div>
+            </div>
+            <div class="header-line"></div>
+        </div>
+        
+        <!-- 칼로리 및 영양소 정보 영역 -->
+        <div class="chart-container">
+            <div class="chart-row">
+                <div class="pie-chart-container">
+                    <div class="pie-chart" id="nutritionChart"></div>
+                </div>
+                <div class="calories">
+                    <span class="calorie-number"></span>
+                    <span class="calorie-unit">kcal</span>
+                </div>
+            </div>
+            
+            <!-- 영양소 정보 영역 -->
+            <div class="nutrients">
+                <div class="nutrient">
+                    <div class="nutrient-label">
+                        <span class="nutrient-dot carb-dot"></span>
+                        <span></span>
+                    </div>
+                    <div class="nutrient-value carb-val">g</div>
+                </div>
+                <div class="nutrient">
+                    <div class="nutrient-label">
+                        <span class="nutrient-dot protein-dot"></span>
+                        <span></span>
+                    </div>
+                    <div class="nutrient-value protein-val">g</div>
+                </div>
+                <div class="nutrient">
+                    <div class="nutrient-label">
+                        <span class="nutrient-dot fat-dot"></span>
+                        <span></span>
+                    </div>
+                    <div class="nutrient-value fat-val">g</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 음식 목록 영역 -->
+    <div class="menu-section">
+        <div class="menu-header">
+            <div class="menu-title" th:text="${mealType + ' 메뉴'}"></div>
+            <div class="template-button">템플릿 저장</div>
+        </div>
+        
+        <div class="food-items-container">
+            <div class="food-items-wrapper">
+                <th:block th:each="e : ${foodRecordItems}">
+                    <div class="food-item" th:with="standard = ${e.standard == '100g' ? 'g' : 'ml'},
+                    kcal = ${#numbers.formatInteger(e.kcal * (e.amount / 100), 1)}">
+                        <div class="food-info" th:attr="
+                        data-id=${e.id},
+                        data-food_id=${e.foodId},
+                        data-food_type=${e.foodType},
+                        data-food_amount=${e.amount},
+                        data-food_serving=${e.serving},
+                        data-kcal=${kcal},
+                        data-carbohydrate=${e.carbohydrate * (e.amount / 100)},
+                        data-protein=${e.protein * (e.amount / 100)},
+                        data-fat=${e.fat * (e.amount / 100)},
+                        data-sugar=${e.sugar * (e.amount / 100)},
+                        data-saturated_fat=${e.saturatedFat * (e.amount / 100)},
+                        data-trans_fat=${e.transFat * (e.amount / 100)},
+                        data-cholesterol=${e.cholesterol * (e.amount / 100)},
+                        data-natrium=${#numbers.formatInteger(e.natrium * (e.amount / 100), 1)}">
+                            <div class="food-name" th:text="${e.name}"></div>
+                            <div class="food-portion" th:with="amount = ${e.amount % 1 == 0 ? #numbers.formatInteger(e.amount, 1) : e.amount}"
+                                 th:text="${e.serving == 0 ? amount + standard : e.serving + '인분 (' + amount + standard + ')'}"></div>
+                        </div>
+                        <div class="food-right">
+                            <span class="food-calorie" th:text="${kcal + ' kcal'}"></span>
+                            <span class="remove-button">×</span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 하단 버튼 영역 -->
+    <div class="bottom-buttons">
+        <div class="add-button"><i class="bi bi-plus"></i></div>
+        <div class="complete-button">수정 완료</div>
+    </div>
+    
+    
+    <!-- 영양소 상세 모달 -->
+    <div class="modal-overlay" id="nutritionModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">영양정보</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="nutrition-info-list">
+                    <!-- 총 열량 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">총 열량</div>
+                        <div class="nutrition-info-value" id="totalCaloriesValue">845 kcal</div>
+                    </div>
+                    
+                    <!-- 구분선 -->
+                    <div class="nutrition-divider"></div>
+                    
+                    <!-- 탄수화물 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">탄수화물</div>
+                        <div class="nutrition-info-value" id="carbValue">60 g</div>
+                    </div>
+                    
+                    <!-- 당 -->
+                    <div class="nutrition-info-item sub-item">
+                        <div class="nutrition-info-label">당</div>
+                        <div class="nutrition-info-value sub-value" id="sugarValue">15 g</div>
+                    </div>
+                    
+                    <!-- 구분선 -->
+                    <div class="nutrition-divider"></div>
+                    
+                    <!-- 단백질 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">단백질</div>
+                        <div class="nutrition-info-value" id="proteinValue">60 g</div>
+                    </div>
+                    
+                    <!-- 구분선 -->
+                    <div class="nutrition-divider"></div>
+                    
+                    <!-- 지방 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">지방</div>
+                        <div class="nutrition-info-value" id="fatValue">20 g</div>
+                    </div>
+                    
+                    <!-- 포화지방 -->
+                    <div class="nutrition-info-item sub-item">
+                        <div class="nutrition-info-label">포화지방</div>
+                        <div class="nutrition-info-value sub-value" id="saturatedFatValue">7.7 g</div>
+                    </div>
+                    
+                    <!-- 트랜스지방 -->
+                    <div class="nutrition-info-item sub-item">
+                        <div class="nutrition-info-label">트랜스지방</div>
+                        <div class="nutrition-info-value sub-value" id="transFatValue">0 g</div>
+                    </div>
+                    
+                    <!-- 구분선 -->
+                    <div class="nutrition-divider"></div>
+                    
+                    <!-- 나트륨 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">나트륨</div>
+                        <div class="nutrition-info-value" id="natriumValue">500 mg</div>
+                    </div>
+                    
+                    <!-- 구분선 -->
+                    <div class="nutrition-divider"></div>
+                    
+                    <!-- 콜레스테롤 -->
+                    <div class="nutrition-info-item">
+                        <div class="nutrition-info-label">콜레스테롤</div>
+                        <div class="nutrition-info-value" id="cholesterolValue">40 mg</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 템플릿 입력 모달 -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">템플릿 이름 입력</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="template-input-container">
+                    <div class="weight-input-group">
+                        <input type="text" class="template-input" id="templateInput" placeholder="여기에 입력" maxlength="10">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button submit-button" id="templateSubmitButton">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    
+    <script th:src="@{/js/record/food_record.js}"></script>
+
+</th:block>
+</body>
+
+</html>

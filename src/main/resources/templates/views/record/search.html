@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>식품 검색</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/search.css}">
+        
+        <style>
+            h1 {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+        </style>
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    
+    <div id="toast-container">
+        <div id="toast-message" class="toast-message">
+            <span id="toast-text"></span>
+        </div>
+    </div>
+    
+    <div class="header">
+        <div class="header-container">
+            <span class="back-arrow"><i class="bi bi-arrow-left"></i></span>
+            <div class="search-bar">
+                <span class="search-icon">⚲</span>
+                <input type="text" id="search-food-input" placeholder="무슨 음식을 드셨나요?">
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab" id="tab-favorites">즐겨찾기</div>
+            <div class="tab active" id="tab-templates">템플릿</div>
+            <div class="tab" id="tab-custom">직접 등록</div>
+        </div>
+    </div>
+    
+    <!-- 즐겨찾기 탭 콘텐츠 -->
+    <div id="favorites-content" class="content">
+        <div class="info-bar">
+            <div class="total-count" th:text="'총 ' + ${favoriteList.size()} + '개'"></div>
+        </div>
+        
+        <div class="food-list favorites-list active">
+            <th:block th:each="e : ${favoriteList}">
+                <th:block th:if="${e != null}" th:with="standard = ${e.standard == '100g' ? 'g' : 'ml'},
+                manufacturerName = ${e.manufacturerName != null ? e.manufacturerName : ''},
+                servingSize = ${(e.servingSize != null && e.servingSize > 0) ? e.servingSize :
+                            (e.weight != null and e.weight <= 350 ? T(java.lang.Math).round(e.weight) : 100)},
+                serving = ${'인분 (' + servingSize + standard + ')'},
+                kcal = (${T(java.lang.Math).round(e.kcal * (servingSize / 100.0))})">
+                    <div class="food-item"
+                         th:attr="data-id=${e.foodId},
+                        data-name=${e.name},
+                        data-manufacturer_name=${manufacturerName},
+                        data-kcal=${e.kcal},
+                        data-default_kcal=${kcal},
+                        data-carbohydrate=${e.carbohydrate},
+                        data-protein=${e.protein},
+                        data-fat=${e.fat},
+                        data-standard=${standard},
+                        data-serving_size=${servingSize},
+                        data-serving=${serving},
+                        data-sugar=${e.sugar},
+                        data-saturated_fat=${e.saturatedFat},
+                        data-trans_fat=${e.transFat},
+                        data-cholesterol=${e.cholesterol},
+                        data-natrium=${e.natrium},
+                        data-food_type=${e.foodType}">
+                        <div class="food-info">
+                            <div class="product-container">
+                                <span class="product-name" th:text="${e.name}"></span>
+                                <span class="brand-name" th:text="${manufacturerName}"></span>
+                            </div>
+                            <div class="food-serving" th:text="'1' + ${serving}"></div>
+                        </div>
+                        <div class="food-actions">
+                            <div class="food-calories" th:text="${kcal} + 'kcal'"></div>
+                            <div class="add-button">
+                                <i class="bi bi-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        
+        </div>
+    </div>
+    
+    <!-- 템플릿 탭 콘텐츠 -->
+    <div id="templates-content" class="content" style="display: none;">
+        <div class="info-bar">
+            <div class="total-count">총 3개</div>
+        </div>
+        
+        <div class="food-list templates-list active">
+            <th:block th:each="e : ${templateList}">
+                <th:block th:if="${e != null}">
+                    <div class="template-item">
+                        <div class="template-info">
+                            <div class="food-name" th:text="${e.name}"></div>
+                            <div class="food-item-list" th:text="${#strings.arrayJoin(e.foodNames, ', ')}"></div>
+                        </div>
+                        <div class="food-calories" th:text="${e.kcal + 'kcal'}"></div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    
+    <!-- 직접 등록 탭 콘텐츠 -->
+    <div id="custom-content" class="content" style="display: none;">
+        <div class="info-bar">
+            <div class="total-count" th:text="'총 ' + ${individualList.size()} + '개'"></div>
+            <div class="register-button">등록하기</div>
+        </div>
+        
+        <div class="food-list custom-list active">
+            <th:block th:each="e : ${individualList}">
+                <th:block th:if="${e != null}" th:with="standard = ${e.standard == '100g' ? 'g' : 'ml'},
+                manufacturerName = ${e.manufacturerName != null ? e.manufacturerName : ''},
+                servingSize = ${(e.servingSize != null && e.servingSize > 0) ? e.servingSize :
+                            (e.weight != null and e.weight <= 350 ? T(java.lang.Math).round(e.weight) : 100)},
+                serving = ${'인분 (' + servingSize + standard + ')'},
+                kcal = (${T(java.lang.Math).round(e.kcal * (servingSize / 100.0))})">
+                    <div class="food-item"
+                         th:attr="data-id=${e.id},
+                        data-name=${e.name},
+                        data-manufacturer_name=${manufacturerName},
+                        data-kcal=${e.kcal},
+                        data-default_kcal=${kcal},
+                        data-carbohydrate=${e.carbohydrate},
+                        data-protein=${e.protein},
+                        data-fat=${e.fat},
+                        data-standard=${standard},
+                        data-serving_size=${servingSize},
+                        data-serving=${serving},
+                        data-sugar=${e.sugar},
+                        data-saturated_fat=${e.saturatedFat},
+                        data-trans_fat=${e.transFat},
+                        data-cholesterol=${e.cholesterol},
+                        data-natrium=${e.natrium}"
+                         data-food_type="user">
+                        <div class="food-info">
+                            <div class="product-container">
+                                <span class="product-name" th:text="${e.name}"></span>
+                                <span class="brand-name" th:text="${manufacturerName}"></span>
+                            </div>
+                            <div class="food-serving" th:text="'1' + ${serving}"></div>
+                        </div>
+                        <div class="food-actions">
+                            <div class="food-calories" th:text="${kcal} + 'kcal'"></div>
+                            <div class="add-button">
+                                <i class="bi bi-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    
+    <!-- 음식 검색 결과 -->
+    <div id="search-content" class="content" style="display: none;">
+        <div class="info-bar">
+            <div class="total-count">총 0개</div>
+        </div>
+        
+        <div class="food-list custom-list active" id="search-results">
+        
+        </div>
+    </div>
+    
+    <!-- 음식 추가 모달 -->
+    <div class="modal-overlay" id="foodAddModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title"></div>
+            </div>
+            <div class="modal-body">
+                <div class="nutrition-info">
+                    <div class="nutrition-details">
+                        <div class="nutrition-item">
+                            <span class="nutrition-label carb">탄</span>
+                            <span class="nutrition-value carb">368g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label protein">단</span>
+                            <span class="nutrition-value protein">9g</span>
+                        </div>
+                        <div class="nutrition-item">
+                            <span class="nutrition-label fat">지</span>
+                            <span class="nutrition-value fat">8g</span>
+                        </div>
+                    </div>
+                    <div class="total-calories">500kcal</div>
+                </div>
+                
+                <div class="serving-info">
+                    <div class="serving-option active" id="serving-size">인분(100g)</div>
+                    <div class="serving-option" id="serving-standard">g</div>
+                </div>
+                
+                <div class="quantity-control">
+                    <button class="quantity-btn decrease">-</button>
+                    <input type="number" class="quantity-value" value="1">
+                    <button class="quantity-btn increase">+</button>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="action-button detail-button">음식 상세</button>
+                    <button class="action-button add-button-large">추가하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 음식 상세 모달 -->
+    <div class="modal-overlay" id="foodDetailModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <div class="header-icons">
+                        <span class="favorite-icon"><i class="bi bi-star"></i></span>
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div class="plus-icon">
+                        <i class="bi bi-plus"></i>
+                    </div>
+                </div>
+                <div class="modal-title"></div>
+            </div>
+            <div class="modal-body">
+                <div class="nutrition-header">
+                    <div>1회 제공량</div>
+                    <div class="detail-serving">1인분 (200g)</div>
+                </div>
+                
+                <table class="nutrition-table">
+                    <tr class="calories-row">
+                        <td>칼로리</td>
+                        <td class="detail-kcal">315kcal</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="percentage-header">% 일일 권장 섭취량*</td>
+                    </tr>
+                    <tr>
+                        <td><span class="nutrient-name">총 지방</span> <span class="measurement"><span
+                                class="detail-fat"></span> g</span></td>
+                        <td><span class="detail-fat-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td class="indented">포화 지방 <span class="detail-saturated-fat"></span> g</td>
+                        <td><span class="detail-saturated-fat-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td class="indented">트랜스 지방 <span class="detail-trans-fat"></span> g</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><span class="nutrient-name">콜레스테롤</span> <span class="measurement"><span
+                                class="detail-cholesterol"></span> mg</span></td>
+                        <td><span class="detail-cholesterol-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td><span class="nutrient-name">나트륨</span> <span class="measurement"><span
+                                class="detail-natrium"></span> mg</span></td>
+                        <td><span class="detail-natrium-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td><span class="nutrient-name">총 탄수화물</span> <span class="measurement"><span
+                                class="detail-carbohydrate"></span> g</span></td>
+                        <td><span class="detail-carbohydrate-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td class="indented">당류 <span class="detail-sugar"></span> g</td>
+                        <td><span class="detail-sugar-p"></span> %</td>
+                    </tr>
+                    <tr>
+                        <td><span class="nutrient-name">단백질</span> <span class="measurement"><span
+                                class="detail-protein"></span> g</span></td>
+                        <td><span class="detail-protein-p"></span> %</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-button" th:text="${foodRecordsCount}">5</div>
+</div>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/record/search.js}"></script>
+    
+    <script>
+    
+    </script>
+</th:block>
+</body>
+
+</html>
