@@ -36,11 +36,13 @@
     <update id="mypageUpdateUser" parameterType="UserDto">
         UPDATE user
         SET 
-            email = #{email}, password = #{password}, nickname = #{nickname}, profile_image = #{profileImage}, 
+            nickname = #{nickname},
             gender = #{gender}, age = #{age}, height = #{height}, activity_level = #{activityLevel}, 
-            current_weight = #{currentWeight}, goal_weight = #{goalWeight}, cheating_day = #{cheatingDay}, 
-            type = #{type}, carbohydrate = #{carbohydrate}, protein = #{protein}, fat = #{fat}, 
-            created_at = #{createdAt}, my_intro = #{myIntro}
+            current_weight = #{currentWeight}, goal_weight = #{goalWeight}, type = #{type},
+            created_at = now(), my_intro = #{myIntro}
+        <if test="profileImage !=null">
+			,profile_image = #{profileImage} <!-- null이 아니면 update문에 들어가야하므로 ,도 줘야함** -->
+		</if>
         WHERE id = #{id}
     </update>
     
