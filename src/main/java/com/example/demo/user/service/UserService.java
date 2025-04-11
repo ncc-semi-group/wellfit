@@ -18,18 +18,6 @@ import com.example.demo.user.mapper.UserMapper;
 public class UserService {
 	private final UserMapper userMapper;
 
-	public List<UserDto> getAllUsers() {
-		return userMapper.getAllUsers();
-	}
-
-	public UserDto getUserById(int id) {
-		return userMapper.getUserById(id);
-	}
-
-	public UserDto getUserByEmail(String email) {
-		return userMapper.getUserByEmail(email);
-	}
-
 	public UserDto login(String email, String password) {
 		UserDto user = userMapper.getUserByEmail(email);
 		if (user == null) return null;
@@ -64,7 +52,7 @@ public class UserService {
 		user.setPassword(hashedPassword);
 		user.setNickname(nickname);
 
-		int result = userMapper.insertUser(user); // user 저장
+		int result = userMapper.insertUserAccount(user); // user 저장
 		userMapper.insertUserSalt(user.getId(), salt); // salt 저장
 
 		return result > 0;
@@ -72,20 +60,6 @@ public class UserService {
 
 	public String getSaltByUserId(int userId) {
 		return userMapper.getSaltByUserId(userId);
-	}
-
-	public void deleteUser(int id) {
-		userMapper.deleteUser(id);
-	}
-
-	public List<UserDto> searchUsersByNickname(String nickname) {
-		try {
-			return userMapper.searchUsersByNickname(nickname);
-		} catch (Exception e) {
-			System.out.println("닉네임 검색 중 오류 발생: " + e.getMessage());
-			e.printStackTrace();
-			throw e;
-		}
 	}
 	
     @Value("${file.upload-dir}")
@@ -162,14 +136,6 @@ public class UserService {
         }
         return false;
     }
-
-    public UserDto login(String email, String password) {
-        UserDto user = userMapper.getUserById(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
-    }
     
     // ==========================
 
@@ -185,7 +151,7 @@ public class UserService {
 
     // 이메일로 사용자 조회
     public UserDto getUserByEmail(String email) {
-        return userMapper.selectUserByEmail(email);
+        return userMapper.getUserByEmail(email);
     }
 
     // 사용자 정보 업데이트
@@ -216,6 +182,6 @@ public class UserService {
     }
 
     public void insertUser(UserDto userDto) {
-        userMapper.insertUser(userDto);
+    	userMapper.insertUser(userDto);
     }
 }

@@ -110,15 +110,20 @@
 	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
 	</select>
   
-  <!-- 로그인: 이메일로 사용자 조회 -->
+  	<!-- 로그인: 이메일로 사용자 조회 -->
     <select id="getUserByEmail" parameterType="String" resultType="UserDto">
         SELECT id, email, password
         FROM user
         WHERE email = #{email}
     </select>
+    
+    <!-- 사용자 ID로 Salt 조회 -->
+    <select id="getSaltByUserId" parameterType="int" resultType="String">
+        SELECT salt FROM user_salt WHERE user_id = #{userId}
+    </select>
 
     <!-- 유저 삽입 -->
-	<insert id="insertUser" parameterType="UserDto">
+	<insert id="insertUserAccount" parameterType="UserDto">
 	    INSERT INTO user (email, password, nickname)
 	    VALUES (#{email}, #{password}, #{nickname});
 	    <selectKey resultType="int" keyProperty="id" order="AFTER">
