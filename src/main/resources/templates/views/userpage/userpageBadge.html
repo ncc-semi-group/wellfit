@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>사용자 프로필</title>
+    
+    <!-- 페이지별 css -->
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/userpage/userpage_badge.css}">
+	</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="profile-container">
+    	<div class="profile-header">
+        	<i class="bi bi-arrow-left back-btn"></i>
+            <h3 class="profile-title" th:text="${user.nickname} + '님의 프로필'">사용자 프로필</h3>
+        </div>
+        
+        <div class="profile-content">
+            <img class="my-profile-image" th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
+                user.profileImage : 
+                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" alt="프로필 이미지">
+            <div class="profile-info">
+                <div class="profile-stats">
+                    <div class="stat-item friend-link" th:data-user-id="${user.id}">
+                        <div class="stat-number" th:text="${user.friendCount}"></div>
+                        <div class="stat-label">친구</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${user.userId2}"></div>
+                        <div class="stat-label">팔로워</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${user.userId1}"></div>
+                        <div class="stat-label">팔로잉</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="profile-name" th:text="${user.nickname}"></div>
+        <h5 class="info" th:text="${user.gender == 'male' ? '남성' : '여성'} + ' / ' + ${user.height} + ' / ' + ${user.currentWeight}"></h5>
+        <div class="user_intro">
+            <h6>소개</h6>
+            <h6 th:text="${user.myIntro != null and !user.myIntro.isEmpty() ? user.myIntro : '안녕하세요'}"></h6>
+        </div>
+        
+        <div class="box">
+	       	<div class="box-title1" th:data-user-id="${user.id}">
+				<h6>기록</h6>
+			</div>
+			<div class="box-title2">
+				<h6>뱃지</h6>
+			</div>
+		</div>
+		
+		<div class="badge-container">
+		<div class="badge" th:each="badge : ${badgeList}" 
+			 th:class="${badge.isAchieved == 1 ? 'badge-item' : 'badge-item not-achieved'}">
+			<img th:src="@{'/static/images/' + ${badge.badgeImages}}" class="badge-image">
+			<div class="badge-name" th:text="${badge.badgeName}"></div>
+			<div class="badge-content" th:text="${badge.badgeContents}"></div>
+			<div class="progress-container" th:if="${badge.isAchieved != 1}">
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" 
+						 th:style="'width: ' + ${(badge.condition_count * 100) / badge.conditionValue} + '%'"
+						 th:attr="aria-valuenow=${badge.condition_count},aria-valuemin='0',aria-valuemax=${badge.conditionValue}">
+					</div>
+				</div>
+				<small th:text="${badge.condition_count + '/' + badge.conditionValue}"></small>
+			</div>
+		</div>
+	</div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/userpage/userpage_badge.js}"></script>
+</th:block>
+
+</body>
+</html>

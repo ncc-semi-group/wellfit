@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>좋아요 목록</title>
+    
+    <!-- 페이지별 css -->
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/mypage/mypage_like.css}">
+	</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h2 class="title">내 좋아요 목록</h2>
+    </div>
+
+    <div class="category-title">
+        <span class="tag-text" th:text="${'#' + tag}"></span>
+    </div>
+
+    <div class="posts-grid">
+        <div th:if="${posts != null and !posts.empty}" th:each="post : ${posts}" class="post-item" th:data-post-id="${post.id}">
+            <img th:src="@{${post.thumbnailImage != null ? '/static/images/' + post.thumbnailImage : '/static/images/no-image.png'}}"
+                 class="post-image" 
+                 th:alt="${post.content}">
+            <i th:if="${post.imageCount > 1}" class="bi bi-files multiple-images-icon"></i>
+        </div>
+        <div th:if="${posts == null or posts.empty}" class="no-posts">
+            <p>해당 태그의 좋아요한 게시물이 없습니다.</p>
+        </div>
+    </div>
+</div>
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage_like.js}"></script>
+</th:block>
+</body>
+</html> 

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>내 정보 수정</title>
+    
+    <!-- 페이지별 css -->
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/mypage/mypage_update.css}">
+	</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h3 class="title">프로필 수정</h3>
+    </div>
+
+    <div class="container">
+        <form th:action="@{/update}" method="post" enctype="multipart/form-data" th:object="${dto}">
+            <input type="hidden" th:field="*{id}">
+            
+            <div class="profile-section text-center">
+                <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage : '/static/images/default-profile.png'}}" 
+                     class="profile-image" id="preview-image">
+                <div class="mb-3">
+                    <input type="file" class="form-control" id="profile-upload" name="upload" 
+                           accept="image/*" onchange="previewImage(this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nickname">닉네임</label>
+                <input type="text" class="form-control" id="nickname" th:field="*{nickname}" required>
+            </div>
+
+            <div class="form-group">
+                <label>성별</label>
+                <select class="form-control" th:field="*{gender}">
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="age">나이</label>
+                <input type="number" class="form-control" id="age" th:field="*{age}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="height">키 (cm)</label>
+                <input type="number" class="form-control" id="height" th:field="*{height}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="currentWeight">현재 체중 (kg)</label>
+                <input type="number" class="form-control" id="currentWeight" th:field="*{currentWeight}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="goalWeight">목표 체중 (kg)</label>
+                <input type="number" class="form-control" id="goalWeight" th:field="*{goalWeight}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="myIntro">소개</label>
+                <input type="text" class="form-control" id="myIntro" th:field="*{myIntro}" required>
+            </div>
+
+            <div class="form-group">
+                <label>활동 수준</label>
+                <select class="form-control" th:field="*{activityLevel}">
+                    <option value="Sedentary">거의 운동하지 않음</option>
+                    <option value="Lightly Active">가벼운 운동 (주 1-3회)</option>
+                    <option value="Moderately Active">중간 강도 운동 (주 3-5회)</option>
+                    <option value="Very Active">높은 강도 운동 (주 6-7회)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>식단 유형</label>
+                <select class="form-control" th:field="*{type}">
+                    <option value="custom">커스텀</option>
+                    <option value="common">일반식</option>
+                    <option value="health">건강식</option>
+                    <option value="quito">키토</option>
+                    <option value="vegan">비건</option>
+                </select>
+            </div>
+
+            <div class="text-center mt-4 mb-5">
+                <button type="submit" class="btn btn-update">수정하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage_update.js}"></script>
+</th:block>
+
+</body>
+</html>

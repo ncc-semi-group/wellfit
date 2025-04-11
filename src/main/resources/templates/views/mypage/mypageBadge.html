@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+<title>나의 뱃지</title>
+
+<!-- 페이지별 css -->
+<th:block layout:fragment="css">
+	<link rel="stylesheet" th:href="@{/css/mypage/mypage_badge.css}">
+</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+		<h3 class="title">나의 뱃지</h3>
+	</div>
+	<div class="box-title">
+		<h6>뱃지</h6>
+	</div>
+	
+	<div class="badge-container">
+		<div class="badge" th:each="badge : ${badgeList}" 
+			 th:class="${badge.isAchieved == 1 ? 'badge-item' : 'badge-item not-achieved'}">
+			<img th:src="@{'/static/images/' + ${badge.badgeImages}}" class="badge-image">
+			<div class="badge-name" th:text="${badge.badgeName}"></div>
+			<div class="badge-content" th:text="${badge.badgeContents}"></div>
+			<div class="progress-container" th:if="${badge.isAchieved != 1}">
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" 
+						 th:style="'width: ' + ${(badge.condition_count * 100) / badge.conditionValue} + '%'"
+						 th:attr="aria-valuenow=${badge.condition_count},aria-valuemin='0',aria-valuemax=${badge.conditionValue}">
+					</div>
+				</div>
+				<small th:text="${badge.condition_count + '/' + badge.conditionValue}"></small>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage_badge.js}"></script>
+</th:block>
+</body>
+</html>
