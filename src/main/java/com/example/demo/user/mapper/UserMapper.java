@@ -3,7 +3,8 @@ package com.example.demo.user.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
+
 import java.util.List;
 
 @Mapper

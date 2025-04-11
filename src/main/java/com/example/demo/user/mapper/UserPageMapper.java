@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.UserDto;
 
 @Mapper
 public interface UserPageMapper {

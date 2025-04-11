@@ -1,7 +1,8 @@
 package com.example.demo.daily.controller;
 
 import com.example.demo.daily.service.DailyStatisticsService;
-import com.example.demo.dto.DailyStatisticsDto;
+import com.example.demo.dto.statistics.DailyStatisticsDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;

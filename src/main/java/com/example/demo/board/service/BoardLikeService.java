@@ -1,8 +1,9 @@
 package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardLikeMapper;
-import com.example.demo.dto.BoardDto;
-import com.example.demo.dto.BoardLikeDto;
+import com.example.demo.dto.board.BoardDto;
+import com.example.demo.dto.board.BoardLikeDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.user;
 
 import java.sql.Timestamp;
 import lombok.Data;

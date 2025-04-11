@@ -1,7 +1,8 @@
 package com.example.demo.board.mapper;
 
-import com.example.demo.dto.CommentDto;
 import org.apache.ibatis.annotations.*;
+
+import com.example.demo.dto.board.CommentDto;
 
 import java.util.List;
 

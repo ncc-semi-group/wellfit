@@ -1,7 +1,8 @@
 package com.example.demo.board.mapper;
 
-import com.example.demo.dto.BoardDto;
 import org.apache.ibatis.annotations.*;
+
+import com.example.demo.dto.board.BoardDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.hashtag;
 
 import lombok.Data;
 import org.apache.ibatis.type.Alias;

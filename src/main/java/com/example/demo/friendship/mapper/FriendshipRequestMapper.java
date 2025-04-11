@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.dto.FriendshipRequestDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.friendship.FriendshipRequestDto;
+import com.example.demo.dto.user.UserDto;
 
 @Mapper
 public interface FriendshipRequestMapper {

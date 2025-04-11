@@ -98,13 +98,13 @@
     <!-- ================================== -->
     
     <!-- 모든 유저 조회 -->
-    <select id="getAllUsers" resultType="com.example.demo.dto.UserDto">
+    <select id="getAllUsers" resultType="com.example.demo.dto.user.UserDto">
         SELECT id, email, nickname, profile_image 
         FROM user
     </select>
 
 	<!-- 닉네임으로 유저 조회 -->
-    <select id="searchUsersByNickname" resultType="com.example.demo.dto.UserDto">
+    <select id="searchUsersByNickname" resultType="com.example.demo.dto.user.UserDto">
 	    SELECT id, email, nickname, profile_image as profileImage, my_intro as myIntro
 	    FROM user
 	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')

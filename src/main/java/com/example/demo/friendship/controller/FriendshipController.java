@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.dto.FriendshipDto;
-import com.example.demo.dto.FriendshipRequestDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.friendship.FriendshipDto;
+import com.example.demo.dto.friendship.FriendshipRequestDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.service.FriendshipRequestService;
 import com.example.demo.friendship.service.FriendshipService;
 import com.example.demo.user.service.UserPageService;
