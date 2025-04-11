@@ -1,6 +1,6 @@
 package com.example.demo.record.service;
 
-import com.example.demo.dto.FoodRecordsDto;
+import com.example.demo.dto.record.FoodRecordsDto;
 import com.example.demo.record.mapper.RecordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

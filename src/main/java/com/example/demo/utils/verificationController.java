@@ -12,7 +12,6 @@ public class verificationController {
     public ResponseEntity<?> verify(HttpSession session) {
         // 세션에서 사용자 ID 가져오기
         Integer userId = (Integer) session.getAttribute("userId");
-        System.out.println(userId);
         
         // 사용자 ID가 null인 경우
         if (userId == null) {

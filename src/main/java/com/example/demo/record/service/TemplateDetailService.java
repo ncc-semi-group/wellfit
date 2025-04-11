@@ -1,8 +1,8 @@
 package com.example.demo.record.service;
 
-import com.example.demo.dto.FoodNutritionDto;
-import com.example.demo.dto.FoodRecordsDto;
-import com.example.demo.dto.TemplateItemsDto;
+import com.example.demo.dto.record.FoodNutritionDto;
+import com.example.demo.dto.record.FoodRecordsDto;
+import com.example.demo.dto.record.TemplateItemsDto;
 import com.example.demo.record.mapper.FoodRecordMapper;
 import com.example.demo.record.mapper.SearchMapper;
 import com.example.demo.record.mapper.TemplateDetailMapper;

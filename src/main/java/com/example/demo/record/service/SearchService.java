@@ -1,6 +1,6 @@
 package com.example.demo.record.service;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.record.*;
 import com.example.demo.record.elasticsearch.FoodDocument;
 import com.example.demo.record.mapper.FoodRecordMapper;
 import com.example.demo.record.mapper.SearchMapper;

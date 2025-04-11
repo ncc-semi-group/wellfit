@@ -1,7 +1,7 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodNutritionDto;
-import com.example.demo.dto.TemplateWithFoodsDto;
+import com.example.demo.dto.record.FoodNutritionDto;
+import com.example.demo.dto.record.TemplateWithFoodsDto;
 import com.example.demo.record.elasticsearch.FoodDocument;
 import com.example.demo.record.service.SearchService;
 import jakarta.servlet.http.HttpSession;

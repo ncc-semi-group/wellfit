@@ -1,7 +1,7 @@
 package com.example.demo.record.mapper;
 
-import com.example.demo.dto.FoodNutritionDto;
-import com.example.demo.dto.TemplateItemsDto;
+import com.example.demo.dto.record.FoodNutritionDto;
+import com.example.demo.dto.record.TemplateItemsDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodRecordsDto;
+import com.example.demo.dto.record.FoodRecordsDto;
 import com.example.demo.record.service.RecordService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

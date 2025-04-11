@@ -1,6 +1,6 @@
 package com.example.demo.record.mapper;
 
-import com.example.demo.dto.FoodRecordsDto;
+import com.example.demo.dto.record.FoodRecordsDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

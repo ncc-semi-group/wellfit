@@ -392,7 +392,8 @@ $(document).ready(function () {
 
     // 뒤로 가기 버튼
     $('.back-arrow').click(function () {
-        window.location.replace(document.referrer);
+        const queryString = window.location.href.split('?')[1];
+        location.href = `/record/food_record?${queryString}`;
     });
 
     // 등록 버튼

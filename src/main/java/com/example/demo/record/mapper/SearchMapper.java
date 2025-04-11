@@ -1,6 +1,6 @@
 package com.example.demo.record.mapper;
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.record.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
