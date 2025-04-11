@@ -8,6 +8,7 @@ import org.apache.ibatis.type.Alias;
 public class TemplateItemsDto {
     private int id;
     private int foodTemplateId;
+    private int foodRecordsId;
     private int foodId;
     private String foodType;
     private int amount;

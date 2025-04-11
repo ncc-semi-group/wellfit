@@ -74,17 +74,10 @@ public class FoodRecordService {
         List<TemplateItemsDto> items = foodRecordMapper.getFoodRecordItemsOnly(foodRecordsId);
         
         // 템플릿 아이템 추가
-        List<TemplateItemsDto> templateItemsList = items.stream()
-                .map(item -> {
-                    TemplateItemsDto templateItem = new TemplateItemsDto();
-                    templateItem.setFoodTemplateId(foodTemplateId);
-                    templateItem.setFoodId(item.getFoodId());
-                    templateItem.setFoodType(item.getFoodType());
-                    templateItem.setAmount(item.getAmount());
-                    templateItem.setServing(item.getServing());
-                    return templateItem;
-                })
-                .toList();
-        foodRecordMapper.addFoodTemplateItems(templateItemsList);
+        for (TemplateItemsDto item : items) {
+            item.setFoodTemplateId(foodTemplateId);
+        }
+        
+        foodRecordMapper.addFoodTemplateItems(items);
     }
 }

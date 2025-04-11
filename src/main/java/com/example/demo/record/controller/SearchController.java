@@ -58,6 +58,7 @@ public class SearchController {
         
         // food_records 테이블에서 식단 기록 정보 갯수 가져오기
         int foodRecordsId = searchService.getFoodRecordsId(userId, mealType, sqlDate);
+        // 세션에 저장
         session.setAttribute("foodRecordsId", foodRecordsId);
         int foodRecordsCount = searchService.getRecordItemsCount(foodRecordsId);
         model.addAttribute("foodRecordsCount", foodRecordsCount);
@@ -73,6 +74,9 @@ public class SearchController {
         // 직접 등록한 식단 정보 가져오기
         List<FoodNutritionDto> individualList = searchService.getIndividualFoodNutrition(userId);
         model.addAttribute("individualList", individualList);
+        
+        // 세션에 mealType 저장
+        session.setAttribute("mealType", mealType);
         
         return "views/record/search";
     }

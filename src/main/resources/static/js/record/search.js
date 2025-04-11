@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
     // 탭 전환 기능
     $('.tab').click(function () {
         // 모든 탭에서 active 클래스 제거
@@ -22,6 +24,9 @@ $(document).ready(function () {
             $('#custom-content').show();
         }
     });
+
+    // 초기 탭 설정 (즐겨찾기 탭 활성화)
+    $('#tab-favorites').click();
 
     // 음식 항목 클릭 시 모달 열기 (중복 방지를 위해 off-on 사용)
     $('#search-results, .food-list').off('click', '.add-button').on('click', '.add-button', function () {
@@ -402,6 +407,13 @@ $(document).ready(function () {
         location.href = `/record/food_record?${queryString}`;
     });
 
+    // 템플릿 아이템 클릭 시
+    $('.template-item').click(function () {
+        let templateId = $(this).data('id');
+        let name = $(this).find('.food-name').text();
+        location.href = `/record/template_detail?template_id=${templateId}&name=${name}`;
+    });
+
 
     // 음식 갯수 카운트 갱신
     function updateFoodCount() {
@@ -416,29 +428,6 @@ $(document).ready(function () {
             }
         });
     }
-
-    // 페이지 로드 시 초기화 함수
-    function initFoodApp() {
-        // 초기 탭 설정 (템플릿 탭 활성화)
-        $('#tab-favorites').click();
-
-        // 첫 번째 음식 항목으로 모달 초기화
-        let firstItem = $('.food-item').first();
-        let firstProductName = firstItem.find('.product-name').text().trim();
-        let firstBrandName = firstItem.find('.brand-name').text().trim();
-
-        let initialTitle = firstProductName;
-        if (firstBrandName) {
-            initialTitle += ' ' + firstBrandName;
-        }
-
-        // 모달 타이틀 초기화
-        $('#foodAddModal .modal-title').text(initialTitle);
-    }
-
-    // 초기화 실행
-    initFoodApp();
-
 
     // 현재 페이지 번호를 전역 변수로 관리
     let currentPageNo = 0;

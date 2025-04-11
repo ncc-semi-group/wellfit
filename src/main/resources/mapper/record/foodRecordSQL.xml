@@ -20,8 +20,7 @@
         fn.natrium,
         fn.cholesterol,
         fn.saturated_fat as saturatedFat,
-        fn.trans_fat as transFat,
-        fn.manufacturer_name as manufacturerName
+        fn.trans_fat as transFat
         from
         record_items ri
         join
@@ -49,8 +48,7 @@
         ifn.natrium,
         ifn.cholesterol,
         ifn.saturated_fat as saturatedFat,
-        ifn.trans_fat as transFat,
-        ifn.manufacturer_name as manufacturerName
+        ifn.trans_fat as transFat
         from
         record_items ri
         join

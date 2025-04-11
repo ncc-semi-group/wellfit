@@ -9,26 +9,12 @@
     <!-- 페이지별 css -->
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/record/search.css}">
-        
-        <style>
-            h1 {
-                color: #333;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
-        </style>
     </th:block>
 
 </head>
 <body>
 <!-- 페이지 내용 -->
 <div layout:fragment="content">
-    
-    <div id="toast-container">
-        <div id="toast-message" class="toast-message">
-            <span id="toast-text"></span>
-        </div>
-    </div>
     
     <div class="header">
         <div class="header-container">
@@ -101,13 +87,13 @@
     <!-- 템플릿 탭 콘텐츠 -->
     <div id="templates-content" class="content" style="display: none;">
         <div class="info-bar">
-            <div class="total-count">총 3개</div>
+            <div class="total-count" th:text="${'총 ' + templateList.size() + '개'}"></div>
         </div>
         
         <div class="food-list templates-list active">
             <th:block th:each="e : ${templateList}">
                 <th:block th:if="${e != null}">
-                    <div class="template-item">
+                    <div class="template-item" th:data-id="${e.id}">
                         <div class="template-info">
                             <div class="food-name" th:text="${e.name}"></div>
                             <div class="food-item-list" th:text="${#strings.arrayJoin(e.foodNames, ', ')}"></div>
@@ -303,10 +289,6 @@
 <!-- 페이지별 JavaScript -->
 <th:block layout:fragment="script">
     <script th:src="@{/js/record/search.js}"></script>
-    
-    <script>
-    
-    </script>
 </th:block>
 </body>
 

@@ -15,20 +15,14 @@
 <body>
 <!-- 페이지 내용 -->
 <div layout:fragment="content">
-    
-    <div id="toast-container">
-        <div id="toast-message" class="toast-message">
-            <span id="toast-text"></span>
-        </div>
-    </div>
-    
+
     <!-- 헤더 영역 -->
     <div class="top-layout">
         <div class="header">
             <div class="header-top">
                 <div class="back-title-group">
                     <div class="back-button"><i class="bi bi-arrow-left"></i></div>
-                    <div class="title">템플릿 이름</div>
+                    <div class="title" th:text="${name}"></div>
                 </div>
                 <div class="subtitle" id="openNutritionModal">영양소 상세</div>
             </div>
@@ -76,21 +70,16 @@
     <!-- 음식 목록 영역 -->
     <div class="menu-section">
         <div class="menu-header">
-            <div class="menu-title">템플릿 음식 목록</div>
+            <div class="menu-title">템플릿 목록</div>
             <div class="template-button">템플릿 삭제</div>
         </div>
         
         <div class="food-items-container">
             <div class="food-items-wrapper">
-                <th:block th:each="e : ${foodRecordItems}">
+                <th:block th:each="e : ${templateItems}">
                     <div class="food-item" th:with="standard = ${e.standard == '100g' ? 'g' : 'ml'},
                     kcal = ${#numbers.formatInteger(e.kcal * (e.amount / 100), 1)}">
                         <div class="food-info" th:attr="
-                        data-id=${e.id},
-                        data-food_id=${e.foodId},
-                        data-food_type=${e.foodType},
-                        data-food_amount=${e.amount},
-                        data-food_serving=${e.serving},
                         data-kcal=${kcal},
                         data-carbohydrate=${e.carbohydrate * (e.amount / 100)},
                         data-protein=${e.protein * (e.amount / 100)},
@@ -106,7 +95,6 @@
                         </div>
                         <div class="food-right">
                             <span class="food-calorie" th:text="${kcal + ' kcal'}"></span>
-                            <span class="remove-button">×</span>
                         </div>
                     </div>
                 </th:block>
@@ -116,8 +104,7 @@
     
     <!-- 하단 버튼 영역 -->
     <div class="bottom-buttons">
-        <div class="add-button"><i class="bi bi-plus"></i></div>
-        <div class="complete-button">수정 완료</div>
+        <div class="add-button">추가하기</div>
     </div>
     
     
