@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.example.demo.util;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
