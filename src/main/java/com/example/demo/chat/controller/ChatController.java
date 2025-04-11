@@ -37,6 +37,7 @@ public class ChatController {
         // 채팅방 목록을 가져와서 모델에 추가
         chatService.findChatroomList(userId);
         model.addAttribute("userId", userId);
+        model.addAttribute("showHeader", false);
         return "chat/chatroomList";
     }
     @GetMapping("/chatroom/all/{userId}")
@@ -101,7 +102,7 @@ public class ChatController {
             Long roomId = chatService.createChatroom(dto);
             System.out.println("roomId = " + roomId);
             chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId().toString()).roomId(roomId.toString()).createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).build());
-            return "redirect:/chatroom/list"+dto.getUserId();
+            return "redirect:/chatroom/list/"+dto.getUserId();
         }catch (RuntimeException e){
             e.printStackTrace();
             return "redirect:/chatroom/form";

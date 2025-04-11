@@ -3,13 +3,13 @@
 <mapper namespace="com.example.demo.chat.mapper.ChatroomMapper">
     <resultMap id="Chatroom" type="com.example.demo.dto.chat.Chatroom">
         <result property="roomId" column="id"/>
-        <result property="chatroomName" column="chatroom_name"/>
+        <result property="chatroomName" column="room_name"/>
         <result property="createdAt" column="created_at"/>
         <result property="readingCount" column="reading_count"/>
     </resultMap>
     <resultMap id="ChatroomDto" type="com.example.demo.chat.dto.ChatroomDto">
         <result property="roomId" column="id"/>
-        <result property="roomName" column="chatroom_name"/>
+        <result property="roomName" column="room_name"/>
         <result property="roomImage" column="room_image"/>
         <result property="description" column="description"/>
         <result property="createdAt" column="created_at"/> <result property="readingCount" column="reading_count"/>
@@ -19,7 +19,7 @@
     </resultMap>
     <insert id="insertChatroom" parameterType="com.example.demo.dto.chat.Chatroom"
     useGeneratedKeys="true" keyProperty="id">
-        insert into chatroom (chatroom_name, max_user, description, room_image) values (#{chatroomName}, #{maxUser}, #{description}, #{roomImage});
+        insert into chatroom (room_name, max_user, description, room_image) values (#{chatroomName}, #{maxUser}, #{description}, #{roomImage});
     </insert>
     <delete id="deleteChatroom" parameterType="java.lang.Long">
         delete from chatroom where id=#{roomId};
@@ -28,13 +28,13 @@
         select * from chatroom where id=#{roomId};
     </select>
     <select id="findChatroomByUserId" parameterType="java.lang.Long" resultMap="ChatroomDto">
-        select chatroom.id, chatroom.chatroom_name, chatroom.room_image, chatroom.description,
+        select chatroom.id, chatroom.room_name, chatroom.room_image, chatroom.description,
                chatroom.created_at, chatroom.reading_count, chatroom.max_user,
                count(chatroom_user.user_id) as user_count
         from chatroom
                  left join chatroom_user on chatroom.id = chatroom_user.chatroom_id
         where chatroom_user.user_id = #{userId}  -- ✅ WHERE 절을 GROUP BY 앞에 배치
-        group by chatroom.id, chatroom.chatroom_name, chatroom.room_image, chatroom.description,
+        group by chatroom.id, chatroom.room_name, chatroom.room_image, chatroom.description,
                  chatroom.created_at, chatroom.reading_count, chatroom.max_user;
     </select>
     <select id="isFull" resultType="boolean" parameterType="java.lang.Long">
@@ -49,7 +49,7 @@
     <select id="findChatroomList" resultMap="ChatroomDto" parameterType="java.lang.Long">
         SELECT
             chatroom.id,
-            chatroom.chatroom_name,
+            chatroom.room_name,
             chatroom.room_image,
             chatroom.description,
             chatroom.created_at,
@@ -63,7 +63,7 @@
             FROM chatroom_user
             WHERE user_id = #{userId}
         )
-        GROUP BY chatroom.id, chatroom.chatroom_name, chatroom.room_image,
+        GROUP BY chatroom.id, chatroom.room_name, chatroom.room_image,
                  chatroom.description, chatroom.created_at,
                  chatroom.reading_count, chatroom.max_user;
 
