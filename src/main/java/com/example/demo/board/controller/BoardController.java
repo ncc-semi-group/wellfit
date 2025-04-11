@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.board.service.BoardImageService;
 import com.example.demo.board.service.BoardService;
-import com.example.demo.dto.BoardDto;
-import com.example.demo.dto.BoardImageDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.board.BoardDto;
 import com.example.demo.user.service.UserPageService;
 
 import java.util.HashMap;

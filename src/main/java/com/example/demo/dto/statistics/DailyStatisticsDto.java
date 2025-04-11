@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.statistics;
 
 import lombok.Data;
 import org.apache.ibatis.type.Alias;

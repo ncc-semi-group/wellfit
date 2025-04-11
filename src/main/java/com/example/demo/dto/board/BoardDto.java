@@ -1,8 +1,9 @@
-package com.example.demo.dto;
+package com.example.demo.dto.board;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.example.demo.dto.user.UserDto;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;

@@ -3,26 +3,26 @@
 <mapper namespace="com.example.demo.board.mapper.BoardImageMapper">
 
     <!-- 모든 게시판 이미지 목록 조회 -->
-    <select id="selectAllBoardImages" resultType="com.example.demo.dto.BoardImageDto">
+    <select id="selectAllBoardImages" resultType="com.example.demo.dto.board.BoardImageDto">
         SELECT id, board_id AS boardId, file_name AS fileName
         FROM board_images
     </select>
 
     <!-- 특정 게시판의 이미지 목록 조회 (boardId로 검색) -->
-    <select id="selectImagesByBoardId" parameterType="int" resultType="com.example.demo.dto.BoardImageDto">
+    <select id="selectImagesByBoardId" parameterType="int" resultType="com.example.demo.dto.board.BoardImageDto">
         SELECT id, board_id AS boardId, file_name AS fileName
         FROM board_images
         WHERE board_id = #{boardId}
     </select>
 
     <!-- 게시판 이미지 추가 -->
-    <insert id="insertBoardImage" parameterType="com.example.demo.dto.BoardImageDto">
+    <insert id="insertBoardImage" parameterType="com.example.demo.dto.board.BoardImageDto">
         INSERT INTO board_images (board_id, file_name)
         VALUES (#{boardId}, #{fileName})
     </insert>
 
     <!-- 게시판 이미지 수정 -->
-    <update id="updateBoardImage" parameterType="com.example.demo.dto.BoardImageDto">
+    <update id="updateBoardImage" parameterType="com.example.demo.dto.board.BoardImageDto">
         UPDATE board_images
         SET file_name = #{fileName}
         WHERE id = #{id}

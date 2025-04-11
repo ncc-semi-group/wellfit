@@ -1,8 +1,8 @@
 package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardMapper;
-import com.example.demo.dto.BoardDto;
-import com.example.demo.dto.CommentDto;
+import com.example.demo.dto.board.BoardDto;
+import com.example.demo.dto.board.CommentDto;
 
 
 import lombok.AllArgsConstructor;
