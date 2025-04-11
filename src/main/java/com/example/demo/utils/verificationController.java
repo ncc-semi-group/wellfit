@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// /src/main/java/com.example.demo/utils/verificationController.java
 @RestController
 public class verificationController {
     

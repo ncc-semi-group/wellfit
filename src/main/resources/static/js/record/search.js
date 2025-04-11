@@ -123,7 +123,7 @@ $(document).ready(function () {
                     kcal: kcal
                 },
                 success: function (response) {
-                    showToast('음식이 추가되었습니다.');
+                    window.showToast('음식이 추가되었습니다.');
                     console.log(response);
                     // 모달 닫기
                     closeModal();
@@ -335,10 +335,10 @@ $(document).ready(function () {
                 success: function (response) {
                     console.log(response);
                     if (isFavorite) {
-                        showToast('즐겨찾기에서 삭제되었습니다.');
+                        window.showToast('즐겨찾기에서 삭제되었습니다.');
                         favoriteIcon.html('<i class="bi bi-star"></i>');
                     } else {
-                        showToast('즐겨찾기에 추가되었습니다.');
+                        window.showToast('즐겨찾기에 추가되었습니다.');
                         favoriteIcon.html('<i class="bi bi-star-fill"></i>');
                     }
                 },
@@ -582,26 +582,5 @@ $(document).ready(function () {
         }
 
     });
-
-
-    ////////////////////////////////
-
-
-    // 토스트 메시지 표시 함수
-    function showToast(message, duration = 3000) {
-        const toastMessage = $('#toast-message');
-        const toastText = $('#toast-text');
-
-        // 메시지 설정
-        toastText.text(message);
-
-        // 토스트 표시
-        toastMessage.addClass('show');
-
-        // 지정된 시간 후 토스트 숨기기
-        setTimeout(() => {
-            toastMessage.removeClass('show');
-        }, duration);
-    }
-
+    
 });

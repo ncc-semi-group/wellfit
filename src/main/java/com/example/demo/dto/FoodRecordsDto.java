@@ -7,7 +7,7 @@ import java.sql.Date;
 
 @Data
 @Alias("FoodRecords")
-public class FoodRecordsDTO {
+public class FoodRecordsDto {
     private int id;
     private int userId;
     private String mealType;

@@ -40,7 +40,6 @@ dependencies {
 	// elasticsearch
 	implementation 'org.springframework.data:spring-data-elasticsearch:4.0.5.RELEASE'
 
-
 	// thymleaf-layout-dialect
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
 }

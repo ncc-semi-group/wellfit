@@ -1,6 +1,6 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodRecordsDTO;
+import com.example.demo.dto.FoodRecordsDto;
 import com.example.demo.record.service.RecordService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +51,9 @@ public class RecordController {
         int userId = 1; // 실제 사용자 ID로 변경해야 함
         
         // 식단 기록 정보
-        List<FoodRecordsDTO> foodRecords = recordService.getFoodRecords(userId, sqlDate);
-        Map<String, FoodRecordsDTO> foodRecordsMap = new HashMap<>();
-        for (FoodRecordsDTO foodRecord : foodRecords) {
+        List<FoodRecordsDto> foodRecords = recordService.getFoodRecords(userId, sqlDate);
+        Map<String, FoodRecordsDto> foodRecordsMap = new HashMap<>();
+        for (FoodRecordsDto foodRecord : foodRecords) {
             String mealType = foodRecord.getMealType();
             foodRecordsMap.put(mealType, foodRecord);
         }

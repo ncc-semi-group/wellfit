@@ -111,7 +111,7 @@ public class SearchService {
     @Transactional
     public Integer getFoodRecordsId(int userId, String mealType, Date date) {
         // FoodRecordsDTO 객체 생성
-        FoodRecordsDTO foodRecords = new FoodRecordsDTO();
+        FoodRecordsDto foodRecords = new FoodRecordsDto();
         foodRecords.setUserId(userId);
         foodRecords.setMealType(mealType);
         foodRecords.setDate(date);
@@ -141,7 +141,7 @@ public class SearchService {
     // 식단 기록 추가
     @Transactional
     public void insertRecordItems(int foodRecordsId, int foodId, String foodType, int amount, int serving, int kcal, int userId, Date sqlDate) {
-        RecordItemsDTO recordItems = new RecordItemsDTO();
+        RecordItemsDto recordItems = new RecordItemsDto();
         recordItems.setFoodRecordsId(foodRecordsId);
         recordItems.setFoodId(foodId);
         recordItems.setFoodType(foodType);
@@ -150,7 +150,7 @@ public class SearchService {
         searchMapper.addRecordItems(recordItems);
         
         // food_records 에 kcal 업데이트
-        FoodRecordsDTO foodRecords = new FoodRecordsDTO();
+        FoodRecordsDto foodRecords = new FoodRecordsDto();
         foodRecords.setId(foodRecordsId);
         foodRecords.setKcal(kcal);
         searchMapper.updateFoodRecordsKcal(foodRecords);
@@ -171,14 +171,14 @@ public class SearchService {
     
     // 즐겨찾기 목록 가져오기
     @Transactional
-    public List<FoodNutritionDTO> getUserFoodFavorites(int userId) {
+    public List<FoodNutritionDto> getUserFoodFavorites(int userId) {
         return searchMapper.getUserFoodFavorites(userId);
     }
     
     // 즐겨찾기 여부 확인
     @Transactional
     public boolean isFoodFavorite (int userId, int foodId, String foodType) {
-        FoodFavoritesDTO foodFavorites = new FoodFavoritesDTO();
+        FoodFavoritesDto foodFavorites = new FoodFavoritesDto();
         foodFavorites.setUserId(userId);
         foodFavorites.setFoodId(foodId);
         foodFavorites.setFoodType(foodType);
@@ -190,7 +190,7 @@ public class SearchService {
     // 즐겨찾기 추가 / 삭제
     @Transactional
     public void toggleFoodFavorite (int userId, int foodId, String foodType, boolean isFavorite) {
-        FoodFavoritesDTO foodFavorites = new FoodFavoritesDTO();
+        FoodFavoritesDto foodFavorites = new FoodFavoritesDto();
         foodFavorites.setUserId(userId);
         foodFavorites.setFoodId(foodId);
         foodFavorites.setFoodType(foodType);
@@ -201,13 +201,13 @@ public class SearchService {
     
     // 직접 등록한 식품 정보 가져오기
     @Transactional
-    public List<FoodNutritionDTO> getIndividualFoodNutrition (int userId) {
+    public List<FoodNutritionDto> getIndividualFoodNutrition (int userId) {
         return searchMapper.getIndividualFoodNutrition(userId);
     }
     
     // 식단 템플릿 정보 가져오기
     @Transactional
-    public List<TemplateWithFoodsDTO> getTemplatesForUser(int userId) {
+    public List<TemplateWithFoodsDto> getTemplatesForUser(int userId) {
         return searchMapper.getTemplateWithFoods(userId);
     }
 }

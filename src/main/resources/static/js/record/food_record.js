@@ -100,10 +100,10 @@ $(document).ready(function () {
             type: 'POST',
             data: {recordId: recordId, kcal: kcal},
             success: function (response) {
-                showToast(response);
+                window.showToast(response);
             },
             error: function (error) {
-                showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
+                window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
             }
         });
@@ -159,8 +159,7 @@ $(document).ready(function () {
 
     // 뒤로가기 버튼 클릭 이벤트
     $('.back-button').click(function () {
-        // 이전 페이지로 이동하며 새로고침
-        window.location.replace(document.referrer);
+        location.href = `/record?year=${year}&month=${month}&day=${day}`;
     });
 
     // 완료 버튼 클릭 이벤트
@@ -179,7 +178,7 @@ $(document).ready(function () {
         const templateName = $('#templateInput').val();
         // 템플릿 이름이 비어있을 경우
         if (templateName.trim() === '') {
-            showToast("템플릿 이름을 입력해주세요.");
+            window.showToast("템플릿 이름을 입력해주세요.");
             return;
         }
 
@@ -192,12 +191,12 @@ $(document).ready(function () {
                 kcal: totalKcal
             },
             success: function (response) {
-                showToast(response);
+                window.showToast(response);
                 // 모달 닫기
                 closeModal();
             },
             error: function (error) {
-                showToast('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
+                window.showToast('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
             }
         });
@@ -242,25 +241,5 @@ $(document).ready(function () {
             closeModal();
         }
     });
-
-    ////////////////////////////////
-
-
-    // 토스트 메시지 표시 함수
-    function showToast(message, duration = 3000) {
-        const toastMessage = $('#toast-message');
-        const toastText = $('#toast-text');
-
-        // 메시지 설정
-        toastText.text(message);
-
-        // 토스트 표시
-        toastMessage.addClass('show');
-
-        // 지정된 시간 후 토스트 숨기기
-        setTimeout(() => {
-            toastMessage.removeClass('show');
-        }, duration);
-    }
 
 });

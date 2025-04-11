@@ -1,8 +1,7 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodNutritionDTO;
-import com.example.demo.dto.TemplateItemsDTO;
-import com.example.demo.dto.TemplateWithFoodsDTO;
+import com.example.demo.dto.FoodNutritionDto;
+import com.example.demo.dto.TemplateWithFoodsDto;
 import com.example.demo.record.elasticsearch.FoodDocument;
 import com.example.demo.record.service.SearchService;
 import jakarta.servlet.http.HttpSession;
@@ -64,15 +63,15 @@ public class SearchController {
         model.addAttribute("foodRecordsCount", foodRecordsCount);
         
         // 즐겨찾기 정보 가져오기
-        List<FoodNutritionDTO> favoriteList = searchService.getUserFoodFavorites(userId);
+        List<FoodNutritionDto> favoriteList = searchService.getUserFoodFavorites(userId);
         model.addAttribute("favoriteList", favoriteList);
         
         // 템플릿 정보 가져오기
-        List<TemplateWithFoodsDTO> templateList = searchService.getTemplatesForUser(userId);
+        List<TemplateWithFoodsDto> templateList = searchService.getTemplatesForUser(userId);
         model.addAttribute("templateList", templateList);
         
         // 직접 등록한 식단 정보 가져오기
-        List<FoodNutritionDTO> individualList = searchService.getIndividualFoodNutrition(userId);
+        List<FoodNutritionDto> individualList = searchService.getIndividualFoodNutrition(userId);
         model.addAttribute("individualList", individualList);
         
         return "views/record/search";

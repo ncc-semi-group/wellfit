@@ -5,7 +5,7 @@ import org.apache.ibatis.type.Alias;
 
 @Data
 @Alias("FoodNutrition")
-public class FoodNutritionDTO {
+public class FoodNutritionDto {
     private int id;
     private int userId;
     private int foodId;

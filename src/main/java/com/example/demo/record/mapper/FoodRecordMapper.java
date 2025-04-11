@@ -1,7 +1,7 @@
 package com.example.demo.record.mapper;
 
-import com.example.demo.dto.FoodNutritionDTO;
-import com.example.demo.dto.TemplateItemsDTO;
+import com.example.demo.dto.FoodNutritionDto;
+import com.example.demo.dto.TemplateItemsDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface FoodRecordMapper {
     
-    List<FoodNutritionDTO> getFoodRecordItems(int foodRecordsId);
+    List<FoodNutritionDto> getFoodRecordItems(int foodRecordsId);
     
     void updateDailyStatisticsFromFoodRecords(Map<String, Object> params);
     
@@ -20,8 +20,8 @@ public interface FoodRecordMapper {
     
     int getFoodTemplateId(Map<String, Object> params);
     
-    List<TemplateItemsDTO> getFoodRecordItemsOnly(int foodRecordsId);
+    List<TemplateItemsDto> getFoodRecordItemsOnly(int foodRecordsId);
     
-    void addFoodTemplateItems(List<TemplateItemsDTO> list);
+    void addFoodTemplateItems(List<TemplateItemsDto> list);
     
 }

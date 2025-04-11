@@ -1,10 +1,7 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodNutritionDTO;
+import com.example.demo.dto.FoodNutritionDto;
 import com.example.demo.record.service.FoodRecordService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -49,7 +45,7 @@ public class FoodRecordController {
         session.setAttribute("foodRecordsId", foodRecordsId);
         
         // 식사 기록 조회
-        List<FoodNutritionDTO> foodRecordItems = foodRecordService.getFoodRecordItems(foodRecordsId);
+        List<FoodNutritionDto> foodRecordItems = foodRecordService.getFoodRecordItems(foodRecordsId);
         
         // 모델에 데이터 추가
         model.addAttribute("foodRecordItems", foodRecordItems);

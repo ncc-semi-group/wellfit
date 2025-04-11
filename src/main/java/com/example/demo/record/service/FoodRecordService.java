@@ -1,8 +1,8 @@
 package com.example.demo.record.service;
 
-import com.example.demo.dto.FoodNutritionDTO;
-import com.example.demo.dto.FoodRecordsDTO;
-import com.example.demo.dto.TemplateItemsDTO;
+import com.example.demo.dto.FoodNutritionDto;
+import com.example.demo.dto.FoodRecordsDto;
+import com.example.demo.dto.TemplateItemsDto;
 import com.example.demo.record.mapper.FoodRecordMapper;
 import com.example.demo.record.mapper.SearchMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class FoodRecordService {
     
     @Transactional
     public int getFoodRecordsId(int userId, String mealType, Date date) {
-        FoodRecordsDTO foodRecords = new FoodRecordsDTO();
+        FoodRecordsDto foodRecords = new FoodRecordsDto();
         foodRecords.setUserId(userId);
         foodRecords.setMealType(mealType);
         foodRecords.setDate(date);
@@ -31,7 +31,7 @@ public class FoodRecordService {
     }
     
     @Transactional
-    public List<FoodNutritionDTO> getFoodRecordItems(int foodRecordsId) {
+    public List<FoodNutritionDto> getFoodRecordItems(int foodRecordsId) {
         return foodRecordMapper.getFoodRecordItems(foodRecordsId);
     }
     
@@ -42,7 +42,7 @@ public class FoodRecordService {
         foodRecordMapper.deleteFoodRecordItems(recordId);
         
         // food_records 에 kcal 업데이트
-        FoodRecordsDTO foodRecords = new FoodRecordsDTO();
+        FoodRecordsDto foodRecords = new FoodRecordsDto();
         foodRecords.setId(foodRecordsId);
         // kcal은 음식을 삭제했으므로 -kcal로 업데이트
         foodRecords.setKcal(-kcal);
@@ -71,12 +71,12 @@ public class FoodRecordService {
         int foodTemplateId = foodRecordMapper.getFoodTemplateId(params);
         
         // 식단 기록 아이템 가져오기
-        List<TemplateItemsDTO> items = foodRecordMapper.getFoodRecordItemsOnly(foodRecordsId);
+        List<TemplateItemsDto> items = foodRecordMapper.getFoodRecordItemsOnly(foodRecordsId);
         
         // 템플릿 아이템 추가
-        List<TemplateItemsDTO> templateItemsList = items.stream()
+        List<TemplateItemsDto> templateItemsList = items.stream()
                 .map(item -> {
-                    TemplateItemsDTO templateItem = new TemplateItemsDTO();
+                    TemplateItemsDto templateItem = new TemplateItemsDto();
                     templateItem.setFoodTemplateId(foodTemplateId);
                     templateItem.setFoodId(item.getFoodId());
                     templateItem.setFoodType(item.getFoodType());

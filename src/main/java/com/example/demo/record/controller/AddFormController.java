@@ -1,8 +1,7 @@
 package com.example.demo.record.controller;
 
-import com.example.demo.dto.FoodNutritionDTO;
+import com.example.demo.dto.FoodNutritionDto;
 import com.example.demo.record.service.AddFormService;
-import com.example.demo.record.service.FoodRecordService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class AddFormController {
         // type에 따라 다른 뷰를 반환
         model.addAttribute("type", type);
         if (type.equals("edit")) {
-            FoodNutritionDTO foodNutrition = addFormService.getFoodNutritionById(foodId);
+            FoodNutritionDto foodNutrition = addFormService.getFoodNutritionById(foodId);
             float weight = foodNutrition.getWeight();
             int servingSize = foodNutrition.getServingSize();
             float combiner;
@@ -61,7 +60,7 @@ public class AddFormController {
     @PostMapping("/api/record/add_food")
     @ResponseBody
     public ResponseEntity<?> addFoodNutrition(HttpSession session,
-                                              @RequestBody FoodNutritionDTO foodNutrition) {
+                                              @RequestBody FoodNutritionDto foodNutrition) {
         
         // 유저 ID 설정 (예시로 1 사용)
         int userId = 1; // 실제 사용자 ID로 변경해야 함
@@ -79,7 +78,7 @@ public class AddFormController {
     @PostMapping("/api/record/update_food")
     @ResponseBody
     public ResponseEntity<?> updateFoodNutrition(HttpSession session,
-                                                  @RequestBody FoodNutritionDTO foodNutrition) {
+                                                  @RequestBody FoodNutritionDto foodNutrition) {
         
         // 유저 ID 설정 (예시로 1 사용)
         int userId = 1; // 실제 사용자 ID로 변경해야 함

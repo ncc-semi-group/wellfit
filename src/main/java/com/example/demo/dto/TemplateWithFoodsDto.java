@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Alias("TemplateWithFoods")
-public class TemplateWithFoodsDTO {
+public class TemplateWithFoodsDto {
     private int id;
     private String name;        // 템플릿 이름
     private int kcal;           // 칼로리

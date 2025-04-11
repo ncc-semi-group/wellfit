@@ -45,7 +45,7 @@ $(document).ready(function () {
         });
 
         if (!isValid) {
-            showToast('필수 항목을 모두 입력하세요.');
+            window.showToast('필수 항목을 모두 입력하세요.');
             return;
         }
         // 제출 전 빈 필드를 "0"으로 설정
@@ -80,14 +80,14 @@ $(document).ready(function () {
             type: 'POST',
             data: {foodId: foodId},
             success: function (response) {
-                showToast(response);
+                window.showToast(response);
                 setTimeout(() => {
                     // 이전 페이지로 돌아간 후 새로고침
                     window.location.replace(document.referrer);
                 }, 1000);
             },
             error: function (error) {
-                showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
+                window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
                 $('.delete-button').prop('disabled', false); // 버튼 활성화
             }
@@ -143,14 +143,14 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
-                showToast(response);
+                window.showToast(response);
                 setTimeout(() => {
                     // 이전 페이지로 돌아간 후 새로고침
                     window.location.replace(document.referrer);
                 }, 1000);
             },
             error: function (error) {
-                showToast('식품 추가에 실패했습니다. 다시 시도해주세요.');
+                window.showToast('식품 추가에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
                 $('.save-button').prop('disabled', false); // 버튼 활성화
             }
@@ -191,14 +191,14 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
-                showToast(response);
+                window.showToast(response);
                 setTimeout(() => {
                     // 이전 페이지로 돌아간 후 새로고침
                     window.location.replace(document.referrer);
                 }, 1000);
             },
             error: function (error) {
-                showToast('정보 수정에 실패했습니다. 다시 시도해주세요.');
+                window.showToast('정보 수정에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
                 $('.update-button').prop('disabled', false); // 버튼 활성화
             }
@@ -299,25 +299,4 @@ $(document).ready(function () {
             });
         }
     });
-
-
-    ////////////////////////////////
-
-
-    // 토스트 메시지 표시 함수
-    function showToast(message, duration = 3000) {
-        const toastMessage = $('#toast-message');
-        const toastText = $('#toast-text');
-
-        // 메시지 설정
-        toastText.text(message);
-
-        // 토스트 표시
-        toastMessage.addClass('show');
-
-        // 지정된 시간 후 토스트 숨기기
-        setTimeout(() => {
-            toastMessage.removeClass('show');
-        }, duration);
-    }
 });

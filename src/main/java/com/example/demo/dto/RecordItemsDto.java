@@ -4,10 +4,12 @@ import lombok.Data;
 import org.apache.ibatis.type.Alias;
 
 @Data
-@Alias("FoodFavorites")
-public class FoodFavoritesDTO {
+@Alias("RecordItems")
+public class RecordItemsDto {
     private int id;
-    private int userId;
+    private int foodRecordsId;
     private int foodId;
     private String foodType;
+    private int amount;
+    private int serving;
 }
