@@ -3,7 +3,7 @@
 <mapper namespace="com.example.demo.user.mapper.UserMapper">
 
     <!-- 로그인: 이메일로 사용자 조회 -->
-    <select id="getUserByEmail" parameterType="String" resultType="com.example.demo.dto.UserDto">
+    <select id="getUserByEmail" parameterType="String" resultType="UserDto">
         SELECT id, email, password
         FROM user
         WHERE email = #{email}
@@ -15,26 +15,26 @@
     </select>
 
     <!-- 모든 유저 조회 -->
-    <select id="getAllUsers" resultType="com.example.demo.dto.UserDto">
+    <select id="getAllUsers" resultType="UserDto">
         SELECT id, email, nickname, profile_image 
         FROM user
     </select>
 
     <!-- 닉네임으로 유저 조회 -->
-    <select id="searchUsersByNickname" resultType="com.example.demo.dto.UserDto">
+    <select id="searchUsersByNickname" resultType="UserDto">
         SELECT id, email, nickname, profile_image, my_intro
         FROM user
         WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
     </select>
 
-    <select id="getUserById" parameterType="int" resultType="com.example.demo.dto.UserDto">
+    <select id="getUserById" parameterType="int" resultType="UserDto">
         SELECT id, nickname, profile_image, my_intro
         FROM user
         WHERE id = #{id}
     </select>
 
     <!-- 유저 삽입 -->
-	<insert id="insertUser" parameterType="com.example.demo.dto.UserDto">
+	<insert id="insertUser" parameterType="UserDto">
 	    INSERT INTO user (email, password, nickname)
 	    VALUES (#{email}, #{password}, #{nickname});
 	    <selectKey resultType="int" keyProperty="id" order="AFTER">

@@ -1,8 +1,11 @@
 package com.example.demo.dto;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Data;
 
 @Data
+@Alias("UserDto")
 public class UserDto {
     private int id;                    // id
     private String email;              // 이메일
