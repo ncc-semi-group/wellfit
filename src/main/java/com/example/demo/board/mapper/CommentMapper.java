@@ -25,4 +25,6 @@ public interface CommentMapper {
 	
 
 	public List<CommentDto> getSelectUserId(int userId);
+	
+	
 }

@@ -21,9 +21,7 @@ public class BoardDto {
 	private List<BoardImageDto> images;
 	private String nickname;
 	
-	// 해시태그 목록
-	private List<HashtagDto> hashtags;
-	
+
 	// 이미지 관련 필드
 	private int imageCount;
 	private String thumbnailImage;
