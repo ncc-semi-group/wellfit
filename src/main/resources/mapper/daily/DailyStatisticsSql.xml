@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.daily.mapper.DailyStatisticsMapper">
+    
+    <!-- 특정 날짜의 통계 조회 -->
+    <select id="getDailyStatistics" resultType="DailyStatisticsDto">
+        SELECT *
+        FROM daily_statistics
+        WHERE user_id = #{userId} AND date = #{date}
+    </select>
+    
+    <!-- 특정 월의 통계 목록 조회 -->
+    <select id="getMonthlyStatistics" resultType="HashMap">
+        SELECT id,
+               user_id,
+               DATE_FORMAT(date, '%Y-%m-%d') as date,
+               is_achieved
+        FROM daily_statistics
+        WHERE user_id = #{userId}
+        AND YEAR(date) = #{year}
+        AND MONTH(date) = #{month}
+        ORDER BY date ASC
+    </select>
+    
+    <!-- 통계 업데이트 -->
+    <update id="updateDailyStatistics" parameterType="DailyStatisticsDto">
+        UPDATE daily_statistics
+        SET total_kcal = #{totalKcal},
+            total_protein = #{totalProtein},
+            total_fat = #{totalFat},
+            total_carbohydrate = #{totalCarbohydrate},
+            total_natrium = #{totalNatrium},
+            total_cholesterol = #{totalCholesterol},
+            total_saturated_fat = #{totalSaturatedFat},
+            total_trans_fat = #{totalTransFat},
+            weight = #{weight},
+            total_burned_kcal = #{totalBurnedKcal},
+            total_exercise_time = #{totalExerciseTime},
+            recommended_kcal = #{recommendedKcal},
+            is_achieved = #{isAchieved}
+        WHERE id = #{id}
+    </update>
+</mapper> 

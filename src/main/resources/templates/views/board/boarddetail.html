@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>게시물 상세</title>
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/board/boarddetail.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h2 class="title">게시물 상세</h2>
+    </div>
+
+    <div class="post-container">
+        <div class="post-header">
+            <div class="user-info">
+                <img th:src="@{${post?.user.profileImage != null and post?.user.profileImage.startsWith('/') ? 
+                user.profileImage : 
+                (post?.user.profileImage != null ? '/images/' + post?.user.profileImage : '/static/images/default-profile.png')}}" class="profile-image" alt="프로필 이미지">
+                <span class="username" th:text="${post?.user?.nickname}">사용자명</span>
+            </div>
+            <div class="post-date" th:text="${#dates.format(post?.createdAt, 'yyyy.MM.dd HH:mm')}">작성일</div>
+        </div>
+
+        <div class="post-content">
+            <div class="content-text" th:text="${post?.content}">게시물 내용</div>
+            <div class="post-images" th:if="${post?.images != null and not #lists.isEmpty(post.images)}">
+                <img th:each="image : ${post.images}" 
+                     th:src="@{'/images/' + ${image.fileName}}" 
+                     class="post-image" 
+                     alt="게시물 이미지">
+            </div>
+        </div>
+
+        <div class="post-footer">
+            <div class="post-stats">
+                <span class="likes">
+                    <i class="bi bi-heart-fill"></i>
+                    <span th:text="${post?.likesCount ?: 0}">0</span>
+                </span>
+                <span class="comments">
+                    <i class="bi bi-chat-fill"></i>
+                    <span th:text="${post?.commentCount ?: 0}">0</span>
+                </span>
+            </div>
+            <div class="hashtags" th:if="${post?.hashtags != null and not #lists.isEmpty(post.hashtags)}">
+                <span class="hashtag" th:each="tag : ${post.hashtags}" th:text="${'#' + tag.tag}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/board/boarddetail.js}"></script>
+</th:block>
+</body>
+</html> 

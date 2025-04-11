@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.user.mapper.UserMapper">
+    <select id="getSelectUser" resultType="UserDto" useCache="false">
+        SELECT u.id, u.email, u.nickname, u.profile_image as profileImage, 
+        u.gender, u.height, u.current_weight as currentWeight, 
+        u.age, u.activity_level as activityLevel,
+        u.goal_weight as goalWeight, u.type,
+        u.my_intro as myIntro,
+        (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
+        (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
+        (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2,
+        (SELECT COUNT(*) FROM user_badge WHERE user_id = u.id AND is_achieved = 1) as badgeCount,
+        (SELECT COUNT(*) FROM daily_statistics WHERE user_id = u.id AND is_achieved = 1) as achievementCount,
+        (SELECT COUNT(*) FROM board WHERE user_id = u.id) as postCount,
+        (SELECT COUNT(*) FROM comment WHERE user_id = u.id) as commentCount
+        FROM user u
+        WHERE u.id = #{id}
+    </select>
+    
+    <select id="getSelectNickname" parameterType="String" resultType="UserDto">
+        SELECT u.id, u.email, u.nickname, u.profile_image as profileImage, 
+        u.gender, u.height, u.current_weight as currentWeight, 
+        u.age, u.activity_level as activityLevel,
+        u.goal_weight as goalWeight, u.type,
+        u.carbohydrate, u.protein, u.fat,
+        (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
+        (SELECT COUNT(*) FROM user_badge WHERE user_id = u.id AND is_achieved = 1) as badgeCount,
+        (SELECT COUNT(*) FROM exercise_record WHERE user_id = u.id) as achievementCount,
+        (SELECT COUNT(*) FROM board WHERE user_id = u.id) as postCount,
+        (SELECT COUNT(*) FROM comment WHERE user_id = u.id) as commentCount
+        FROM user u
+        WHERE u.nickname = #{nickname}
+    </select>
+    
+    <update id="mypageUpdateUser" parameterType="UserDto">
+        UPDATE user
+        SET 
+            nickname = #{nickname},
+            gender = #{gender}, age = #{age}, height = #{height}, activity_level = #{activityLevel}, 
+            current_weight = #{currentWeight}, goal_weight = #{goalWeight}, type = #{type},
+            created_at = now(), my_intro = #{myIntro}
+        <if test="profileImage !=null">
+			,profile_image = #{profileImage} <!-- null이 아니면 update문에 들어가야하므로 ,도 줘야함** -->
+		</if>
+        WHERE id = #{id}
+    </update>
+    
+    <select id="getLikeList" resultType="UserDto" useCache="false">
+        SELECT b.id, b.content as title, 'board' as type
+        FROM board b
+        INNER JOIN board_like bl ON b.id = bl.board_id
+        WHERE bl.user_id = #{userId}
+        ORDER BY b.created_at DESC
+        LIMIT 10
+    </select>
+
+    <select id="getUserById" parameterType="string" resultType="UserDto">
+        SELECT id, email, password, nickname as userId, profile_image as profileImage, gender
+        FROM user
+        WHERE email = #{id}
+    </select>
+    
+    <!-- =============================== -->
+    
+     <!-- 사용자 추가 -->
+    <insert id="insertUser" parameterType="UserDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (
+            email, password, nickname, profile_image, gender, age, height, activity_level, 
+            current_weight, goal_weight, cheating_day, type, carbohydrate, protein, fat, created_at, my_intro
+        )
+        VALUES (
+            #{email}, #{password}, #{nickname}, #{profileImage}, #{gender}, #{age}, #{height}, 
+            #{activityLevel}, #{currentWeight}, #{goalWeight}, #{cheatingDay}, #{type}, 
+            #{carbohydrate}, #{protein}, #{fat}, #{createdAt}, #{myIntro}
+        )
+    </insert>
+
+    <!-- 사용자 목록 조회 -->
+    <select id="selectAllUsers" resultType="UserDto">
+        SELECT * FROM user
+    </select>
+
+    <!-- 사용자 삭제 -->
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+    
+    <!-- ID로 사용자 조회 -->
+    <select id="selectUserById" parameterType="int" resultType="UserDto">
+        SELECT id, email, nickname, profile_image as profileImage, gender, 
+               height, current_weight as currentWeight, age, activity_level as activityLevel,
+               goal_weight as goalWeight, type, my_intro as myIntro
+        FROM user
+        WHERE id = #{id}
+    </select>
+    
+    <!-- ================================== -->
+    
+    <!-- 모든 유저 조회 -->
+    <select id="getAllUsers" resultType="com.example.demo.dto.UserDto">
+        SELECT id, email, nickname, profile_image 
+        FROM user
+    </select>
+
+	<!-- 닉네임으로 유저 조회 -->
+    <select id="searchUsersByNickname" resultType="com.example.demo.dto.UserDto">
+	    SELECT id, email, nickname, profile_image as profileImage, my_intro as myIntro
+	    FROM user
+	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
+	</select>
+  
+  	<!-- 로그인: 이메일로 사용자 조회 -->
+    <select id="getUserByEmail" parameterType="String" resultType="UserDto">
+        SELECT id, email, password
+        FROM user
+        WHERE email = #{email}
+    </select>
+    
+    <!-- 사용자 ID로 Salt 조회 -->
+    <select id="getSaltByUserId" parameterType="int" resultType="String">
+        SELECT salt FROM user_salt WHERE user_id = #{userId}
+    </select>
+
+    <!-- 유저 삽입 -->
+	<insert id="insertUserAccount" parameterType="UserDto">
+	    INSERT INTO user (email, password, nickname)
+	    VALUES (#{email}, #{password}, #{nickname});
+	    <selectKey resultType="int" keyProperty="id" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+	
+	<!-- salt 삽입 -->
+	<insert id="insertUserSalt">
+	    INSERT INTO user_salt (user_id, salt)
+	    VALUES (#{userId}, #{salt})
+	</insert>
+    
+    <!-- 프로필 이미지 경로 확인용 쿼리 -->
+    <select id="checkProfileImages" resultType="UserDto">
+        SELECT id, nickname, profile_image as profileImage
+        FROM user
+        WHERE profile_image IS NOT NULL
+    </select>
+    
+</mapper>

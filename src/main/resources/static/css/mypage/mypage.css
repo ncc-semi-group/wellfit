@@ -1,0 +1,305 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+/*뒤로가기 버튼 + 제목 */
+.header {
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.back-btn {
+	font-size: 1.8rem;
+	margin-right: 1rem;
+}
+
+.title {
+	display: inline-block;
+	padding-top: 0.7rem;
+	font-size: 1.5rem;
+}
+
+.update-btn {
+	font-size: 1.8rem;
+	margin-left: auto; /*오른쪽 정렬*/
+}
+
+/* 프로필 사진 라인 */
+.profile {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.my-profile-image {
+	width: 6rem;
+	height: 6rem;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 1rem;
+	margin-left : 1.5rem;
+	margin-top : 1rem;
+}
+
+.profile-info {
+	flex: 1;
+}
+
+.username {
+	margin-left : 1.5rem;
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.info {
+	margin-left : 1.5rem;
+	color: #666;
+	margin-bottom: 20px;
+}
+
+.profile-stats {
+	display: flex;
+	justify-content: space-around;
+}
+
+.stat-item {
+	text-align: center;
+}
+
+.stat-number {
+	font-size: 18px;
+	font-weight: bold;
+	color: #005666;
+}
+
+.stat-label {
+	font-size: 14px;
+	color: #666;
+}
+
+.my-intro {
+	padding-left: 1.5rem;
+}
+
+/*내 업적 부분*/
+.achievement {
+	background-color: #E2F5F0;
+	padding: 1rem;
+}
+
+.achievement-in {
+	display: flex;
+}
+
+.ach-image {
+	width: 6rem;
+	height: 6rem;
+	margin-left: 1rem;
+	margin-bottom: 1.3rem;
+}
+
+.badge-cnt1 {
+	width: 15rem;
+	height: 12rem;
+	text-align: center;
+}
+
+.badge-cnt2 {
+	width: 15rem;
+	height: 12rem;
+	text-align: center;
+}
+
+/* 나의 활동 부분 */
+.h5 {
+	padding: 1rem 1rem 0.2rem 1rem;
+}
+
+.box {
+	display: flex;
+}
+
+.box-up {
+	padding: 1rem;
+	background-color: #005666;
+	box-shadow: 4px 4px 5px #ccc;
+	width: 50%;
+	height: 3.5rem;
+	color: #fff;
+	text-align: center;
+}
+
+/*내 좋아요 목록*/
+.like-list {
+	border: 1px solid #ccc;
+	padding-bottom: 1.5rem;
+	box-shadow: 2px 2px 5px 1px #ccc;
+}
+
+.like-list-in {
+	display: flex;
+	overflow: auto;
+	white-space: nowrap;
+	padding-left: 1rem;
+}
+/*스크롤바 숨기기*/
+.like-list-in::-webkit-scrollbar {
+	display: none;
+}
+
+.like-list-inn {
+	padding-right: 0.7rem;
+}
+
+.list1 {
+	width: 6.2rem;
+	height: 4.3rem;
+	border-radius: 10% 10% 0% 0%;
+	border: 1px solid #ccc;
+	background-color: #C5EBE2;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0;
+}
+
+.list1-in {
+	width: 6.2rem;
+	height: 1.7rem;
+	border-radius: 0% 0% 10% 10%;
+	border: 1px solid #ccc;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tag-text {
+	font-size: 0.9rem;
+	color: #000;
+	display: block;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0.3rem 0;
+}
+
+.like-count {
+	font-size: 0.9rem;
+	color: #333;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0;
+}
+
+/* 캘린더 스타일 */
+.calendar-section {
+	margin-top: 20px;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.calendar-container {
+	margin-top: 15px;
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.calendar-header button {
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	padding: 5px 15px;
+	color: #333;
+}
+
+#currentMonth {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333;
+}
+
+.calendar {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+	gap: 5px;
+}
+
+.calendar-day-header {
+	text-align: center;
+	font-weight: bold;
+	padding: 10px;
+	background-color: #f8f9fa;
+}
+
+.calendar-day {
+	position: relative;
+	min-height: 60px;
+	padding: 5px;
+	border: 1px solid #dee2e6;
+	text-align: left;
+	overflow: visible;
+}
+
+.date-number {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	font-size: 14px;
+}
+
+.success-badge {
+	position: absolute;
+	top: 60%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 25px;
+	height: 25px;
+	object-fit: contain;
+	display: block;
+	z-index: 1;
+	background-color: transparent;
+}
+
+.other-month {
+	background-color: #f8f9fa;
+	color: #adb5bd;
+}
+
+.calendar-day:not(.other-month):hover {
+	background: #f8f9fa;
+	cursor: pointer;
+}
+
+/* 일요일 색상 */
+.calendar-day-header:first-child,
+.calendar-day:not(.other-month):nth-child(7n + 1) .date-number {
+	color: #dc3545;
+}
+
+/* 토요일 색상 */
+.calendar-day-header:last-child,
+.calendar-day:not(.other-month):nth-child(7n) .date-number {
+	color: #007bff;
+}
+
+/* 현재 날짜 표시 */
+.calendar-day.today {
+	background: #e8f5e9;
+}
+
+.calendar-day.today .date-number {
+	font-weight: bold;
+	color: #1b5e20;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>나의 활동</title>
+   
+	<!-- 페이지별 css -->
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/mypage/mypage_comment.css}">
+	</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h2 class="title">나의 활동</h2>
+    </div>
+
+    <div class="tab-container">
+        <div class="tab1" th:data-user-id="${session.userId}">내 게시물</div>
+        <div class="tab2">내가 쓴 댓글</div>
+    </div>
+
+    <div class="comment-container">
+        <div th:if="${commentList != null and !commentList.empty}">
+            <div th:each="comment : ${commentList}" class="comment-item" th:onclick="|window.location.href='/board/detail/${comment.boardId}'|" style="cursor: pointer;">
+                <div class="comment-content" th:text="${comment.comment}"></div>
+                <div class="board-footer">
+                    <div class="comment-date" th:text="${#dates.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
+                    <div class="hashtag-list" th:if="${comment.hashtags != null and !comment.hashtags.empty}">
+                        <span th:each="tag : ${comment.hashtags}" class="hashtag" th:text="${'#' + tag.tag}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${commentList == null or commentList.empty}" class="no-comments">
+            <p>작성한 댓글이 없습니다.</p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage_comment.js}"></script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+body * {
+	font-family: 'Jua';
+}
+
+.header {
+	padding: 1rem;
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+}
+
+.back-btn {
+	font-size: 1.5rem;
+	margin-right: 1rem;
+	color: #333;
+	cursor: pointer;
+}
+
+.title {
+	font-size: 1.3rem;
+	margin: 0;
+	color: #333;
+}
+
+.tab-container {
+	display: flex;
+	margin: 1rem;
+	border-radius: 8px;
+	overflow: hidden;
+	padding-bottom: 2rem;
+	padding-left: 3rem;
+}
+
+.tab1 {
+	flex: 0.4;
+	padding: 0.8rem;
+	text-align: center;
+	cursor: pointer;
+	border: 1px solid #8AA7AF;
+	background-color: #D7E1E4;
+	color: #333;
+	font-size: 1rem;
+	border-radius: 10px 0px 0px 10px;
+}
+
+.tab2 {
+	flex: 0.4;
+	padding: 0.8rem;
+	text-align: center;
+	cursor: pointer;
+	border: 1px solid #8AA7AF;
+	background-color: #fff;
+	color: #000;
+	font-size: 1rem;
+	border-radius: 0px 10px 10px 0px;
+}
+
+.board-container {
+	padding: 0 1rem;
+}
+
+.board-item {
+	background: #fff;
+	border-radius: 20px;
+	padding: 1.2rem;
+	margin-bottom: 1rem;
+	border: 1px solid #ccc;
+	box-shadow: 2px 5px 5px 2px #ccc;
+	width: 22rem;
+	margin-left: 1rem;
+}
+
+.board-content {
+	font-size: 0.95rem;
+	line-height: 1.5;
+	margin-bottom: 0.8rem;
+	color: #333;
+	white-space: pre-wrap;
+}
+
+.board-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.board-date {
+	color: #888;
+	font-size: 0.8rem;
+}
+
+.hashtag-list {
+	text-align: right;
+}
+
+.hashtag {
+	width: 5rem;
+	height: 1.5rem;
+	text-align: center;
+	margin-left: auto;
+	margin-right: 0.2rem;
+	border-radius: 5px;
+	background-color: #EFEFEF;
+	display: flex;
+	align-items: center; /* 세로 중앙 정렬 */
+	justify-content: center; /* 가로 중앙 정렬 */
+}
+
+.no-posts {
+	text-align: center;
+	padding: 2rem;
+	color: #666;
+}
