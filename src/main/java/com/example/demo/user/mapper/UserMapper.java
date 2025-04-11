@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+      
 	public UserDto getSelectUser(int id);
 	public UserDto getSelectNickname(String nickname);
 	public List<UserDto> getLikeList(int userId);
@@ -21,11 +22,13 @@ public interface UserMapper {
 
 	// 사용자 정보 조회
 	public UserDto selectUserById(@Param("id") int id);
-
+  
 	// 이메일로 사용자 조회
 	public UserDto selectUserByEmail(@Param("email") String email);
-
-
+  public UserDto getUserByEmail(@Param("email") String email);
+  public String getSaltByUserId(@Param("userId") int userId);
+  public void insertUserSalt(@Param("userId") int userId, @Param("salt") String salt);
+  
 	// 사용자 목록 조회
 	public List<UserDto> selectAllUsers();
 

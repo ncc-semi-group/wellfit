@@ -32,7 +32,7 @@ public class FriendshipRequestService {
         return recommendedFriends.isEmpty() ? Collections.emptyList() : recommendedFriends;
     }
     
-    public List<FriendshipRequestDto> getFriendRequestsByUserId(int userId) {
+    public List<FriendshipRequestDto> getFriendRequestsByUserId(@Param("userId") int userId) {
     	List<FriendshipRequestDto> FriendRequests = friendshipRequestMapper.getFriendRequestsByUserId(userId);
 
         // 결과가 없을 경우 빈 리스트 반환

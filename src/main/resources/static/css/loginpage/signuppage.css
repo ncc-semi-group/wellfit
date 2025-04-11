@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+* {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Helvetica, Arial, sans-serif;
+	box-sizing: border-box;
+}
+
+.login-container {
+	width: 25.75rem;
+	height: 52rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #fff;
+	justify-self: center;
+}
+
+.comment {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-bottom: 1.5rem;
+}
+
+.input-field {
+	width: 18rem;
+	height: 4rem;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	border-radius: 2rem;
+	border: 1px solid #ddd;
+	outline: none;
+	margin-bottom: 1rem;
+	background-color: #EDEDED;
+}
+
+.btn-signup {
+	display: inline-block;
+	width: 18rem;
+	height: 4rem;
+	line-height: 4rem;
+	font-size: 1.25rem;
+	text-align: center;
+	text-decoration: none;
+	border: none;
+	border-radius: 2rem;
+	background-color: #005666;
+	color: white;
+	cursor: pointer;
+	margin-bottom: 1rem;
+}
+
+.btn-back {
+	display: inline-block;
+	width: 18rem;
+	height: 4rem;
+	line-height: 4rem;
+	font-size: 1.25rem;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 2rem;
+	background-color: #005666;
+	color: white;
+	cursor: pointer;
+	margin-bottom: 1rem;
+}

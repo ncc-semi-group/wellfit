@@ -36,10 +36,17 @@ function updateFriendList(friends) {
     listContainer.innerHTML = '';
 
     friends.forEach(friend => {
+        let imageUrl = friend.profileImage;
+
+        // URL 형태가 아니면 /images/ 붙이기
+        if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/images/')) {
+            imageUrl = `/images/${imageUrl}`;
+        }
+
         const friendElement = document.createElement('div');
         friendElement.classList.add('friend-wrapper');
         friendElement.innerHTML = `
-            <img src="${friend.profileImage}" alt="${friend.nickname}" />
+            <img src="${imageUrl}" alt="${friend.nickname}" />
             <div class="profile">
                 <div class="name">${friend.nickname}</div>
                 <div class="intro">${friend.myIntro}</div>
@@ -48,4 +55,3 @@ function updateFriendList(friends) {
         listContainer.appendChild(friendElement);
     });
 }
-	

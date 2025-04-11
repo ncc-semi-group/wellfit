@@ -1,3 +1,4 @@
+
 // '/friends_request' 대신 '/friends'로 히스토리 항목을 덮어씀
 window.addEventListener('load', function() {
 	history.replaceState(null, '', '/friends');
@@ -35,36 +36,37 @@ function handleKeyDown(event) {
 function searchFriend() {
 	const nickname = document.getElementById("searchInput").value.trim();
 	const listContainer = document.getElementById("friendList");
-	
+
 	if (nickname === '') {
 		listContainer.innerHTML = '';
 		return;
 	}
-	
+
 	fetch(`/search?nickname=${encodeURIComponent(nickname)}`)
 		.then(response => {
 			if (!response.ok) throw new Error("검색 실패");
 			return response.json();
 		})
 		.then(data => {
-			console.log("검색 결과:", data);
 			if (data.length === 0) {
 				listContainer.innerHTML = `<div style="padding: 1rem;">검색 결과가 없습니다.</div>`;
 				return;
 			}
-	
+
 			listContainer.innerHTML = data.map(user => {
-				console.log("사용자 정보:", user);
+				const imageUrl =
+					user.profileImage.startsWith('http') || user.profileImage.startsWith('/images/')
+						? user.profileImage
+						: `/images/${user.profileImage}`;
+
 				return `
-				<div class="friend-wrapper">
-					<img src="${user.profileImage ? user.profileImage : '/images/default-profile.jpg'}" 
-						 alt="${user.nickname}"
-						 onerror="this.src='/images/default-profile.jpg'">
-					<div class="profile">
-						<div class="name">${user.nickname}</div>
-						<div class="intro">${user.myIntro || '자기소개가 없습니다.'}</div>
+					<div class="friend-wrapper">
+						<img src="${imageUrl}" />
+						<div class="profile">
+							<div class="name">${user.nickname}</div>
+							<div class="intro">${user.myIntro}</div>
+						</div>
 					</div>
-				</div>
 				`;
 			}).join('');
 		})
