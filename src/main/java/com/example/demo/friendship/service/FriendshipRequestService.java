@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.FriendshipRequestDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.friendship.FriendshipRequestDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.mapper.FriendshipRequestMapper;
 
 import java.util.Collections;

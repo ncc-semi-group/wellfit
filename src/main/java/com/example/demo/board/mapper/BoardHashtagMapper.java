@@ -1,6 +1,6 @@
 package com.example.demo.board.mapper;
 
-import com.example.demo.dto.BoardHashtagDto;
+import com.example.demo.dto.board.BoardHashtagDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
