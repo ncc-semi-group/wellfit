@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>layout</title>
+    
+    <!-- 사용할 라이브러리 (의논하여 cdn 기반으로 넣을 라이브러리 추가) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- 공통 css -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    
+    <!-- 페이지별 css 를 위한 블록 -->
+    <th:block layout:fragment="css"></th:block>
+    
+    <!-- 헤더 css (조건부) -->
+    <th:block th:replace="${showHeader == false} ? ~{} : ~{fragments/header :: headerCSS}"></th:block>
+    
+    <!-- 풋터 css (조건부) -->
+    <th:block th:replace="${showFooter == false} ? ~{} : ~{fragments/footer :: navigationBarCSS}"></th:block>
+    
+</head>
+<body>
+<div style="display:none" th:text="${showHeader}"></div>
+
+<!-- 헤더 영역 (조건부) -->
+<th:block th:replace="${showHeader == false} ? ~{} : ~{fragments/header :: header}"></th:block>
+
+<!-- 본문 영역 -->
+<main>
+    <div class="container">
+        <div layout:fragment="content">
+            <!-- 각 페이지의 실제 내용 -->
+        </div>
+    </div>
+</main>
+
+<!-- 푸터 영역 (네비게이션 바, 조건부) -->
+<th:block th:replace="${showFooter == false} ? ~{} : ~{fragments/footer :: navigationBar}"></th:block>
+
+<!-- 공통 JavaScript -->
+<script th:src="@{/js/common.js}"></script>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script"></th:block>
+
+</body>
+</html>

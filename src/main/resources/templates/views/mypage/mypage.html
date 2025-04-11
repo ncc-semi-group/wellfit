@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h3 class="title">마이페이지</h3>
+		<i class="bi bi-pencil-square update-btn"></i>
+    </div>
+
+    <div th:if="${dto != null}">
+        <div class="profile">
+            <img th:src="@{${dto.profileImage != null and dto.profileImage.startsWith('/') ? 
+                dto.profileImage : 
+                (dto.profileImage != null ? '/images/' + dto.profileImage : '/static/images/default-profile.png')}}" 
+                class="my-profile-image">
+            <div class="profile-info">
+                <div class="profile-stats">
+                    <div class="stat-item" id="friend-link">
+                        <div class="stat-number" th:text="${dto.friendCount}"></div>
+                        <div class="stat-label">친구</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${dto.userId2}"></div>
+                        <div class="stat-label">팔로워</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" th:text="${dto.userId1}"></div>
+                        <div class="stat-label">팔로잉</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="username" th:text="${dto.nickname}"></div>
+        <h5 class="info" th:text="${dto.gender == 'male' ? '남성' : '여성'} + ' / ' + ${dto.height} + ' / ' + ${dto.currentWeight}"></h5>
+        <div class="my-intro">
+            <h6>소개</h6>
+            <h6 th:text="${dto.myIntro}"></h6>
+        </div>
+        <br>
+
+        <div class="achievement">
+            <h5>내 업적</h5>
+            <div class="achievement-in">
+                <div class="badge-cnt1" th:data-user-id="${dto.id}">
+                    <img th:src="@{/static/images/업적.png}" class="ach-image">
+                    <h5>보유 뱃지 수</h5>
+                    <h4 th:text="${dto.badgeCount + '개'}" ></h4>
+                </div>
+
+                <div class="badge-cnt2">
+                    <img th:src="@{/static/images/업적2.png}" class="ach-image">
+                    <h5>목표 달성 수</h5>
+                    <h4 th:text="${dto.achievementCount + '개'}"></h4>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="h5">나의 활동</h5>
+        <div>
+            <div class="box">
+                <div class="box-up">
+                    <h4 class = "mypost" th:text="'내 게시글 ' + ${dto.postCount}" th:data-id="${dto.id}"></h4>
+                </div>
+                <div class="box-up">
+                    <h4 class="myComment" th:text="'내 댓글 ' + ${dto.commentCount}" th:data-id="${dto.id}"></h4>
+                </div>
+            </div>
+
+            <div class="like-list">
+                <h5 class="h5">내 좋아요 목록</h5>
+                <div class="like-list-in">
+                    <div th:if="${likeList != null and !likeList.empty}" th:each="like : ${likeList}">
+                        <div class="like-list-inn">
+                            <div class="list1">
+                                <h6 class="like-count" th:text="${like['likeCount'] + '개'}"></h6>
+                            </div>
+                            <div class="list1-in">
+                                <span class="tag-text" th:text="${'#' + like['tag']}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${likeList == null or likeList.empty}" class="text-center p-3">
+                        <p>좋아요 목록이 없습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:unless="${dto != null}" class="text-center p-5">
+        <h3>사용자를 찾을 수 없습니다.</h3>
+        <p>데이터베이스에 해당 사용자 정보가 없습니다.</p>
+    </div>
+
+    <!-- 캘린더 섹션 -->
+    <div class="calendar-section">
+        <h3>일일 통계 캘린더</h3>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button id="prevMonth">&lt;</button>
+                <span id="currentMonth"></span>
+                <button id="nextMonth">&gt;</button>
+            </div>
+            <div class="calendar" id="calendar">
+                <!-- 캘린더 내용이 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- mypage JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage.js}"></script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>사용자 목록</title>
+    
+   	<!-- 페이지별 css -->
+	<th:block layout:fragment="css">
+		<link rel="stylesheet" th:href="@{/css/userpage/userpage_list.css}">
+	</th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="user-list-container">
+        <h2>다른 사용자</h2>
+        <div th:each="user : ${users}" class="user-item" 
+             th:onclick="'window.location.href=\'/userpage/' + ${user.id} + '\''">
+            <img th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
+                user.profileImage : 
+                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" class="user-profile-image" alt="프로필 이미지">
+            <div class="user-info">
+                <div class="user-name" th:text="${user.nickname}">사용자 이름</div>
+                <div class="user-stats">
+                    친구 <span th:text="${user.friendCount}"></span> ·
+                    팔로워 <span th:text="${user.achievementCount}"></span> ·
+                    팔로잉 <span th:text="${user.badgeCount}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

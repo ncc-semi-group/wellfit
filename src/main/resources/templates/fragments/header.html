@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>header fragments</title>
+</head>
+<body>
+<!-- 초안입니다, cluade ai 도움받음 -->
+<header th:fragment="header" class="page-header">
+    <div class="header-container">
+        <!-- 로고 이미지 표시 -->
+        <img th:if="${showLogo}" class="wellFit-logo" th:src="@{/images/wellfit-logo.png}" alt="WellFit 로고">
+        <!-- 페이지 제목 표시 -->
+        <h1 th:unless="${showLogo}" class="page-title" th:text="${pageTitle}"></h1>
+        
+        <div class="user-profile">
+            <!-- 프로필 이미지 표시 (프사 미설정시 기본 프사) -->
+            <img th:if="${userProfileImage}" th:src="${userProfileImage}" alt="프로필 이미지" class="profile-image">
+            <img th:unless="${userProfileImage}" th:src="@{/images/default-profile.jpg}" alt="기본 프로필 이미지" class="profile-image">
+        </div>
+    </div>
+</header>
+
+<th:block th:fragment="headerCSS">
+    <style>
+        /* 헤더 스타일 */
+        .page-header {
+            background-color: white;
+            padding: 16px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            box-sizing: border-box;
+            /* 고정 헤더를 위한 스타일 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
+            /* iOS 상태바 처리 */
+            padding-top: calc(16px + env(safe-area-inset-top, 0));
+            height: 70px;
+        }
+        
+        /* 컨텐츠 영역 패딩 조정 (헤더에 가리지 않도록) */
+        body {
+            margin: 0;
+            padding-top: calc(70px + env(safe-area-inset-bottom, 0px));
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            color: #000;
+        }
+        
+        .user-profile {
+        	padding-top : 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #eaeaea;
+        }
+        
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 24px;
+                
+            }
+            
+            .profile-image {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</th:block>
+
+
+</body>
+</html>

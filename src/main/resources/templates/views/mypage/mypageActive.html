@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <title>나의 활동</title>
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mypage/mypage_active.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn"></i>
+        <h2 class="title">나의 활동</h2>
+    </div>
+
+    <div class="tab-container">
+        <div class="tab1 active">내 게시물</div>
+        <div class="tab2" th:data-user-id="${session.userId}">내가 쓴 댓글</div>
+    </div>
+
+    <div class="board-container">
+        <div th:if="${boardList != null and !boardList.empty}">
+            <div th:each="board : ${boardList}" class="board-item" th:onclick="|window.location.href='/board/detail/${board.id}'|" style="cursor: pointer;">
+                <div class="board-content" th:text="${board.content}"></div>
+                <div class="board-footer">
+                    <div class="board-date" th:text="${#dates.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></div>
+                    <div class="hashtag-list" th:if="${board.hashtags != null and !board.hashtags.empty}">
+                        <span th:each="tag : ${board.hashtags}" class="hashtag" th:text="${'#' + tag.tag}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${boardList == null or boardList.empty}" class="no-posts">
+            <p>작성한 게시물이 없습니다.</p>
+        </div>
+    </div>
+</div>
+
+<!--JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/mypage_active.js}"></script>
+</th:block>
+</body>
+</html>
