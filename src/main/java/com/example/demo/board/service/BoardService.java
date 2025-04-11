@@ -2,43 +2,30 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardMapper;
 import com.example.demo.dto.BoardDto;
+import com.example.demo.dto.CommentDto;
+
 
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 
 @Service
 @AllArgsConstructor
 public class BoardService {
 
 	BoardMapper boardMapper;
+	
 
-	// 모든 게시판 목록 조회
-	public List<BoardDto> getAllBoards() {
-		return boardMapper.selectAllBoards();
-	}
 
 	// 특정 게시판 조회
 	public BoardDto getBoardById(int id) {
 		return boardMapper.selectBoardDetail(id);
 	}
 
-	// 게시판 추가
-	public void addBoard(BoardDto boardDto) {
-		boardMapper.insertBoard(boardDto);
-	}
-
-	// 게시판 수정
-	public void updateBoard(BoardDto boardDto) {
-		boardMapper.updateBoard(boardDto);
-	}
-
-	// 게시판 삭제
-	public void deleteBoard(int id) {
-		boardMapper.deleteBoard(id);
-	}
 
 	public List<BoardDto> getAllBoardWithDetails(){
 		return boardMapper.selectAllBoardsWithDetails();
@@ -47,4 +34,34 @@ public class BoardService {
 	public List<BoardDto> getSelectUserId(int userId){
 		return boardMapper.getSelectUserId(userId);
 	}
+	
+	public List<CommentDto> getCommentByBoardId(int boardId){
+		return boardMapper.selectCommentsByBoardId(boardId);
+	}
+	
+	
+	// 댓글 추가
+	public void addComment(CommentDto commentDto) {
+		boardMapper.insertComment(commentDto);
+	}
+	
+	
+	 @Transactional
+	    public boolean toggleLike(int postId, int userId) {
+	        boolean alreadyLiked = boardMapper.isLiked(postId, userId) > 0;
+
+	        if (alreadyLiked) {
+	        	boardMapper.deleteLike(postId, userId);
+	            return false;
+	        } else {
+	        	boardMapper.insertLike(postId, userId);
+	            return true;
+	        }
+	    }
+
+	    public int getLikeCount(int postId) {
+	        return boardMapper.countLikes(postId);
+	    }
+	
+	
 }

@@ -18,6 +18,7 @@ public class CommentDto {
     private String comment;           // 댓글 내용
     private int parentId;         // 부모 댓글 ID (대댓글에 사용)
     private Timestamp createdAt;  // 생성 시간 
+	private UserDto user;
 	
 	private List<HashtagDto> hashtags;
 	private String nickname;   
