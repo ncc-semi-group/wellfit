@@ -12,14 +12,13 @@
     <link rel="stylesheet" th:href="@{/css/chat/chatroomForm.css}">
     <script th:src="@{/js/chat/chatroomForm.js}"></script>
 </head>
+<script>
+    const userId = [[${userId}]];
+</script>
 <body>
 <div >
     <form action="./create" method="post" enctype="multipart/form-data">
         <table class="table table-bordered">
-            <tr>
-                <td>유저 아이디</td>
-                <td><input type="text" required name="userId" class="form-control"></td>
-            </tr>
             <tr>
                 <td width="100">채팅방 이름</td>
                 <td><input type="text" required name="roomName" class="form-control"></td>

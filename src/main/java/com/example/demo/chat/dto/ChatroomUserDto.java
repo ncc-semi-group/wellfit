@@ -13,4 +13,6 @@ public class ChatroomUserDto {
     private String nickname;
     private String latestReadTime;
     private Timestamp createdAt;
+    private String profileImage;
+    private boolean active;
 }

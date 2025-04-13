@@ -130,7 +130,9 @@ div.modal-content {
     color: white; /* 텍스트 색상 변경 */
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
     transition: right 0.3s ease-in-out;
-    padding: 20px;
+    overflow-y: auto; /* 모달 안 스크롤 */
+    /* footer 안 가리게 */
+    padding: 20px 20px 80px;
 }
 .modal-overlay.active {
     right: 0;
@@ -242,7 +244,7 @@ div.modal-content {
 .pictures img {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 20%;
 }
 
 /* participants: 세로 정렬 + bullet 제거 */
@@ -259,8 +261,10 @@ div.modal-content {
 .participants .participant img {
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 30%;
     margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 div.modal-content {
     display: flex;
@@ -272,4 +276,26 @@ div.modal-content {
     padding-top: 10px;
     padding-left: 10px;
     display: block;
+}
+
+.modal-footer {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.exit-btn {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.exit-btn:hover {
+    background-color: #c82333;
 }

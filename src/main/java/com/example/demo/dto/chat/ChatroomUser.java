@@ -18,4 +18,5 @@ public class ChatroomUser {
     private String chatroomName;
     private Timestamp create_at;
     private Timestamp latest_read_time;
+    private boolean active;
 }

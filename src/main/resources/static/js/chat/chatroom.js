@@ -3,13 +3,19 @@ let socket = null;
 let stompClient = null;
 const reconnectInterval = 5000; // 5초 후 재연결 시도
 // unreadCount
-let readingCount = null;
-
+let readingCount = 0;
 let userCount = null;
 // date
 let latestDateStr = null;
 
-function getUserList() {
+function exitChatroom() {
+    if (confirm("채팅방에서 퇴장하시겠습니까?")) {
+        // 퇴장 처리 로직
+        location.href = "/chat"; // 예: 리스트로 리다이렉트
+    }
+}
+
+async function getUserList(initial) {
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/chatroom/" + roomId + "/members",
@@ -29,9 +35,10 @@ function getUserList() {
                 userMeta.id = user.userId;
                 userMeta.setAttribute("latestReadTime", new Date(user.latestReadTime).toISOString());
                 userMeta.style.display = "none"; // invisible div
-
+                userMeta.setAttribute("active", user.active);
+                console.log("active : " + user.active);
                 const img = document.createElement("img");
-                // img.src = "..."  // 이미지 경로 있으면 설정
+                img.src = user.profileImage;
 
                 const span = document.createElement("span");
                 span.textContent = user.nickname;
@@ -42,7 +49,14 @@ function getUserList() {
                 list.appendChild(li);
             });
 
+            const participants = document.getElementsByClassName("participant");
+            for (let i = 0; i < participants.length; i++) {
+                if (participants[i].getAttribute("active") === "true") {
+                    readingCount++;
+                }
+            }
             userCount = response.length;
+            console.log("userCount : " + userCount);
         },
         error: function (error) {
             console.error("Error fetching user list:", error);
@@ -56,15 +70,13 @@ function getChatroomDetail(){
         url: "http://localhost:8080/chatroom/"+roomId+"/detail",
         dataType: "json",
         success: function(response){
-            roomId= response.roomId;
             const roomName = document.querySelector(".roomName");
             roomName.textContent = response.roomName;
-            readingCount = response.readingCount;
             console.log("readingCount : " + readingCount);
         }
     });
 }
-function getChats(){
+async function getChats(){
     $.ajax({
         type: "GET",
         url: `http://localhost:8080/chatroom/${roomId}/chats`,
@@ -79,9 +91,9 @@ function getChats(){
                 if(chat.messageType=="TALK"){
                     changeDate(chat.createdAt);
                     addTalkMessageWithDB(chat);
+                    activeUsersRead();
                 }else if(chat.messageType=="CREATE"){
                     changeDate(chat.createdAt);
-                    getUserList();
                     addCreateMessage(chat);
                 }else if(chat.messageType=="DELETE") {
                     changeDate(chat.createdAt);
@@ -138,7 +150,8 @@ function onMessageReceived(payload) {
         addTalkMessageWithSocket(message);
     }else if(message.messageType=="CREATE"){
         changeDate(message.createdAt);
-        addCreateMessage(message);
+        getUserList().then(() => addCreateMessage(message))
+        ;
     }else if(message.messageType=="DELETE"){
         changeDate(message.createdAt);
         addDeleteMessage(message);
@@ -153,8 +166,10 @@ function onMessageReceived(payload) {
 }
 function addTalkMessageWithDB(message) {
     const messageContainer = document.querySelector(".chat-container");
-    let unreadCount = userCount - message.readCount - readingCount;
+    let unreadCount = userCount - message.readCount;
+    console.log("message.readCount : " + message.readCount);
     console.log("unreadCount : " +unreadCount);
+    console.log("readingCount : " + readingCount);
     //const messageElement = createTalkMessageElement(message, (userCount - message.readCount==0?"":userCount - message.readCount));
     const messageElement = createTalkMessageElement(message, (unreadCount==0?"":unreadCount));
     messageContainer.appendChild(messageElement);
@@ -163,9 +178,29 @@ function addTalkMessageWithDB(message) {
 
 function addTalkMessageWithSocket(message) {
     const messageContainer = document.querySelector(".chat-container");
-    const messageElement = createTalkMessageElement(message, (userCount - readingCount==0?"":userCount - readingCount));
+    const messageElement = createTalkMessageElement(message, (userCount - message.readCount - readingCount==0?"":userCount - message.readCount - readingCount));
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
+}
+function activeUsersRead(){
+    const users = document.getElementsByClassName("user");
+    let activeUsers = [];
+    for(let i = 0; i < users.length; i++){
+        const user = users[i];
+        if(user.getAttribute("active") == "true"){
+            activeUsers.push(user);
+        }
+    }
+    for(let i = 0; i < activeUsers.length; i++){
+        const user = users[i];
+        console.log("activeUsers : " + user.getAttribute("active") + " / latestReadTime : " + user.getAttribute("latestReadTime") + " / id : " + user.getAttribute("id"));
+        if(user.getAttribute("active") == "true"){
+            const tempLRT = user.getAttribute("latestReadTime");
+            const newReadTime = new Date().toISOString();
+            console.log("readMessages:", tempLRT, "→", newReadTime);
+            readMessages(tempLRT, newReadTime);
+        }
+    }
 }
 function readMessages(time1, time2){
     const chatList = document.querySelectorAll(".message .meta");
@@ -213,7 +248,7 @@ function readMessages(time1, time2){
 function createTalkMessageElement(message, unreadCount) {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
-    console.log("unreadCount : "+unreadCount);
+    //console.log("unreadCount : "+unreadCount);
     if (message.userId == userId) {
         messageElement.classList.add("outgoing");
     } else {
@@ -274,21 +309,32 @@ function addDeleteMessage(message){
 }
 function addEnterMessage(message){
     readingCount++;
+    const users = document.getElementsByClassName("user");
+    for(let i = 0; i < users.length; i++){
+        const user = users[i];
+        if(user.getAttribute("id") == message.userId){
+            user.setAttribute("active", "true");
+            console.log("active : " + user.getAttribute("active"));
+            break;
+        }
+    }
     console.log("readingCount : "+readingCount);
     const userId = message.userId;
     const user = document.getElementById(userId);
     const tempLRT = user.getAttribute("latestReadTime");
-    const newReadTime = message.latestReadTime;
+    const newReadTime = new Date().toISOString();
     console.log("readMessages:", tempLRT, "→", newReadTime);
     user.setAttribute("latestReadTime", newReadTime);
     readMessages(tempLRT, newReadTime);
 }
 function addExitMessage(message){
     readingCount--;
-    console.log("readingCount : "+readingCount);
+    console.log("Exit Message -- readingCount : "+readingCount);
     const userId = message.userId;
     const user = document.getElementById(userId);
+    const newReadTime = message.latestReadTime;
     user.setAttribute("latestReadTime", new Date(newReadTime).toISOString());
+    user.setAttribute("active", "false");
 }
 function addImageMessage(message){
     const messageContainer = document.querySelector(".chat-container");
@@ -320,7 +366,6 @@ function stompConnect(){
             latestReadTime: new Date().toISOString()
         };
         stompClient.send("/pub/chat/on", {}, JSON.stringify(jsonData));
-        getChatroomDetail();
     });
     // ✅ WebSocket 연결 종료 시 /pub/chat/off 에 메시지 전송
     socket.onclose = function () {
@@ -334,10 +379,11 @@ function stompConnect(){
 }
 $(document).ready(function () {
     getChatroomDetail();
-    getUserList();
-    getChats();
-    // 페이지 로드 시 웹소켓 연결
-    stompConnect();
+    getUserList().then(() => {
+        getChats().then(() => {
+            stompConnect();
+        });
+    });
 
     // EventListener
     document.querySelector(".chat button").addEventListener("click", function () {
@@ -367,6 +413,48 @@ $(document).ready(function () {
             document.querySelector(".chat button").click();
         }
     });
+    document.getElementById("imageUpload").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.className = "image-preview";
+
+                const previewContainer = document.getElementById("imagePreviewContainer");
+                previewContainer.innerHTML = ""; // 기존 미리보기 초기화
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    // 드래그로 가로 스크롤 기능 추가
+    const pictureContainer = document.querySelector(".pictures");
+    let isDragging = false;
+    let startX, scrollLeft;
+
+    pictureContainer.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.pageX - pictureContainer.offsetLeft;
+        scrollLeft = pictureContainer.scrollLeft;
+    });
+
+    pictureContainer.addEventListener("mouseleave", () => {
+        isDragging = false;
+    });
+
+    pictureContainer.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
+
+    pictureContainer.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - pictureContainer.offsetLeft;
+        const walk = (x - startX) * 2; // 스크롤 속도 조절
+        pictureContainer.scrollLeft = scrollLeft - walk;
+    });
 });
 
 //  창을 닫거나 이동할 때 서버에 알림
@@ -379,60 +467,44 @@ function sendDisconnectSignal() {
         };
         stompClient.send("/pub/chat/off", {}, JSON.stringify(disconnectData));
         stompClient.disconnect();
+        userActiveChange(userId, "false");
+    }
+}
+function userActiveChange(userId, activeStatus) {
+    const userElement = document.getElementById(userId);
+    if (userElement) {
+        userElement.setAttribute("active", activeStatus);
+        console.log("User " + userId + " active status changed to " + activeStatus);
+    } else {
+        console.error("User element not found for ID: " + userId);
     }
 }
 window.addEventListener("beforeunload", sendDisconnectSignal);
 // 메시지 수신 처리
 
-const exitLink = document.getElementById("exitLink");
-exitLink.href = `/delete/`+userId;
-
-document.getElementById("imageUpload").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = document.createElement("img");
-            img.src = e.target.result;
-            img.className = "image-preview";
-
-            const previewContainer = document.getElementById("imagePreviewContainer");
-            previewContainer.innerHTML = ""; // 기존 미리보기 초기화
-            previewContainer.appendChild(img);
+function exitChatroom(){
+    if (confirm("채팅방에서 퇴장하시겠습니까?")) {
+        const exitData = {
+            roomId: roomId,
+            userId: userId,
+            createdAt: new Date().toISOString()
         };
-        reader.readAsDataURL(file);
+        $.ajax({
+            url: '/chatroom/exit',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(exitData),
+            success: function (res) {
+                console.log("✅ 퇴장 처리 성공:", res);
+                // 퇴장 후 리스트 페이지로 이동
+                window.location.href = '/chat';
+            },
+        });
     }
-});
-
-// 드래그로 가로 스크롤 기능 추가
-const pictureContainer = document.querySelector(".pictures");
-let isDragging = false;
-let startX, scrollLeft;
-
-pictureContainer.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    startX = e.pageX - pictureContainer.offsetLeft;
-    scrollLeft = pictureContainer.scrollLeft;
-});
-
-pictureContainer.addEventListener("mouseleave", () => {
-    isDragging = false;
-});
-
-pictureContainer.addEventListener("mouseup", () => {
-    isDragging = false;
-});
-
-pictureContainer.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - pictureContainer.offsetLeft;
-    const walk = (x - startX) * 2; // 스크롤 속도 조절
-    pictureContainer.scrollLeft = scrollLeft - walk;
-});
+}
 
 function goToList() {
-    window.location.href = "/chatroom/list/"+userId; // 리스트 페이지 URL 설정
+    window.location.href = "/chat"; // 리스트 페이지 URL 설정
 }
 
 function openModal() {

@@ -5,6 +5,7 @@ import com.example.demo.chat.dto.ChatExitDto;
 import com.example.demo.chat.dto.ChatRequestDto;
 import com.example.demo.chat.dto.ChatroomCreateDto;
 import com.example.demo.chat.service.ChatService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,39 +22,41 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class ChatController {
     private final ChatService chatService;
-
     public ChatController(ChatService chatService) {
         this.chatService = chatService;
     }
 
     // Test
-    @GetMapping("/")
+    @GetMapping("/chat/test")
     public String test(){
         return "chat/test";
     }
     // Template
-    @GetMapping("/chatroom/list/{userId}")
-    public String chatroomList(Model model, @PathVariable(value = "userId") Long userId){
+    @GetMapping("/chat")
+    public String chatroomList(HttpSession session, Model model) {
+        Long userId = ((Integer)session.getAttribute("userId")).longValue();
         // 채팅방 목록을 가져와서 모델에 추가
         chatService.findChatroomList(userId);
         model.addAttribute("userId", userId);
         model.addAttribute("showHeader", false);
         return "chat/chatroomList";
     }
-    @GetMapping("/chatroom/all/{userId}")
+    @GetMapping("/chat/list/all")
     @ResponseBody
-    public ResponseEntity<?> chatroomList(@PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> chatroomList(HttpSession session) {
         try {
+            Long userId = ((Integer)session.getAttribute("userId")).longValue();
             return ResponseEntity.ok(chatService.findChatroomList(userId));
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
         }
     }
-    @GetMapping("/chatroom/my/{userId}")
+    @GetMapping("/chat/list/my")
     @ResponseBody
-    public ResponseEntity<?> userChatroomList(@PathVariable(value = "userId") Long userId) {
+    public ResponseEntity<?> userChatroomList(HttpSession session) {
         try {
+            Long userId = ((Integer)session.getAttribute("userId")).longValue();
             return ResponseEntity.ok(chatService.findChatroomByUserId(userId));
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -61,15 +64,17 @@ public class ChatController {
         }
     }
     @GetMapping("/chatroom/form")
-    public String chatroomForm(Model model){
-        model.addAttribute("userId", 2);
+    public String chatroomForm(Model model, HttpSession session) {
+        Long userId = ((Integer)session.getAttribute("userId")).longValue();
+        model.addAttribute("userId", userId);
         return "/chat/chatroomForm";
     }
 
     @GetMapping("/chatroom/enter/{roomId}")
     public String chatroom(Model model,
                            @PathVariable Long roomId,
-                           @RequestParam Long userId) {
+                           HttpSession session) {
+        Long userId = ((Integer)session.getAttribute("userId")).longValue();
         model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
         model.addAttribute("userId", userId);
         model.addAttribute("roomId", roomId);
@@ -97,12 +102,15 @@ public class ChatController {
         chatService.talk(chatDto);
     }
     @PostMapping("/chatroom/create")
-    public String createChatroom(@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
+    public String createChatroom(HttpSession session ,@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
         try{
+            Long userId = ((Integer)session.getAttribute("userId")).longValue();
+            dto.setUserId(userId);
             Long roomId = chatService.createChatroom(dto);
+            System.out.println("userId = " + userId);
             System.out.println("roomId = " + roomId);
             chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId().toString()).roomId(roomId.toString()).createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).build());
-            return "redirect:/chatroom/list/"+dto.getUserId();
+            return "redirect:/chat";
         }catch (RuntimeException e){
             e.printStackTrace();
             return "redirect:/chatroom/form";

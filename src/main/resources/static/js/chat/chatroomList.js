@@ -33,25 +33,29 @@ $(document).ready(function () {
 
                 if (!isMyChatroom) {
                     // 오픈채팅 클릭 시 모달 내용 변경
-                    $('.chatroom').click(function () {
-                        let roomName = $(this).data('roomname');
-                        let description = $(this).data('description');
-                        let userCount = $(this).data('usercount').split(' / ')[0];  // 현재 인원
-                        let maxUser = $(this).data('usercount').split(' / ')[1];    // 최대 인원
-                        let roomId = $(this).data('roomid');
-                        let roomImage = $(this).data('roomimage'); // 👉 이 줄 추가
+                    // 모달용 chatroom 클릭 이벤트 - 동적 요소 대응 (이벤트 위임)
+                    $(document).on('click', '.chatroom', function () {
+                        if (!$(this).attr('onclick')) { // 오픈채팅만 (내 채팅방은 enterChatroom으로 바로 감)
+                            let roomName = $(this).data('roomname');
+                            let description = $(this).data('description');
+                            let userCount = $(this).data('usercount').split(' / ')[0];
+                            let maxUser = $(this).data('usercount').split(' / ')[1];
+                            let roomId = $(this).data('roomid');
+                            let roomImage = $(this).data('roomimage');
 
-                        $('#chatroomModal').data('roomid', roomId)
-                            .data('usercount', parseInt(userCount))
-                            .data('maxuser', parseInt(maxUser));
-                        $('#chatroomModalLabel').text(roomName);
-                        $('#chatroomModal .modal-body').html(`
-                            <div><strong>채팅방 이름:</strong> <span>${roomName}</span></div>
-                            <div><strong>인원:</strong> <span>${userCount}</span></div>
-                            <div><strong>상세설명:</strong> <span>${description}</span></div>
-                            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
-                        `);
+                            $('#chatroomModal').data('roomid', roomId)
+                                .data('usercount', parseInt(userCount))
+                                .data('maxuser', parseInt(maxUser));
+                            $('#chatroomModalLabel').text(roomName);
+                            $('#chatroomModal .modal-body').html(`
+            <div><strong>채팅방 이름:</strong> <span>${roomName}</span></div>
+            <div><strong>인원:</strong> <span>${userCount}</span></div>
+            <div><strong>상세설명:</strong> <span>${description}</span></div>
+            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
+        `);
+                        }
                     });
+
                 }
             }
         });
@@ -60,24 +64,24 @@ $(document).ready(function () {
     // 나의 채팅방 입장 함수
     window.enterChatroom = function (element) {
         let roomId = $(element).data('roomid');
-        const url = "/chatroom/enter/" + roomId+"?userId="+userId;
+        const url = "/chatroom/enter/" + roomId;
         window.location.href = url; // 즉시 입장
     };
 
     // 페이지 로드 시 기본적으로 "오픈채팅" 실행
-    loadChatRooms('http://localhost:8080/chatroom/all/'+userId, false);
+    loadChatRooms('http://localhost:8080/chat/list/all', false);
     $('.btn-openchat').addClass('active');
 
     // 오픈채팅 버튼 클릭 이벤트
     $('.btn-openchat').click(function () {
-        loadChatRooms('http://localhost:8080/chatroom/all/'+userId, false);
+        loadChatRooms('http://localhost:8080/chat/list/all', false);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });
 
     // 나의 채팅방 버튼 클릭 이벤트
     $('.btn-mychat').click(function () {
-        loadChatRooms('http://localhost:8080/chatroom/my/'+userId, true);
+        loadChatRooms('http://localhost:8080/chat/list/my', true);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });

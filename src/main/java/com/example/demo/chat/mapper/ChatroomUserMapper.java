@@ -1,5 +1,6 @@
 package com.example.demo.chat.mapper;
 
+import com.example.demo.chat.dto.ChatRequestDto;
 import com.example.demo.dto.chat.ChatroomUser;
 import com.example.demo.chat.dto.ChatroomUserDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,4 +18,5 @@ public interface ChatroomUserMapper {
     int countChatroomUsers(@Param("roomId") Long roomId);
     void updateLatestReadTime(@Param("roomId") Long roomId, @Param("userId") Long userId);
     int getChatroomUserCount(@Param("roomId") Long roomId);
+    void updateActive(@Param("userId") Long userId, @Param("roomId") Long roomId);
 }
