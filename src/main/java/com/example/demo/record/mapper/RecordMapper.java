@@ -24,8 +24,6 @@ public interface RecordMapper {
     
     void updateUserWeight(UserDto user);
     
-    Integer getTotalKcal(FoodRecordsDto foodRecords);
-    
     DailyStatisticsDto getArchivedDataByStatistics(FoodRecordsDto foodRecords);
     
     void updateAchieved(DailyStatisticsDto dailyStatistics);

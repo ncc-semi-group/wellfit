@@ -79,11 +79,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
-    background-color: #f7f7f7;
+    padding: 15px;
+    background-color: #eee;
     border-radius: 8px;
     margin-bottom: 10px;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .exercise-info {
@@ -93,12 +94,14 @@ body {
 }
 
 .exercise-name {
+    margin-top: 3px;
     margin-left: 5px;
     font-size: 18px;
     font-weight: 500;
 }
 
 .exercise-met {
+    margin-top: 3px;
     margin-right: 5px;
     font-size: 18px;
     color: #888;

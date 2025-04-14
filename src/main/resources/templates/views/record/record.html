@@ -20,7 +20,7 @@
     <div class="date-header" th:data-year="${year}" th:data-month="${month}" th:data-day="${day}">
         <div class="arrow" id="prev-date">&#9664;</div>
         <div class="date">
-            <span class="calendar-icon" id="calendar-btn">&#128197;</span>
+            <span class="calendar-icon" id="calendar-btn">🗓️</span>
             <input type="date" id="date-input">
             <span id="current-date" th:text="${month} + '.' + ${day}"></span>
         </div>
@@ -31,7 +31,7 @@
     <div class="main-content">
         <div class="header">
             <h1>오늘의 기록</h1>
-            <div class="share-button"><i class="bi bi-bar-chart-line"></i></div>
+            <div class="statistics-button"><i class="bi bi-bar-chart-line"></i></div>
         </div>
         <div class="sub-container" th:with="ableKcal = ${dailyStatistics.getRecommendKcal() + dailyStatistics.getTotalBurnedKcal()}">
             <div class="stats">

@@ -56,12 +56,6 @@
         set current_weight = #{currentWeight}
         where id = #{id}
     </update>
-    
-    <select id="getTotalKcal" parameterType="foodRecords" resultType="int">
-        select sum(kcal) as totalKcal
-        from food_records
-        where user_id = #{userId} and date = #{date}
-    </select>
 
     <select id="getArchivedDataByStatistics" parameterType="foodRecords" resultType="DailyStatisticsDto">
         select recommend_kcal, target, is_achieved, user_id, date

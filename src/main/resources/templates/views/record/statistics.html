@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>식품 검색</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/statistics.css}">
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    <!-- 정보 표시줄 -->
+    <div class="info-bar">
+        <div class="left">
+            <span id="infoText"></span> <span class="kcal-info" id="eatKcal"></span> 먹고
+        </div>
+        <div class="right">
+            <span class="kcal-info" id="burnedKcal"></span> 소모했어요
+        </div>
+        <div class="goal-info" th:data-current_weight="${user.getCurrentWeight()}" th:data-target_weight="${user.getGoalWeight()}">
+            <div>
+                <span class="emoji">🎯</span><span id="currentWeight"></span>
+            </div>
+            <div>
+                <span class="emoji" id="targetEmoji"></span><span id="targetLeft"></span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 기간 선택 탭 -->
+    <div class="tab-container">
+        <button class="tab-button active" data-period="daily">일별</button>
+        <button class="tab-button" data-period="weekly">주별</button>
+        <button class="tab-button" data-period="monthly">월별</button>
+    </div>
+    
+    <!-- 체중 차트 -->
+    <div class="chart-container">
+        <div class="chart-title">체중 변화</div>
+        <canvas id="weightChart"></canvas>
+    </div>
+    
+    <!-- 섭취 칼로리 차트 -->
+    <div class="chart-container">
+        <div class="chart-title">섭취 칼로리</div>
+        <canvas id="intakeChart"></canvas>
+    </div>
+    
+    <!-- 소모 칼로리 차트 -->
+    <div class="chart-container">
+        <div class="chart-title">소모 칼로리</div>
+        <canvas id="burnedChart"></canvas>
+    </div>
+</div>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script th:src="@{/js/record/statistics.js}"></script>
+</th:block>
+</body>
+
+</html>

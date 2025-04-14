@@ -573,6 +573,11 @@ $(document).ready(function () {
         }
     });
 
+    // 차트 아이콘 클릭 시 차트 페이지로 이동
+    $('.statistics-button').click(function () {
+        location.href = '/record/statistics';
+    });
+
     /////////////////////////////////////////
 
     // 물음표 아이콘 요소 가져오기

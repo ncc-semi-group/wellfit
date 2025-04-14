@@ -86,7 +86,7 @@ body {
     font-weight: bold;
 }
 
-.share-button {
+.statistics-button {
     font-size: 24px;
 }
 
@@ -281,7 +281,7 @@ body {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* 아이콘 스타일 */
@@ -379,7 +379,7 @@ body {
     left: 50%; /* JavaScript로 동적 설정 */
     width: 8px;
     height: 22px;
-    background-color: #364fc7;
+    background-color: #333;
     border-radius: 4px;
     transform: translateX(-50%); /* 마커 중앙 정렬 */
     transition: left 0.3s ease-out; /* 부드러운 이동 효과 */
