@@ -1,7 +1,8 @@
 package com.example.demo.user.service;
 
 import org.springframework.stereotype.Service;
-import com.example.demo.dto.UserDto;
+
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.mapper.UserPageMapper;
 
 import lombok.RequiredArgsConstructor;

@@ -19,9 +19,7 @@
         </div>
         
         <div class="profile-content">
-            <img class="my-profile-image" th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
-                user.profileImage : 
-                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" alt="프로필 이미지">
+             <img class="my-profile-image" th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" alt="프로필 이미지">
             <div class="profile-info">
                 <div class="profile-stats">
                     <div class="stat-item friend-link" th:data-user-id="${user.id}">
@@ -58,7 +56,7 @@
 		<div class="badge-container">
 		<div class="badge" th:each="badge : ${badgeList}" 
 			 th:class="${badge.isAchieved == 1 ? 'badge-item' : 'badge-item not-achieved'}">
-			<img th:src="@{'/static/images/' + ${badge.badgeImages}}" class="badge-image">
+			<img th:src="@{'/images/' + ${badge.badgeImages}}" class="badge-image">
 			<div class="badge-name" th:text="${badge.badgeName}"></div>
 			<div class="badge-content" th:text="${badge.badgeContents}"></div>
 			<div class="progress-container" th:if="${badge.isAchieved != 1}">

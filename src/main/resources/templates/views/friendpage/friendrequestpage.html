@@ -53,9 +53,9 @@
 						<th:block th:if="${not #lists.isEmpty(recommandFriends)}" th:each="friend : ${recommandFriends}">
 							<div class="recommand-friend-wrapper">
 								<div class="comment">Wellfit의 추천</div>
-								<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
+								<img th:src="${friend.profileImage != null ? friend.profileImage : '/static/images/default-profile.jpg'}"
 									th:alt="${friend.nickname}"
-									onerror="this.src='/images/default-profile.jpg'">
+									onerror="this.src='/static/images/default-profile.jpg'">
 								<div th:text="${friend.nickname}" class="name"></div>
 								<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
 							</div>
@@ -70,9 +70,9 @@
 					</th:block>
 					<th:block th:each="req : ${requests}">
 						<div class="friend-accept-wrapper">
-							<img th:src="${senderMap[req.senderId] != null && senderMap[req.senderId].profileImage != null && senderMap[req.senderId].profileImage != '' ? senderMap[req.senderId].profileImage : '/images/default-profile.jpg'}"
+							<img th:src="${senderMap[req.senderId] != null ? senderMap[req.senderId].profileImage : '/static/images/default-profile.jpg'}"
 								th:alt="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}"
-								onerror="this.src='/images/default-profile.jpg'">
+								onerror="this.src='/static/images/default-profile.jpg'">
 							<div class="profile">
 								<div th:text="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}" class="name"></div>
 								<div th:text="${req.requestMessage != null ? req.requestMessage : '요청 메시지가 없습니다.'}" class="intro"></div>

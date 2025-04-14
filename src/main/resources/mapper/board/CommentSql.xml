@@ -3,20 +3,20 @@
 <mapper namespace="com.example.demo.board.mapper.CommentMapper">
 
     <!-- 모든 댓글 조회 -->
-    <select id="selectAllComments" resultType="com.example.demo.dto.CommentDto">
+    <select id="selectAllComments" resultType="com.example.demo.dto.board.CommentDto">
         SELECT id, board_id AS boardId, user_id AS userId, comment, parent_id AS parentId, created_at AS createdAt
         FROM comment
     </select>
 
     <!-- 특정 게시판의 댓글 조회 -->
-    <select id="selectCommentsByBoardId" parameterType="int" resultType="com.example.demo.dto.CommentDto">
+    <select id="selectCommentsByBoardId" parameterType="int" resultType="com.example.demo.dto.board.CommentDto">
         SELECT id, board_id AS boardId, user_id AS userId, comment, parent_id AS parentId, created_at AS createdAt
         FROM comment
         WHERE board_id = #{boardId}
     </select>
 
     <!-- 댓글 삽입 -->
-    <insert id="insertComment" parameterType="com.example.demo.dto.CommentDto" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertComment" parameterType="com.example.demo.dto.board.CommentDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO comment (board_id, user_id, comment, parent_id, created_at)
         VALUES (#{boardId}, #{userId}, #{comment}, 
             CASE 
@@ -27,7 +27,7 @@
     </insert>
 
     <!-- 댓글 수정 -->
-    <update id="updateComment" parameterType="com.example.demo.dto.CommentDto">
+    <update id="updateComment" parameterType="com.example.demo.dto.board.CommentDto">
         UPDATE comment
         SET comment = #{comment}, parent_id = #{parentId}
         WHERE id = #{id}

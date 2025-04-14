@@ -1,10 +1,12 @@
-package com.example.demo.dto;
+package com.example.demo.dto.board;
 
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.ibatis.type.Alias;
+
+import com.example.demo.dto.hashtag.HashtagDto;
 
 import lombok.Data;
 

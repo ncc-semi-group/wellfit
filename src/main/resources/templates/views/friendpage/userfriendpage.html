@@ -2,7 +2,7 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}" >
+      layout:decorate="~{layouts/layout2}" >
 
 <head>
     <meta charset="UTF-8">
@@ -11,12 +11,13 @@
     
     <!-- 페이지별 css -->
     <th:block layout:fragment="css">
-        <link rel="stylesheet" th:href="@{/css/friendpage/friendpage.css}">
+        <link rel="stylesheet" th:href="@{/css/friendpage/user_friendpage.css}">
     </th:block>
     
 </head>
 <body>
 <div layout:fragment="content">
+	<i class="bi bi-arrow-left back-btn"></i>
 	<div class="content-container">
 		<div class="search-container">
 			<div class="search-wrapper">

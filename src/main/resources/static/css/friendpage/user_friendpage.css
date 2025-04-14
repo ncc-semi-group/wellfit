@@ -9,6 +9,7 @@
 }
 
 .content-container {
+	padding-top : 6rem;
 	width: 25.75rem;
 	height: 47.626rem;
 	display: flex;

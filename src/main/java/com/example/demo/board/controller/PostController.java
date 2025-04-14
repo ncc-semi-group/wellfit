@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.BoardService;
-import com.example.demo.dto.BoardDto;
+import com.example.demo.dto.board.BoardDto;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 

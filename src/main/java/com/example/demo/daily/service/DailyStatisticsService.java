@@ -1,7 +1,8 @@
 package com.example.demo.daily.service;
 
 import com.example.demo.daily.mapper.DailyStatisticsMapper;
-import com.example.demo.dto.DailyStatisticsDto;
+import com.example.demo.dto.statistics.DailyStatisticsDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

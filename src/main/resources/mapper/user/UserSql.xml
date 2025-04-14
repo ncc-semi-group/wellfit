@@ -61,6 +61,10 @@
         WHERE email = #{id}
     </select>
     
+    <update id = "changeImage" parameterType="Map">
+    	update user set profile_image = #{profileImage} where id=#{id}
+    </update>
+    
     <!-- =============================== -->
     
      <!-- 사용자 추가 -->
@@ -98,13 +102,13 @@
     <!-- ================================== -->
     
     <!-- 모든 유저 조회 -->
-    <select id="getAllUsers" resultType="com.example.demo.dto.UserDto">
+    <select id="getAllUsers" resultType="com.example.demo.dto.user.UserDto">
         SELECT id, email, nickname, profile_image 
         FROM user
     </select>
 
 	<!-- 닉네임으로 유저 조회 -->
-    <select id="searchUsersByNickname" resultType="com.example.demo.dto.UserDto">
+    <select id="searchUsersByNickname" resultType="com.example.demo.dto.user.UserDto">
 	    SELECT id, email, nickname, profile_image as profileImage, my_intro as myIntro
 	    FROM user
 	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')

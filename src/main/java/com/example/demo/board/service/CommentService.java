@@ -2,8 +2,8 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.CommentMapper;
 import com.example.demo.badge.service.UserBadgeService;
-import com.example.demo.dto.CommentDto;
-import com.example.demo.dto.UserBadgeDto;
+import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.user.UserBadgeDto;
 
 import lombok.AllArgsConstructor;
 

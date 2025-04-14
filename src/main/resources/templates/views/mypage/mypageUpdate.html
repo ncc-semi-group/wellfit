@@ -22,11 +22,12 @@
             <input type="hidden" th:field="*{id}">
             
             <div class="profile-section text-center">
-                <img th:src="@{${dto.profileImage != null ? '/images/' + dto.profileImage : '/static/images/default-profile.png'}}" 
+                <img th:src="${dto.profileImage != null ? dto.profileImage : '/static/images/default-profile.png'}" 
                      class="profile-image" id="preview-image">
                 <div class="mb-3">
-                    <input type="file" class="form-control" id="profile-upload" name="upload" 
+                    <input type="file" class="form-control" id="profile-upload" name="file" 
                            accept="image/*" onchange="previewImage(this)">
+                    <input type="hidden" name="profileImage" th:value="${dto.profileImage}">
                 </div>
             </div>
 

@@ -23,9 +23,7 @@
         </div>
         
         <div class="profile-content">
-            <img class="my-profile-image" th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
-                user.profileImage : 
-                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" alt="프로필 이미지">
+            <img class="my-profile-image" th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" alt="프로필 이미지">
             <div class="profile-info">
                 <div class="profile-stats">
                     <div class="stat-item friend-link" th:data-user-id="${user.id}">

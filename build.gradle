@@ -35,6 +35,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	//add gradle-naver storage
+	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4' 
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.416'
 }
 
 tasks.named('test') {

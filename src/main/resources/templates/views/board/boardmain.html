@@ -561,7 +561,7 @@
             </div>
             <div class="profile-modal-content">
                 <div class="profile-image-large">
-                    <img src="" alt="Profile">
+                    <img src="${post.user.profileImage || '/static/images/default-profile.png'}" alt="Profile">
                 </div>
                 <div class="profile-name">원숭이는귀여워</div>
                 <div class="profile-description">다같이 고릴라</div>
@@ -643,7 +643,7 @@
             // 프로필 모달을 열기 위한 함수
             function openProfileModal(userData) {
                 // 사용자 데이터로 모달 내용 업데이트
-                $('#profileModal .profile-image-large img').attr('src', '/images/' + userData.profileImage);
+                $('#profileModal .profile-image-large img').attr('src', userData.profileImage || '/static/images/default-profile.png');
                 $('#profileModal .profile-name').text(userData.nickname);
                 $('#profileModal .profile-description').text(userData.description || '설명이 없습니다');
                 $('#profileModal .profile-stats .stat:nth-child(1) .stat-number').text(userData.followersCount || 0);
@@ -859,7 +859,7 @@
 		                            <!-- 사용자 정보 -->
 		                            <div class="post-user">
 		                                <div class="post-user-image post-profile-trigger" data-user='${JSON.stringify(post.user)}'>
-		                                    <img src="/images/${post.user.profileImage}" alt="Profile">
+		                                    <img src="${post.user.profileImage || '/static/images/default-profile.png'}" alt="Profile">
 		                                </div>
 		                                <div class="post-user-info">
 		                                    <div class="post-user-details">
