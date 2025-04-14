@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.board.mapper.BoardMapper">
-	<!-- ResultMap 정의 -->
-	<resultMap id="BoardResultMap" type="BoardDto">
-		<id property="id" column="id"/>
-		<result property="userId" column="user_id"/>
-		<result property="createdAt" column="created_at"/>
-		<result property="content" column="content"/>
-		<collection property="hashtags" ofType="HashtagDto">
-			<id property="id" column="tag_id"/>
-			<result property="tag" column="tag"/>
-		</collection>
-	</resultMap>
 
 	<!-- 게시판 상세 정보 조회 (이미지, 좋아요 수 포함) -->
 	<select id="selectBoardDetail" parameterType="int"
@@ -304,12 +293,6 @@
         LIMIT 5
     </select>
 
-
-
-
-
-
-
  <resultMap id="BoardImageMap" type="BoardImageDto">
         <id property="id" column="image_id"/>
         <result property="boardId" column="board_id"/>
@@ -346,103 +329,4 @@
     </select>
 
 
-
-
-	<!-- 게시판 상세 정보 조회 -->
-	<select id="selectBoardDetail" parameterType="int" resultMap="BoardDetailResultMap">
-		SELECT
-			b.id,
-			b.created_at AS createdAt,
-			b.content,
-			u.id AS userId,
-			u.nickname AS userNickname,
-			u.profile_image AS userProfileImage,
-			COUNT(DISTINCT bl.id) AS likesCount,
-			COUNT(DISTINCT c.id) AS commentCount,
-			bi.id AS imageId,
-			bi.file_name AS fileName
-		FROM board b
-		JOIN user u ON b.user_id = u.id
-		LEFT JOIN board_like bl ON b.id = bl.board_id
-		LEFT JOIN board_image bi ON b.id = bi.board_id
-		LEFT JOIN comment c ON b.id = c.board_id
-		WHERE b.id = #{boardId}
-		GROUP BY b.id, b.created_at, b.content, u.id, u.nickname, u.profile_image, u.my_intro, bi.id, bi.file_name
-		ORDER BY b.created_at ASC
-	</select>
-
-	<!-- 모든 게시판 목록 상세 정보 조회 -->
-	<select id="selectAllBoardsWithDetails" resultMap="BoardDetailResultMap">
-		SELECT
-			b.id AS id,
-			b.created_at AS createdAt,
-			b.content AS content,
-			u.id AS userId,
-			u.nickname AS userNickname,
-			u.profile_image AS userProfileImage,
-			u.my_intro AS myIntro,
-			COUNT(DISTINCT bl.id) AS likesCount,
-			COUNT(c.id) AS commentCount,
-			bi.id AS imageId,
-			bi.file_name AS fileName
-		FROM board b
-		JOIN user u ON b.user_id = u.id
-		LEFT JOIN board_like bl ON b.id = bl.board_id
-		LEFT JOIN board_image bi ON b.id = bi.board_id
-		LEFT JOIN comment c ON b.id = c.board_id
-		GROUP BY b.id, u.id, bi.id, bi.file_name
-		ORDER BY b.created_at DESC
-	</select>
-
-	<!-- 댓글 관련 쿼리 -->
-	<select id="selectCommentsByBoardId" resultMap="CommentResultMap">
-		SELECT 
-			c.id, 
-			c.parent_id AS parentId, 
-			c.board_id AS boardId, 
-			c.user_id AS userId, 
-			c.comment, 
-			c.created_at AS createdAt,
-			u.nickname AS userNickname, 
-			u.profile_image AS userProfileImage
-		FROM comment c
-		JOIN user u ON c.user_id = u.id
-		WHERE c.board_id = #{boardId}
-		ORDER BY c.created_at ASC
-	</select>
-
-	<insert id="insertComment" parameterType="CommentDto">
-		INSERT INTO comment (board_id, user_id, comment, created_at)
-		VALUES (#{boardId}, #{userId}, #{comment}, NOW())
-	</insert>
-	
-	<insert id="insertReply" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO comment (board_id, user_id, comment, parent_id, created_at)
-		VALUES (#{boardId}, #{userId}, #{comment}, #{parentId}, NOW())
-	</insert>
-
-	<delete id="deleteComment">
-		DELETE FROM comment WHERE id = #{id}
-	</delete>
-
-	<!-- 좋아요 관련 쿼리 -->
-	<select id="isLiked" resultType="int">
-		SELECT COUNT(*) FROM board_like
-		WHERE board_id = #{postId} AND user_id = #{userId}
-	</select>
-
-	<insert id="insertLike">
-		INSERT INTO board_like (user_id, board_id)
-		VALUES (#{userId}, #{postId})
-	</insert>
-
-	<delete id="deleteLike">
-		DELETE FROM board_like
-		WHERE user_id = #{userId} AND board_id = #{postId}
-	</delete>
-
-	<select id="countLikes" resultType="int">
-		SELECT COUNT(*) FROM board_like
-		WHERE board_id = #{postId}
-	</select>
 </mapper>
