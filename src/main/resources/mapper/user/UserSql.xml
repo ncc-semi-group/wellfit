@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.user.mapper.UserMapper">
     <select id="getSelectUser" resultType="UserDto" useCache="false">
         SELECT u.id, u.email, u.nickname, u.profile_image as profileImage, 
@@ -8,8 +8,8 @@
         u.goal_weight as goalWeight, u.type,
         u.my_intro as myIntro,
         (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
-        (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
-        (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2,
+        (SELECT COUNT(*) FROM follow WHERE user_id1 = u.id) as followingCount,
+        (SELECT COUNT(*) FROM follow WHERE user_id2 = u.id) as followerCount,
         (SELECT COUNT(*) FROM user_badge WHERE user_id = u.id AND is_achieved = 1) as badgeCount,
         (SELECT COUNT(*) FROM daily_statistics WHERE user_id = u.id AND is_achieved = 1) as achievementCount,
         (SELECT COUNT(*) FROM board WHERE user_id = u.id) as postCount,
@@ -41,8 +41,8 @@
             current_weight = #{currentWeight}, goal_weight = #{goalWeight}, type = #{type},
             created_at = now(), my_intro = #{myIntro}
         <if test="profileImage !=null">
-			,profile_image = #{profileImage} <!-- null이 아니면 update문에 들어가야하므로 ,도 줘야함** -->
-		</if>
+         ,profile_image = #{profileImage} <!-- null이 아니면 update문에 들어가야하므로 ,도 줘야함** -->
+      </if>
         WHERE id = #{id}
     </update>
     
@@ -102,7 +102,7 @@
     <!-- ================================== -->
     
     <!-- 모든 유저 조회 -->
-    <select id="getAllUsers" resultType="com.example.demo.dto.user.UserDto">
+    <select id="getAllUsers" resultType="UserDto">
         SELECT id, email, nickname, profile_image 
         FROM user
     </select>
@@ -119,7 +119,57 @@
         INSERT INTO user (email, password, nickname, profile_image, created_at)
         VALUES (#{email}, #{password}, #{nickname}, #{profileImage}, CURRENT_TIMESTAMP)
     </insert> -->
+
+  
+     <!-- 로그인: 이메일로 사용자 조회 -->
+    <select id="getUserByEmail" parameterType="String" resultType="UserDto">
+        SELECT id, email, password
+        FROM user
+        WHERE email = #{email}
+    </select>
     
+    <!-- 사용자 ID로 Salt 조회 -->
+    <select id="getSaltByUserId" parameterType="int" resultType="String">
+        SELECT salt FROM user_salt WHERE user_id = #{userId}
+    </select>
+
+    <!-- 유저 삽입 -->
+   <insert id="insertUserAccount" parameterType="UserDto">
+       INSERT INTO user (email, password, nickname)
+       VALUES (#{email}, #{password}, #{nickname});
+       <selectKey resultType="int" keyProperty="id" order="AFTER">
+           SELECT LAST_INSERT_ID()
+       </selectKey>
+   </insert>
+   
+   <!-- salt 삽입 -->
+   <insert id="insertUserSalt">
+       INSERT INTO user_salt (user_id, salt)
+       VALUES (#{userId}, #{salt})
+   </insert>
+    
+    <update id="updateUserInitInfo1" parameterType="UserDto">
+	    UPDATE user
+	    SET 
+	        gender = #{gender},
+	        age = #{age},
+	        height = #{height},
+	        current_weight = #{currentWeight},
+	        goal_weight = #{goalWeight},
+	        activity_level = #{activityLevel}
+	    WHERE id = #{id}
+	</update>
+	
+	<update id="updateUserInitInfo2" parameterType="UserDto">
+	    UPDATE user
+	    SET 
+	        type = #{type},
+	        carbohydrate = #{carbohydrate},
+	        protein = #{protein},
+	        fat = #{fat}
+	    WHERE id = #{id}
+	</update>
+
     <!-- 프로필 이미지 경로 확인용 쿼리 -->
     <select id="checkProfileImages" resultType="UserDto">
         SELECT id, nickname, profile_image as profileImage

@@ -1,5 +1,8 @@
 package com.example.demo.board.mapper;
 
+
+import com.example.demo.dto.board.CommentDto;
+
 import org.apache.ibatis.annotations.*;
 
 import com.example.demo.dto.board.CommentDto;
@@ -26,4 +29,6 @@ public interface CommentMapper {
 	
 
 	public List<CommentDto> getSelectUserId(int userId);
+	
+	
 }

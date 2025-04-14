@@ -14,6 +14,7 @@ import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.user.UserBadgeDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.service.UserPageService;
+import com.example.demo.friendship.service.FollowService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class UserPageController {
     private final UserBadgeService userBadgeService;
     private final BadgeService badgeService;
     private final BoardLikeService boardLikeService;
+    private final FollowService followService;
 
     @GetMapping("/userpage/{userId}")
     public String userPage(@PathVariable("userId") int userId, Model model, HttpSession session) {

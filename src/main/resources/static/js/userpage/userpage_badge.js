@@ -17,4 +17,22 @@ $(document).ready(function () {
 	        alert('사용자 정보를 찾을 수 없습니다.');
 	    }
 	});
+	
+	$('#follower').click(function() {
+			var userId = $('.friend-link').data('user-id');
+			if (userId) {
+				window.location.href = '/userpage/follower/' + userId;
+			} else {
+				alert('사용자 정보를 찾을 수 없습니다.');
+			}
+		});
+			
+		$('#following').click(function() {
+			var userId = $('.friend-link').data('user-id');
+			if (userId) {
+				window.location.href = '/userpage/following/' + userId;
+			} else {
+				alert('사용자 정보를 찾을 수 없습니다.');
+			}
+		});
 });

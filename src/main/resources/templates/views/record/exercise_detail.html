@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>식단 기록</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/exercise_detail.css}">
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    
+    <!-- 헤더 영역 -->
+    <div class="top-layout">
+        <div class="header">
+            <div class="header-top">
+                <div class="back-title-group">
+                    <div class="back-button"><i class="bi bi-arrow-left"></i></div>
+                    <div class="title" th:attr="data-year=${year},
+                    data-month=${month}, data-day=${day}">운동 기록</div>
+                </div>
+            </div>
+            <div class="header-line"></div>
+        </div>
+        
+        <!-- 칼로리 및 영양소 정보 영역 -->
+        <div class="info-container">
+            <div class="info-row">
+                <!-- 덤벨 아이콘 -->
+                <div class="dumbbell-container">
+                    <div class="circle-bg">
+                        <div class="dumbbell">
+                            <div class="dumbbell-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 영양소 정보 영역 -->
+            <div class="exercises">
+                <div class="exercise">
+                    <div class="exercise-label">
+                        <span>운동시간</span>
+                    </div>
+                    <div class="exercise-value time-val"></div>
+                </div>
+                <div class="exercise">
+                    <div class="exercise-label">
+                        <span>소모량</span>
+                    </div>
+                    <div class="exercise-value kcal-val"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 음식 목록 영역 -->
+    <div class="menu-section">
+        <div class="menu-header">
+            <div class="menu-title">오늘 한 운동</div>
+        </div>
+        
+        <div class="exercise-items-container">
+            <div class="exercise-items-wrapper">
+                <th:block th:each="e : ${exerciseRecordItems}">
+                    <div class="exercise-item" th:with="level = ${e.exerciseLevel != 1
+                    ? (e.exerciseLevel == 2 ? '적당히' : '격하게') : '가볍게'}">
+                        <div class="exercise-info" th:attr="
+                        data-id=${e.id},
+                        data-kcal=${e.burnedKcal},
+                        data-exercise_time=${e.exerciseTime}">
+                            <div class="exercise-name" th:text="${e.exerciseType}"></div>
+                            <div class="exercise-time-level" th:text="${e.exerciseTime + '분, ' + level}"></div>
+                        </div>
+                        <div class="exercise-right">
+                            <span class="exercise-calorie" th:text="${e.burnedKcal + ' kcal'}"></span>
+                            <span class="remove-button">×</span>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 하단 버튼 영역 -->
+    <div class="bottom-buttons">
+        <div class="add-button"><i class="bi bi-plus"></i></div>
+        <div class="complete-button">수정 완료</div>
+    </div>
+    
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    
+    <script th:src="@{/js/record/exercise_detail.js}"></script>
+
+</th:block>
+</body>
+
+</html>

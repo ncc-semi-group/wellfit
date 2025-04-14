@@ -1,5 +1,6 @@
 package com.example.demo.daily.mapper;
 
+import com.example.demo.dto.statistics.DailyStatisticsDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -68,16 +68,23 @@ body * {
 
 .stat-item {
 	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+	transform: scale(1.05);
+	color: #007bff;
 }
 
 .stat-number {
-	font-size: 18px;
+	font-size: 1.2rem;
 	font-weight: bold;
-	color: #005666;
+	margin-bottom: 0.2rem;
 }
 
 .stat-label {
-	font-size: 14px;
+	font-size: 0.9rem;
 	color: #666;
 }
 

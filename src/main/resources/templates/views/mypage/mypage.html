@@ -32,12 +32,12 @@
                         <div class="stat-number" th:text="${dto.friendCount}"></div>
                         <div class="stat-label">친구</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${dto.userId2}"></div>
+                    <div class="stat-item" id="follower">
+                        <div class="stat-number" th:text="${dto.followerCount}"></div>
                         <div class="stat-label">팔로워</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${dto.userId1}"></div>
+                    <div class="stat-item" id="following">
+                        <div class="stat-number" th:text="${dto.followingCount}"></div>
                         <div class="stat-label">팔로잉</div>
                     </div>
                 </div>

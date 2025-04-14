@@ -19,6 +19,24 @@ $(document).ready(function() {
 	        alert('사용자 정보를 찾을 수 없습니다.');
 	    }
 	});
+	
+	$('#follower').click(function() {
+		var userId = $('.friend-link').data('user-id');
+		if (userId) {
+			window.location.href = '/userpage/follower/' + userId;
+		} else {
+			alert('사용자 정보를 찾을 수 없습니다.');
+		}
+	});
+		
+	$('#following').click(function() {
+		var userId = $('.friend-link').data('user-id');
+		if (userId) {
+			window.location.href = '/userpage/following/' + userId;
+		} else {
+			alert('사용자 정보를 찾을 수 없습니다.');
+		}
+	});
 
     // 캘린더 초기화
     const userId = $('.box-title2').data('user-id');
@@ -127,4 +145,43 @@ $(document).ready(function() {
     $('.back-btn').click(function() {
         history.back();
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 친구 목록 클릭 이벤트
+    const friendLink = document.querySelector('.friend-link');
+    if (friendLink) {
+        friendLink.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = '/userpage/friends/' + userId;
+            }
+        });
+    }
+
+    // 팔로워 클릭 이벤트
+    const followerBtn = document.getElementById('follower');
+    if (followerBtn) {
+        followerBtn.addEventListener('click', function() {
+            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
+            window.location.href = `/userpage/follower/${userId}`;
+        });
+    }
+
+    // 팔로잉 클릭 이벤트
+    const followingBtn = document.getElementById('following');
+    if (followingBtn) {
+        followingBtn.addEventListener('click', function() {
+            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
+            window.location.href = `/userpage/following/${userId}`;
+        });
+    }
+    
+    // 뒤로가기 버튼 클릭 이벤트
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            window.history.back();
+        });
+    }
 });

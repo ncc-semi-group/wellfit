@@ -3,31 +3,31 @@
 <mapper namespace="com.example.demo.friendship.mapper.FriendshipMapper">
 
     <!-- 모든 친구 관계 조회 -->
-    <select id="getAllFriendships" resultType="com.example.demo.dto.friendship.FriendshipDto">
+    <select id="getAllFriendships" resultType="FriendshipDto">
         SELECT id, user1_id, user2_id FROM friendship
     </select>
 
     <!-- 유저의 친구 목록 조회 -->
-    <select id="getFriendsByUserId" resultType="com.example.demo.dto.user.UserDto">
-        SELECT DISTINCT u.id, u.nickname, u.profile_image as profileImage, u.my_intro as myIntro
-        FROM user u
-        INNER JOIN friendship f ON (f.user1_id = u.id OR f.user2_id = u.id)
+    <select id="getFriendsByUserId" resultType="UserDto">
+        SELECT DISTINCT u.id, u.nickname, u.profile_image AS profileImage, u.my_intro AS myIntro
+        FROM friendship f
+        JOIN user u ON (f.user1_id = u.id OR f.user2_id = u.id)
         WHERE (f.user1_id = #{userId} OR f.user2_id = #{userId})
-        AND u.id != #{userId}
+          AND u.id != #{userId}
     </select>
     
     <!-- 찬구 검색 -->
-    <select id="searchFriendsByUserId" parameterType="map" resultType="com.example.demo.dto.user.UserDto">
-        SELECT u.id, u.name, u.nickname, u.profile_image as profileImage
-        FROM user u
-        INNER JOIN friendship f ON (f.user1_id = u.id OR f.user2_id = u.id)
+    <select id="searchFriendsByUserId" parameterType="map" resultType="UserDto">
+        SELECT u.id, u.name, u.nickname, u.profile_image AS profileImage
+        FROM Friendship f
+        JOIN User u ON (f.user1_id = u.id OR f.user2_id = u.id)
         WHERE (f.user1_id = #{userId} OR f.user2_id = #{userId})
         AND u.name LIKE CONCAT('%', #{query}, '%')
         AND u.id != #{userId}
     </select>
 
     <!-- 친구 관계 추가 -->
-    <insert id="insertFriendship" parameterType="com.example.demo.dto.friendship.FriendshipDto">
+    <insert id="insertFriendship" parameterType="FriendshipDto">
         INSERT INTO friendship (user1_id, user2_id)
         VALUES (#{user1Id}, #{user2Id})
     </insert>

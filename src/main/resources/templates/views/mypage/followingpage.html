@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <meta charset="UTF-8">
+    <title>팔로잉 목록</title>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mypage/followingpage.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn" onclick="history.back()"></i>
+        <h3 class="title">팔로잉</h3>
+    </div>
+
+    <div class="user-info">
+        <img th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" 
+             class="profile-image"
+             onerror="this.src='/static/images/default-profile.png'">
+        <span class="username" th:text="${user.nickname}"></span>
+        <span class="following-count" th:text="'팔로잉 ' + ${following.size()}"></span>
+    </div>
+
+    <div class="following-list">
+        <div th:each="followingUser : ${following}" class="following-item">
+            <div class="following-info">
+                <img th:src="${followingUser.profileImage != null ? followingUser.profileImage : '/static/images/default-profile.png'}" 
+                     class="following-image"
+                     onerror="this.src='/static/images/default-profile.png'">
+                <div class="following-details">
+                    <span class="following-name" th:text="${followingUser.nickname}"></span>
+                    <span class="following-intro" th:text="${followingUser.myIntro}"></span>
+                </div>
+            </div>
+            <button class="follow-btn following" 
+                    th:data-user-id="${followingUser.id}">팔로잉</button>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/followingpage.js}"></script>
+</th:block>
+</body>
+</html> 

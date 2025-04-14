@@ -4,9 +4,9 @@ package com.example.demo.dto.board;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.ibatis.type.Alias;
-
 import com.example.demo.dto.hashtag.HashtagDto;
+import com.example.demo.dto.user.UserDto;
+import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
 
@@ -20,6 +20,7 @@ public class CommentDto {
     private String comment;           // 댓글 내용
     private int parentId;         // 부모 댓글 ID (대댓글에 사용)
     private Timestamp createdAt;  // 생성 시간 
+	private UserDto user;
 	
 	private List<HashtagDto> hashtags;
 	private String nickname;   

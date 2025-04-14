@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.chat.mapper.ChatroomMapper">
+    <resultMap id="Chatroom" type="com.example.demo.dto.chat.Chatroom">
+        <result property="roomId" column="id"/>
+        <result property="chatroomName" column="chatroom_name"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="readingCount" column="reading_count"/>
+    </resultMap>
+    <resultMap id="ChatroomDto" type="com.example.demo.chat.dto.ChatroomDto">
+        <result property="roomId" column="id"/>
+        <result property="roomName" column="chatroom_name"/>
+        <result property="roomImage" column="room_image"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/> <result property="readingCount" column="reading_count"/>
+        <result property="maxUser" column="max_user"/>
+        <result property="userCount" column="user_count"/>
+        <result property="currentUser" column="currentUser"/>
+    </resultMap>
+    <insert id="insertChatroom" parameterType="com.example.demo.dto.chat.Chatroom"
+    useGeneratedKeys="true" keyProperty="id">
+        insert into chatroom (chatroom_name, max_user, description, room_image) values (#{chatroomName}, #{maxUser}, #{description}, #{roomImage});
+    </insert>
+    <delete id="deleteChatroom" parameterType="java.lang.Long">
+        delete from chatroom where id=#{roomId};
+    </delete>
+    <select id="findChatroomById" parameterType="java.lang.Long" resultMap="ChatroomDto">
+        select * from chatroom where id=#{roomId};
+    </select>
+    <select id="findChatroomByUserId" parameterType="java.lang.Long" resultMap="ChatroomDto">
+        select chatroom.id, chatroom.chatroom_name, chatroom.room_image, chatroom.description,
+               chatroom.created_at, chatroom.reading_count, chatroom.max_user,
+               count(chatroom_user.user_id) as user_count
+        from chatroom
+                 left join chatroom_user on chatroom.id = chatroom_user.chatroom_id
+        where chatroom_user.user_id = #{userId}  -- ✅ WHERE 절을 GROUP BY 앞에 배치
+        group by chatroom.id, chatroom.chatroom_name, chatroom.room_image, chatroom.description,
+                 chatroom.created_at, chatroom.reading_count, chatroom.max_user;
+    </select>
+    <select id="isFull" resultType="boolean" parameterType="java.lang.Long">
+        select exists(select * from chatroom where max_user = (select count(*) from chatroom_user where chatroom_id = #{roomId}));
+    </select>
+    <update id="addReadingCount" parameterType="java.lang.Long">
+        update chatroom set reading_count = reading_count+1 where id = #{roomId}
+    </update>
+    <update id="subtractReadingCount" parameterType="java.lang.Long">
+        update chatroom set reading_count = reading_count-1 where id = #{roomId}
+    </update>
+    <select id="findChatroomList" resultMap="ChatroomDto" parameterType="java.lang.Long">
+        SELECT
+            chatroom.id,
+            chatroom.chatroom_name,
+            chatroom.room_image,
+            chatroom.description,
+            chatroom.created_at,
+            chatroom.reading_count,
+            chatroom.max_user,
+            COUNT(cu.user_id) AS user_count
+        FROM chatroom
+                 LEFT JOIN chatroom_user cu ON chatroom.id = cu.chatroom_id
+        WHERE chatroom.id NOT IN (
+            SELECT chatroom_id
+            FROM chatroom_user
+            WHERE user_id = #{userId}
+        )
+        GROUP BY chatroom.id, chatroom.chatroom_name, chatroom.room_image,
+                 chatroom.description, chatroom.created_at,
+                 chatroom.reading_count, chatroom.max_user;
+
+    </select>
+    <update id="clearAllActiveUsers">
+        update chatroom set reading_count = 0;
+    </update>
+</mapper>

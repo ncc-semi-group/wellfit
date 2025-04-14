@@ -1,5 +1,8 @@
 package com.example.demo.board.mapper;
 
+
+import com.example.demo.dto.board.BoardImageDto;
+
 import org.apache.ibatis.annotations.*;
 
 import com.example.demo.dto.board.BoardImageDto;

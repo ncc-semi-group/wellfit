@@ -14,9 +14,23 @@ document.addEventListener("DOMContentLoaded", function() {
             profileImage: profileImage,
             myIntro: myIntro
         });
+
+        // 친구 항목 클릭 이벤트 추가
+        friendElement.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = `/userpage/` + userId;
+            }
+        });
     });
 
-    updateFriendList(friendsList);
+    // 뒤로가기 버튼 클릭 이벤트
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            window.history.back();
+        });
+    }
 });
 
 // 닉네임으로 친구 검색
@@ -36,10 +50,17 @@ function updateFriendList(friends) {
     listContainer.innerHTML = '';
 
     friends.forEach(friend => {
+        let imageUrl = friend.profileImage;
+
+        // URL 형태가 아니면 /images/ 붙이기
+        if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/images/')) {
+            imageUrl = `/images/${imageUrl}`;
+        }
+
         const friendElement = document.createElement('div');
         friendElement.classList.add('friend-wrapper');
         friendElement.innerHTML = `
-            <img src="${friend.profileImage}" alt="${friend.nickname}" />
+            <img src="${imageUrl}" alt="${friend.nickname}" />
             <div class="profile">
                 <div class="name">${friend.nickname}</div>
                 <div class="intro">${friend.myIntro}</div>
@@ -48,9 +69,3 @@ function updateFriendList(friends) {
         listContainer.appendChild(friendElement);
     });
 }
-
-// 뒤로가기 버튼 클릭 이벤트
-$('.back-btn').click(function() {
-    history.back();
-});
-	

@@ -30,14 +30,14 @@
 
 		<div class="list-container">
 			<th:block th:each="friend : ${friends}">
-				<div class="friend-wrapper">
+				<div class="friend-wrapper" th:data-user-id="${friend.id}">
 					<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
 						 th:alt="${friend.nickname}"
 						 onerror="this.src='/images/default-profile.jpg'">
-                    <div class="profile">
-                    	<div th:text="${friend.nickname}" class="name"></div>
-                    	<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
-                    </div>
+					<div class="profile">
+						<div th:text="${friend.nickname}" class="name"></div>
+						<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
+					</div>
 				</div>
 			</th:block>
 		</div>
@@ -45,7 +45,7 @@
 	
 	<!-- JavaScript -->
 	<th:block layout:fragment="script">
-	    <script th:src="@{/js/friendpage/friendpage.js}"></script>
+	    <script th:src="@{/js/friendpage/user_friendpage.js}"></script>
 	</th:block>
 </div>
 </body>

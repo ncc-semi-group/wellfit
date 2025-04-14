@@ -2,7 +2,6 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardHashtagMapper;
 import com.example.demo.dto.board.BoardHashtagDto;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

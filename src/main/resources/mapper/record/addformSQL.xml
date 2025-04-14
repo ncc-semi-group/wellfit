@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.AddFormMapper">
+
+    <insert id="addFoodNutrition" parameterType="FoodNutrition">
+        insert into individual_food_nutrition (user_id, name, standard, kcal, protein, fat, carbohydrate, sugar,
+                                               natrium, cholesterol, saturated_fat, trans_fat, manufacturer_name,
+                                               serving_size, weight)
+        values (#{userId}, #{name}, #{standard}, #{kcal}, #{protein}, #{fat}, #{carbohydrate}, #{sugar}, #{natrium},
+                #{cholesterol}, #{saturatedFat}, #{transFat}, #{manufacturerName}, #{servingSize}, #{weight})
+    </insert>
+
+    <select id="getFoodNutritionById" parameterType="int" resultType="FoodNutrition">
+        select id,
+               name,
+               standard,
+               kcal,
+               protein,
+               fat,
+               carbohydrate,
+               sugar,
+               natrium,
+               cholesterol,
+               saturated_fat     as saturatedFat,
+               trans_fat         as transFat,
+               manufacturer_name as manufacturerName,
+               serving_size      as servingSize,
+               weight
+        from individual_food_nutrition
+        where id = #{foodId}
+    </select>
+
+    <update id="updateFoodNutrition" parameterType="FoodNutrition">
+        update individual_food_nutrition
+        set name              = #{name},
+            standard          = #{standard},
+            kcal              = #{kcal},
+            protein           = #{protein},
+            fat               = #{fat},
+            carbohydrate      = #{carbohydrate},
+            sugar             = #{sugar},
+            natrium           = #{natrium},
+            cholesterol       = #{cholesterol},
+            saturated_fat     = #{saturatedFat},
+            trans_fat         = #{transFat},
+            manufacturer_name = #{manufacturerName},
+            serving_size      = #{servingSize},
+            weight            = #{weight}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFoodNutrition" parameterType="int">
+        delete
+        from individual_food_nutrition
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteFoodFavorites" parameterType="int">
+        delete
+        from food_favorites
+        where food_id = #{foodId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/loginpage/inputdata2.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+	<a th:href="@{/inputdata1}" class="btn-back"> <svg
+			xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem"
+			fill="currentColor" stroke="currentColor" stroke-width="0.8"
+			class="bi bi-arrow-left" viewBox="0 0 16 16">
+						<path fill-rule="evenodd"
+				d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
+					</svg>
+	</a>
+	<div class="step-container">
+		<div class="step">1</div>
+		<div class="current-step">2</div>
+	</div>
+	<form method="post" action="/updateinputdata2" class="content-container">
+		<div class="notice">
+			탄단지 계산 완료!<br> 섭취량을 바꿀 수도 있어요.
+		</div>
+		<div class="value-select-container">
+			<div class="value-category">
+				식단
+				<div class="value-detail" id="mealDesc">균형잡힌 탄단지 구성</div>
+			</div>
+			<div class="value-select-wrapper">
+				<input type="radio" id="common" name="type" value="common" class="value-select-radio" hidden checked>
+				<label for="common" class="value-select" data-desc="일반적인 균형잡힌 식단">일반</label>
+			
+				<input type="radio" id="health" name="type" value="health" class="value-select-radio" hidden>
+				<label for="health" class="value-select" data-desc="근육 증가와 회복을 위한 고단백 식단">운동</label>
+			
+				<input type="radio" id="quito" name="type" value="quito" class="value-select-radio" hidden>
+				<label for="quito" class="value-select" data-desc="탄수화물을 최소화한 지방 중심 식단">키토</label>
+			
+				<input type="radio" id="vegan" name="type" value="vegan" class="value-select-radio" hidden>
+				<label for="vegan" class="value-select" data-desc="동물성 식품을 배제한 채식 식단">비건</label>
+			</div>
+		</div>
+
+
+		<div class="value-category">순탄수</div>
+		<div class="value-container">
+			<div class="input-wrapper">
+				<input id="carbohydrate" name="carbohydrate" class="value-input"
+					value="57" oninput="updateMacros()"> <span class="unit">%</span>
+			</div>
+			<div class="value-wrapper">
+				<div class="value" id="carbCal">- Kcal</div>
+				<div class="value" id="carbGram">- g</div>
+			</div>
+		</div>
+
+		<div class="value-category">단백질</div>
+		<div class="value-container">
+			<div class="input-wrapper">
+				<input id="protein" name="protein" class="value-input" value="18"
+					oninput="updateMacros()"> <span class="unit">%</span>
+			</div>
+			<div class="value-wrapper">
+				<div class="value" id="proteinCal">- Kcal</div>
+				<div class="value" id="proteinGram">- g</div>
+			</div>
+		</div>
+
+		<div class="value-category">지방</div>
+		<div class="value-container">
+			<div class="input-wrapper">
+				<input id="fat" name="fat" class="value-input" value="25"
+					oninput="updateMacros()"> <span class="unit">%</span>
+			</div>
+			<div class="value-wrapper">
+				<div class="value" id="fatCal">- Kcal</div>
+				<div class="value" id="fatGram">- g</div>
+			</div>
+		</div>
+		
+		<div id="targetCalDisplay" class="result-wrapper">
+			<div>내목표칼로리</div>
+			<span id="calorieHolder"
+			      th:text="${targetCalories + ' Kcal'}"
+			      th:attr="data-calories=${targetCalories}">
+			</span>
+
+		</div>
+
+		<button type="submit" class="btn-next">시작하기</button>
+	</form>
+</div>
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+	<script th:src="@{/js/loginpage/inputdata2.js}"></script>
+</th:block>
+</body>
+</html>

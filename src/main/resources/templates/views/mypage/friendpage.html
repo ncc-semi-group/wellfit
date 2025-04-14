@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout2}">
+<head>
+    <meta charset="UTF-8">
+    <title>친구 목록</title>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mypage/friendpage.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="header">
+        <i class="bi bi-arrow-left back-btn" onclick="history.back()"></i>
+        <h3 class="title">친구</h3>
+    </div>
+
+    <div class="user-info">
+        <img th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" 
+             class="profile-image"
+             onerror="this.src='/static/images/default-profile.png'">
+        <span class="username" th:text="${user.nickname}"></span>
+        <span class="friend-count" th:text="'친구 ' + ${friends.size()}"></span>
+    </div>
+
+    <div class="friend-list">
+        <div th:each="friend : ${friends}" class="friend-item">
+            <div class="friend-info" th:onclick="|location.href='@{/userpage/{id}(id=${friend.id})}'|">
+                <img th:src="${friend.profileImage != null ? friend.profileImage : '/static/images/default-profile.png'}" 
+                     class="friend-image"
+                     onerror="this.src='/static/images/default-profile.png'">
+                <div class="friend-details">
+                    <span class="friend-name" th:text="${friend.nickname}"></span>
+                    <span class="friend-intro" th:text="${friend.myIntro}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:src="@{/js/mypage/friendpage.js}"></script>
+</th:block>
+</body>
+</html> 

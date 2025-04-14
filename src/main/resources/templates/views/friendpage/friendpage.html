@@ -26,7 +26,7 @@
 	            </svg>
 				<input type="text" placeholder="친구 검색" oninput="searchFriendByNickname()" />
 			</div>
-			<a th:href="@{/friends_request}" class="plus" th:classappend="${currentPage == 'friends'} ? 'active' : ''"> 
+			<a th:href="@{/friendrequestpage}" class="plus" th:classappend="${currentPage == 'friends'} ? 'active' : ''"> 
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor" width="2rem" height="2rem">
 					<circle cx="16" cy="16" r="16" fill="#005667" />
 					<path d="M16 8v16 M8 16h16" stroke="white" stroke-width="4" stroke-linecap="round" />
@@ -37,7 +37,7 @@
 
 		<div class="list-container">
 			<th:block th:each="friend : ${friends}">
-				<div class="friend-wrapper">
+				<div class="friend-wrapper" id="friend-item" th:data-user-id="${friend.id}">
 					<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
 						 th:alt="${friend.nickname}"
 						 onerror="this.src='/images/default-profile.jpg'">
@@ -49,11 +49,10 @@
 			</th:block>
 		</div>
 	</div>
-	
-	<!-- JavaScript -->
-	<th:block layout:fragment="script">
-	    <script th:src="@{/js/friendpage/friendpage.js}"></script>
-	</th:block>
 </div>
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/friendpage/friendpage.js}"></script>
+</th:block>
 </body>
 </html>

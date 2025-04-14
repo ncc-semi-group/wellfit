@@ -3,10 +3,9 @@ package com.example.demo.dto.board;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.ibatis.type.Alias;
-
 import com.example.demo.dto.hashtag.HashtagDto;
 import com.example.demo.dto.user.UserDto;
+import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
 
@@ -26,9 +25,10 @@ public class BoardDto {
 	
 	// 해시태그 목록
 	private List<HashtagDto> hashtags;
-	
+
 	// 이미지 관련 필드
 	private int imageCount;
 	private String thumbnailImage;
 	private List<String> imageUrls;
+	
 }

@@ -1,7 +1,5 @@
 package com.example.demo.dto.user;
 
-import java.sql.Timestamp;
-
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
@@ -20,8 +18,8 @@ public class UserDto {
 		custom, common, health, quito, vegan
 	}
 
-	
-	
+
+
 	private int id; // 사용자 ID (자동 증가)
 	private String email; // 이메일
 	private String password; // 비밀번호 (해싱)
@@ -40,7 +38,7 @@ public class UserDto {
 	private int fat; // 지방
 	private String createdAt; // 생성시간 (타임스탬프)
 	private String myIntro; // 자기소개
-	
+
 	// 마이페이지 추가 필드
 	private int friendCount;
 	private int badgeCount;
@@ -49,7 +47,9 @@ public class UserDto {
 	private int commentCount;
 	private int userId1;
 	private int userId2;
-	
+	private int followerCount; // 팔로워 수
+	private int followingCount; // 팔로잉 수
+
 	// 좋아요 목록용 필드
 	private String title;
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.chat.mapper.ChatroomUserMapper">
+    <resultMap id="ChatroomUserDto" type="com.example.demo.chat.dto.ChatroomUserDto">
+        <result property="userId" column="user_id"/>
+        <result property="roomId" column="chatroom_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="latestReadTime" column="latest_read_time"/>
+        <result property="nickname" column="nickname"/>
+    </resultMap>
+    <insert id="insertChatroomUser">
+        insert into chatroom_user (chatroom_id, user_id) values (#{roomId}, #{userId});
+    </insert>
+    <delete id="deleteChatroomUser">
+        delete from chatroom_user where chatroom_id = #{roomId} and user_id=#{userId};
+    </delete>
+    <select id="findChatroomUserByIds" resultMap="ChatroomUserDto">
+        select user_id, chatroom_id, created_at, latest_read_time, nickname from chatroom_user, user where chatroom_user.user_id=user.id and chatroom_id=#{roomId};
+    </select>
+    <select id="findChatroomUserByUserId" resultMap="ChatroomUserDto">
+        select user_id, chatroom_id, created_at, latest_read_time, nickname from chatroom_user, user where chatroom_user.user_id=user.id and user_id=#{userId};
+    </select>
+    <select id="getChatroomUserCount" parameterType="java.lang.Long" resultType="int">
+        select count(*) from chatroom_user where chatroom_id=#{roomId};
+    </select>
+    <select id="findChatroomUserByChatroomId" parameterType="java.lang.Long" resultMap="ChatroomUserDto">
+        select user_id, chatroom_id, created_at, latest_read_time, user.nickname from chatroom_user, user where chatroom_user.user_id=user.id and chatroom_id=#{roomId};
+    </select>
+    <select id="countChatroomUsers" resultType="int">
+        select count(*) from chatroom_user where chatroom_id=#{roomId};
+    </select>
+    <update id="updateLatestReadTime" parameterType="java.lang.Long">
+        update chatroom_user set latest_read_time = now() where chatroom_id=#{roomId} and user_id=#{userId};
+    </update>
+</mapper>

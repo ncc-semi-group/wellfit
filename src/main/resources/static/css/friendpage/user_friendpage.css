@@ -106,12 +106,9 @@
 }
 
 .profile .intro {
-	font-size: 0.75rem;
-	font-weight: bold;
-	color: #6D6D6D;
-	text-wrap: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	font-size: 0.9rem;
+	color: #666;
+	padding-top : 0.4rem;
 }
 
 .friend-wrapper .btn-message {
@@ -140,4 +137,13 @@
     font-size : 24px;
     cursor : pointer;
     padding-top : 0.4rem;
+}
+
+.user-item {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.user-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }

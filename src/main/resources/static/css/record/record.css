@@ -1,0 +1,780 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.date-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.date-header .date {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.date-header .date .calendar-icon {
+    color: #ff5252;
+    margin-right: 10px;
+}
+
+#date-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.arrow {
+    color: #aaa;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.main-content {
+    background-color: #d7e1e4;
+    padding: 20px;
+}
+
+/* 컨테이너 */
+.sub-container {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.share-button {
+    font-size: 24px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.stat-item {
+    width: 33%;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #555;
+}
+
+.calories-info {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.calories-count {
+    display: flex;
+    align-items: baseline;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.calories-count .total {
+    margin-left: 5px;
+}
+
+.calories-and-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -5px;
+}
+
+.progress-label {
+    font-size: 12px;
+    text-align: right;
+    text-decoration: underline;
+    color: #333;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+}
+
+.fill-carb, .fill-protein, .fill-fat {
+    height: 100%;
+    width: 0%; /* Will be set by JavaScript */
+}
+
+.fill-carb {
+    background-color: #ddd;
+}
+
+.fill-protein {
+    background-color: #567d46;
+}
+
+.fill-fat {
+    background-color: #f3e37c;
+}
+
+.nutrition-section {
+    margin-bottom: -15px;
+}
+
+.nutrition-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.nutrition-item {
+    width: 100%;
+    margin-right: 15px;
+}
+
+.nutrition-item:last-child {
+    margin-right: 0;
+}
+
+.nutrition-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.nutrition-bar {
+    height: 12px;
+    background-color: white;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    border: 1px solid #eee;
+}
+
+.nutrition-fill {
+    height: 100%;
+    border-radius: 6px;
+}
+
+
+.carb-fill, .cholesterol-fill, .sodium-fill, .sugar-fill, .saturated-fill, .trans-fill {
+    background-color: #ddd;
+    width: 0%; /* Will be set by JavaScript */
+}
+
+.protein-fill {
+    background-color: #567d46;
+    width: 0%; /* Will be set by JavaScript */
+}
+
+.fat-fill {
+    background-color: #f3e37c;
+    width: 0%; /* Will be set by JavaScript */
+}
+
+.nutrition-value {
+    font-size: 12px;
+    color: #777;
+}
+
+.detail-button {
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+#detailSection {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+    opacity: 0;
+}
+
+#detailSection.open {
+    max-height: 500px; /* Set to a value larger than the content will ever be */
+    opacity: 1;
+}
+
+
+
+
+/* 식사 카드 컨테이너 */
+.meal-card {
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 아이콘 스타일 */
+.meal-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+}
+
+/* 식사명 스타일 */
+.meal-name {
+    flex-grow: 1;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 칼로리 스타일 */
+.meal-calories {
+    margin-right: 15px;
+    font-size: 16px;
+    color: #666;
+}
+
+/* 상태 아이콘 스타일 */
+.status-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #666;
+    font-size: 24px;
+}
+
+
+/* 아침 아이콘 스타일 */
+.breakfast-icon {
+    color: #ff6b6b;
+}
+
+/* 점심 아이콘 스타일 */
+.lunch-icon {
+    color: #feca57;
+}
+
+/* 저녁 아이콘 스타일 */
+.dinner-icon {
+    color: #48dbfb;
+}
+
+/* 간식 아이콘 스타일 */
+.snack-icon {
+    color: #5f27cd;
+}
+
+
+
+
+/* 체중 */
+
+/* 체중 정보 레이아웃 */
+.weight-info {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+/* BMI 범위 막대 관련 스타일 */
+.bmi-range-container {
+    margin: 15px 0 25px 0;
+    position: relative;
+}
+
+.bmi-range-bar {
+    height: 12px;
+    width: 100%;
+    background: linear-gradient(to right,
+    #74c0fc 0%, #74c0fc 15.6%,    /* 저체중 (16~18.5) */
+    #82c91e 15.6%, #82c91e 43.8%, /* 정상 (18.5~23) */
+    #fd7e14 43.8%, #fd7e14 56.3%, /* 과체중 (23~25) */
+    #e03131 56.3%, #e03131 87.5%, /* 비만 (25~30) */
+    #c92a2a 87.5%, #c92a2a 100%   /* 고도비만 (30~32) */
+    );
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.bmi-marker {
+    position: absolute;
+    top: -5px;
+    left: 50%; /* JavaScript로 동적 설정 */
+    width: 8px;
+    height: 22px;
+    background-color: #364fc7;
+    border-radius: 4px;
+    transform: translateX(-50%); /* 마커 중앙 정렬 */
+    transition: left 0.3s ease-out; /* 부드러운 이동 효과 */
+}
+
+.bmi-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+}
+
+/* 체중 데이터 컨테이너 */
+.weight-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+/* 현재 체중 표시 */
+.current-weight {
+    font-size: 38px;
+    font-weight: bold;
+}
+
+/* 체중 변화 정보 */
+.weight-changes {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.weight-change {
+    font-size: 15px;
+    color: #495057;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.weight-change:last-child {
+    margin-bottom: 0;
+}
+
+/* BMI 정보 */
+.bmi-info {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 5px;
+    color: #364fc7;
+}
+
+/* 등록 버튼 */
+.record-button {
+    background-color: #0b6e99;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* 등록 버튼 호버 효과 */
+.record-button:hover {
+    background-color: #0a5d82;
+}
+
+
+
+/* 운동 */
+
+
+/* 운동 정보 레이아웃 */
+.exercise-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+/* 덤벨 아이콘 컨테이너 */
+.dumbbell-container {
+    position: relative;
+    width: 130px;
+    height: 130px;
+}
+
+/* 원형 배경 */
+.circle-bg {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background-color: #FEF08A;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 덤벨 아이콘 스타일 */
+.dumbbell {
+    position: relative;
+    width: 60px;
+    height: 15px;
+}
+
+.dumbbell:before, .dumbbell:after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 25px;
+    background-color: #4b4b4b;
+    border-radius: 5px;
+}
+
+.dumbbell:before {
+    left: 0;
+    top: -5px;
+}
+
+.dumbbell:after {
+    right: 0;
+    top: -5px;
+}
+
+.dumbbell-bar {
+    position: absolute;
+    width: 40px;
+    height: 6px;
+    background-color: #9ca3af;
+    left: 10px;
+    top: 4px;
+    border-radius: 3px;
+}
+
+/* 운동 데이터 컨테이너 */
+.exercise-data {
+    flex-grow: 1;
+    padding-left: 40px;
+}
+
+/* 운동 시간 텍스트 */
+.exercise-time-label {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* 운동 시간 값 */
+.exercise-time-value {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 칼로리 정보 */
+.burn-calories-info {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* 불꽃 아이콘 */
+.fire-icon {
+    color: #f97316;
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+/* 등록 버튼 */
+.record-button {
+    background-color: #0b6e99;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* 등록 버튼 호버 효과 */
+.record-button:hover {
+    background-color: #0a5d82;
+}
+
+
+/* 모달 창 */
+/* 모달 관련 스타일 */
+.modal-overlay {
+    position: fixed;
+    top: -70px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-container {
+    background-color: white;
+    width: 100%;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(100%);
+    transition: transform 0.3s ease-out;
+}
+
+.modal-overlay.show .modal-container {
+    transform: translateY(0);
+}
+
+.modal-overlay.hide {
+    opacity: 0;
+}
+
+.modal-overlay.hide .modal-container {
+    transform: translateY(100%);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+#cheatDetail {
+    color: #648b96;
+    font-weight: normal;
+    margin-left: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.modal-close {
+    font-size: 30px;
+    color: #999;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.modal-body {
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.weight-input-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.weight-input {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    text-align: left;
+    width: 4.5ch; /* 3자리 숫자 + 소수점 + 소수점 아래 1자리 */
+    border: none;
+    outline: none;
+    background: transparent;
+    -moz-appearance: textfield;
+}
+
+/* 크롬, 사파리, 엣지, 오페라에서 화살표 제거 */
+.weight-input::-webkit-outer-spin-button,
+.weight-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.weight-unit {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 입력 필드와 단위를 포함한 그룹 */
+.weight-input-group {
+    display: inline-flex;
+    align-items: center;
+}
+
+.modal-footer {
+    display: flex;
+    padding: 15px;
+}
+
+.modal-button {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.cancel-button {
+    background-color: #f1f3f5;
+    color: #495057;
+    margin-right: 10px;
+}
+
+.submit-button {
+    background-color: #0b6e99;
+    color: white;
+}
+
+
+
+/* 치팅데이 설정 모달 */
+.points-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.points-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.points-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 사용 버튼 */
+.use-button {
+    background-color: #0b6e99;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 0;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+.use-button:hover {
+    background-color: #0a5d82;
+}
+
+
+
+
+/**//**//**//**//**//**//**//**//**//**//**//**//**//**/
+
+
+/* 모달 밖에 있는 툴팁을 위한 스타일 */
+.popover-tooltip {
+    position: fixed; /* 화면에 고정 */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    width: 300px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    z-index: 2000; /* 모달보다 높은 z-index */
+    display: none;
+    border: 1px solid #eee;
+    opacity: 0; /* 기본 상태는 투명 */
+    transition: opacity 0.3s ease; /* 부드러운 투명도 변화 애니메이션 */
+}
+
+/* 툴팁 화살표 */
+.popover-tooltip:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px 8px 0 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+/* 툴팁이 보이게 하는 클래스 */
+.popover-tooltip.show {
+    display: block;
+    opacity: 1;
+}

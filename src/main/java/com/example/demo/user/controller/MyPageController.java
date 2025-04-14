@@ -2,9 +2,7 @@ package com.example.demo.user.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.badge.service.BadgeService;
@@ -21,15 +19,12 @@ import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.board.service.BoardLikeService;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.CommentService;
+import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.board.BoardDto;
 import com.example.demo.dto.board.BoardLikeDto;
 import com.example.demo.dto.board.CommentDto;
-import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.user.UserBadgeDto;
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.naver.storage.NcpObjectStorageService;
-import com.example.demo.user.mapper.UserMapper;
-import com.example.demo.user.mapper.UserPageMapper;
 import com.example.demo.user.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -45,12 +40,9 @@ public class MyPageController {
 	final BoardService boardService;
 	final CommentService commentService;
 	final BoardLikeService boardLikeService;
-	final NcpObjectStorageService storageService; 
-	final UserMapper userMapper;
 	
-	private String imagePath="https://kr.object.ncloudstorage.com/bitcamp-bucket-122/wellfit/";
-	private String bucketName = "bitcamp-bucket-122";
-
+	@Value("${file.upload-dir}")
+	private String uploadDir;
 	
 	@GetMapping("/mypage")
 	public String goMypage(HttpSession session, Model model) {
@@ -96,36 +88,39 @@ public class MyPageController {
 		}
 	}
 	
-
-@PostMapping("/update")
-public String updateProfile(@ModelAttribute UserDto userDto, 
-                          @RequestParam(value = "file", required = false) MultipartFile file,
-                          HttpSession session) throws IOException {
-    Integer userId = (Integer) session.getAttribute("userId");
-    if (userId == null) {
-        return "redirect:/login";
-    }
-
-    // 기존 사용자 정보 가져오기
-    UserDto existingUser = userService.getSelectUser(userId);
-    userDto.setId(userId); // ID 설정
-
-    // 프로필 이미지가 업로드된 경우에만 처리
-    if (file != null && !file.isEmpty()) {
-        String filename = storageService.uploadFile(bucketName, "wellfit", file);
-        if (filename != null) {
-            String imageUrl = imagePath + filename;
-            userDto.setProfileImage(imageUrl);
-        }
-    } else {
-        // 기존 이미지 유지
-        userDto.setProfileImage(existingUser.getProfileImage());
-    }
-
-    userService.mypageUpdateUser(userDto);
-    return "redirect:/mypage";
-}
-	
+	@PostMapping("/update")
+	public String updateUser(@ModelAttribute UserDto dto, 
+						   @RequestParam(value = "upload", required = false) MultipartFile upload) {
+		try {
+			// 프로필 이미지 처리
+			if (upload != null && !upload.isEmpty()) {
+				String originalFileName = upload.getOriginalFilename();
+				String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+				String newFileName = UUID.randomUUID().toString() + fileExtension;
+				
+				// 업로드 디렉토리가 없으면 생성
+				File directory = new File(uploadDir);
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				
+				// 파일 저장
+				File destFile = new File(uploadDir + File.separator + newFileName);
+				upload.transferTo(destFile);
+				
+				// 프로필 이미지 경로 설정
+				dto.setProfileImage(newFileName);
+			}
+			
+			// 사용자 정보 업데이트
+			userService.mypageUpdateUser(dto);
+			
+			return "redirect:/mypage";
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "redirect:/mypageUpdate?error";
+		}
+	}
 	
 	@GetMapping("/mypageBadge")
 	public String badgeList(@RequestParam("id") int userId, Model model) {
@@ -208,5 +203,23 @@ public String updateProfile(@ModelAttribute UserDto userDto,
         model.addAttribute("showHeader", false);
         
         return "views/mypage/mypageLike";
+    }
+
+    @GetMapping("/follower/{userId}")
+    public String followerList(@PathVariable int userId, Model model) {
+        UserDto user = userService.getUserProfile(userId);
+        List<UserDto> followers = userService.getUserFollowers(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("followers", followers);
+        return "views/mypage/followerpage";
+    }
+
+    @GetMapping("/following/{userId}")
+    public String followingList(@PathVariable int userId, Model model) {
+        UserDto user = userService.getUserProfile(userId);
+        List<UserDto> following = userService.getUserFollowing(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("following", following);
+        return "views/mypage/followingpage";
     }
 }

@@ -1,0 +1,71 @@
+body * {
+    font-family: 'Jua';
+}
+
+.chatroom {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chatroom img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.chatroom-details {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatroom-name {
+    font-weight: bold;
+}
+
+.user-count {
+    text-align: right;
+    width: 70px; /* 일정한 크기로 맞추기 */
+    color: gray;
+    font-size: 14px;
+}
+
+.toggle-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.toggle-buttons a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #198754;
+    color: white;
+    background-color: #198754;
+}
+
+.toggle-buttons a:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.toggle-buttons a:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.toggle-divider {
+    width: 1px;
+    height: 80%;
+    background-color: white;
+    position: relative;
+}

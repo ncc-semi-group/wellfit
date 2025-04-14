@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.ExerciseDetailMapper">
+
+    <select id="getExerciseRecords" parameterType="ExerciseRecord" resultType="ExerciseRecord">
+        select *
+        from exercise_record
+        where user_id = #{userId}
+          and date = #{date}
+    </select>
+
+    <delete id="deleteExerciseRecord" parameterType="int">
+        delete
+        from exercise_record
+        where id = #{exerciseId}
+    </delete>
+
+    <update id="updateStatisticsKcalAndTime" parameterType="map">
+        update daily_statistics
+        set total_burned_kcal = #{burnedKcal},
+            total_exercise_time = #{exerciseTime}
+        where user_id = #{userId}
+          and date = #{date}
+    </update>
+
+</mapper>
