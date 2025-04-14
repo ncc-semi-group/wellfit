@@ -33,62 +33,73 @@
             <h1>오늘의 기록</h1>
             <div class="share-button"><i class="bi bi-bar-chart-line"></i></div>
         </div>
-        <div class="sub-container">
+        <div class="sub-container" th:with="ableKcal = ${dailyStatistics.getRecommendKcal() + dailyStatistics.getTotalBurnedKcal()}">
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-number">1970</div>
-                    <div class="stat-label">내 목표</div>
+                    <div class="stat-number" th:text="${dailyStatistics.getRecommendKcal()}"></div>
+                    <div class="stat-label">내 목표 : <span id="targetText"></span></div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">200</div>
+                    <div class="stat-number" th:text="${dailyStatistics.getTotalBurnedKcal()}">200</div>
                     <div class="stat-label">소모량</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">2170</div>
+                    <div class="stat-number" id="ableKcal" th:text="${ableKcal}"></div>
                     <div class="stat-label">섭취 가능</div>
                 </div>
             </div>
             
-            <div class="calories-info">625 kcal 섭취 가능</div>
+            <div class="calories-info"><span id="leftoverKcal"></span> kcal 섭취 가능</div>
             
             <div class="calories-and-label">
                 <div class="calories-count">
-                    1545 <span class="total">/ 2170</span> <span class="unit">kcal</span>
+                    <span id="currentKcal"></span> <span class="total" th:text="${'/ ' + ableKcal}"></span> <span class="unit">kcal</span>
+                    <th:block th:if="${dailyStatistics.getCheatingKcal() != 0}">
+                        &nbsp;<span class="cheat-kcal" th:text="${'+ ' + dailyStatistics.getCheatingKcal()}"></span>
+                    </th:block>
                 </div>
                 
-                <div class="progress-label" id="cheatDay">치팅데이 설정</div>
+                <th:block th:if="${dailyStatistics.getCheatingKcal() == 0}">
+                    <div class="progress-label" id="cheatDay">치팅데이 설정</div>
+                </th:block>
             </div>
             
             <div class="progress-bar">
                 <div class="progress-fill">
-                    <div class="fill-carb" data-current="50" data-target="150"></div>
-                    <div class="fill-protein" data-current="30" data-target="105"></div>
-                    <div class="fill-fat" data-current="40" data-target="50"></div>
+                    <div class="fill-carb"></div>
+                    <div class="fill-protein"></div>
+                    <div class="fill-fat"></div>
+                    <div class="distinctive-line"></div>
                 </div>
             </div>
             
-            <div class="nutrition-section">
+            <div class="nutrition-section" th:data-user_target="${dailyStatistics.getTarget()}"
+                 th:data-user_type="${user.getType()}">
+                
                 <div class="nutrition-row">
-                    <div class="nutrition-item">
+                    <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalCarbohydrate(), 1)},
+                        target = ${#numbers.formatInteger(ableKcal * user.getCarbohydrate() / 400, 1)}">
                         <div class="nutrition-label">탄수화물</div>
                         <div class="nutrition-bar">
-                            <div class="nutrition-fill carb-fill" data-current="50" data-target="150"></div>
+                            <div class="nutrition-fill carb-fill alert-test" th:data-current="${current}" th:data-target="${target}"></div>
                         </div>
-                        <div class="nutrition-value">50 / 150g</div>
+                        <div class="nutrition-value"><span id="alertCarb" th:text="${current}"></span><span th:text="${' / ' + target + 'g'}"></span></div>
                     </div>
-                    <div class="nutrition-item">
+                    <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalProtein(), 1)},
+                        target = ${#numbers.formatInteger(ableKcal * user.getProtein() / 400, 1)}">
                         <div class="nutrition-label">단백질</div>
                         <div class="nutrition-bar">
-                            <div class="nutrition-fill protein-fill" data-current="30" data-target="105"></div>
+                            <div class="nutrition-fill protein-fill" th:data-current="${current}" th:data-target="${target}"></div>
                         </div>
-                        <div class="nutrition-value">30 / 105g</div>
+                        <div class="nutrition-value" th:text="${current + ' / ' + target + 'g'}"></div>
                     </div>
-                    <div class="nutrition-item">
+                    <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalFat(), 1)},
+                        target = ${#numbers.formatInteger(ableKcal * user.getFat() / 900, 1)}">
                         <div class="nutrition-label">지방</div>
                         <div class="nutrition-bar">
-                            <div class="nutrition-fill fat-fill" data-current="40" data-target="50"></div>
+                            <div class="nutrition-fill fat-fill alert-test" th:data-current="${current}" th:data-target="${target}"></div>
                         </div>
-                        <div class="nutrition-value">40 / 50g</div>
+                        <div class="nutrition-value"><span id="alertFat" th:text="${current}"></span><span th:text="${' / ' + target + 'g'}"></span></div>
                     </div>
                 </div>
                 
@@ -96,43 +107,43 @@
                 
                 <div id="detailSection">
                     <div class="nutrition-row">
-                        <div class="nutrition-item">
+                        <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalCholesterol(), 1)}">
                             <div class="nutrition-label">콜레스트롤</div>
                             <div class="nutrition-bar">
-                                <div class="nutrition-fill cholesterol-fill" data-current="20" data-target="50"></div>
+                                <div class="nutrition-fill cholesterol-fill alert-test" th:data-current="${current}" data-target="300"></div>
                             </div>
-                            <div class="nutrition-value">20 / 50mg</div>
+                            <div class="nutrition-value"><span th:text="${current}"></span> / 300mg</div>
                         </div>
-                        <div class="nutrition-item">
+                        <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalNatrium(), 1)}">
                             <div class="nutrition-label">나트륨</div>
                             <div class="nutrition-bar">
-                                <div class="nutrition-fill sodium-fill" data-current="1200" data-target="2400"></div>
+                                <div class="nutrition-fill sodium-fill alert-test" th:data-current="${current}" data-target="2000"></div>
                             </div>
-                            <div class="nutrition-value">1200 / 2400mg</div>
+                            <div class="nutrition-value"><span th:text="${current}"></span> / 2000mg</div>
                         </div>
                     </div>
                     
                     <div class="nutrition-row">
-                        <div class="nutrition-item">
+                        <div class="nutrition-item" th:with="current = ${#numbers.formatInteger(dailyStatistics.getTotalSugar(), 1)}">
                             <div class="nutrition-label">당류</div>
                             <div class="nutrition-bar">
-                                <div class="nutrition-fill sugar-fill" data-current="50" data-target="150"></div>
+                                <div class="nutrition-fill sugar-fill alert-test" th:data-current="${current}" data-target="100"></div>
                             </div>
-                            <div class="nutrition-value">50 / 150g</div>
+                            <div class="nutrition-value"><span th:text="${current}"></span> / 100g</div>
                         </div>
-                        <div class="nutrition-item">
+                        <div class="nutrition-item" th:with="current = ${#numbers.formatDecimal(dailyStatistics.getTotalSaturatedFat(), 1, 1)}">
                             <div class="nutrition-label">포화지방</div>
                             <div class="nutrition-bar">
-                                <div class="nutrition-fill saturated-fill" data-current="30" data-target="105"></div>
+                                <div class="nutrition-fill saturated-fill alert-test" th:data-current="${current}" data-target="15"></div>
                             </div>
-                            <div class="nutrition-value">30 / 105g</div>
+                            <div class="nutrition-value"><span th:text="${current}"></span> / 15g</div>
                         </div>
-                        <div class="nutrition-item">
+                        <div class="nutrition-item" th:with="current = ${#numbers.formatDecimal(dailyStatistics.getTotalTransFat(), 1, 1)}">
                             <div class="nutrition-label">트랜스지방</div>
                             <div class="nutrition-bar">
-                                <div class="nutrition-fill trans-fill" data-current="40" data-target="50"></div>
+                                <div class="nutrition-fill trans-fill alert-test" th:data-current="${current}" data-target="3"></div>
                             </div>
-                            <div class="nutrition-value">40 / 50g</div>
+                            <div class="nutrition-value"><span th:text="${current}"></span> / 3g</div>
                         </div>
                     </div>
                 </div>
@@ -211,14 +222,21 @@
             
             
             <!-- 체중 정보 레이아웃 -->
-            <div class="weight-info">
+            <div class="weight-info" th:data-user_height="${user.getHeight()}" th:data-user_weight="${user.getCurrentWeight()}"
+            th:data-past_month_weight="${pastMonthWeight}" th:data-past_week_weight="${pastWeekWeight}"
+            th:data-statistics_weight="${dailyStatistics.getWeight()}" th:data-goal_weight="${dailyStatistics.getGoalWeight()}">
                 <!-- 체중 데이터 헤더 -->
                 <div class="weight-header">
                     <!-- 현재 체중 -->
-                    <div class="current-weight">80 kg</div>
-                    
-                    <!-- BMI 정보 -->
-                    <div class="bmi-info">BMI : 23.5</div>
+                    <div class="current-weight">
+                        <span id="currentWeight"></span> kg
+                    </div>
+                    <div class="info-container">
+                        <!-- 목표 체중 -->
+                        <div class="goal-info"></div>
+                        <!-- BMI 정보 -->
+                        <div class="bmi-info">BMI : 23.5</div>
+                    </div>
                 </div>
                 
                 <!-- BMI 범위 표시 -->
@@ -227,7 +245,7 @@
                     <div class="bmi-marker"></div>
                     <div class="bmi-labels">
                         <span>저체중</span>
-                        <span>정상</span>
+                        <span class="bmi-labels-margin">정상</span>
                         <span>과체중</span>
                         <span>비만</span>
                         <span>고도비만</span>
@@ -238,17 +256,17 @@
                 <div class="weight-changes">
                     <div class="weight-change">
                         <span>일주일 동안</span>
-                        <span>-1kg</span>
+                        <span id="weekDiff">-1kg</span>
                     </div>
                     <div class="weight-change">
                         <span>한 달 동안</span>
-                        <span>-5kg</span>
+                        <span id="monthDiff">-5kg</span>
                     </div>
                 </div>
             </div>
             
             <!-- 등록 버튼 -->
-            <button class="record-button">등록</button>
+            <button class="record-button weight-button">등록</button>
         </div>
         
         
@@ -275,18 +293,18 @@
                     <div class="exercise-time-label">오늘의 운동 시간</div>
                     
                     <!-- 운동 시간 값 -->
-                    <div class="exercise-time-value">50분</div>
+                    <div class="exercise-time-value" th:text="${dailyStatistics.getTotalExerciseTime() + '분'}"></div>
                     
                     <!-- 칼로리 정보 -->
                     <div class="burn-calories-info">
                         <span class="fire-icon">🔥</span>
-                        <span>200 kcal</span>
+                        <span th:text="${dailyStatistics.getTotalBurnedKcal() + ' kcal'}"></span>
                     </div>
                 </div>
             </div>
             
             <!-- 등록 버튼 -->
-            <button class="record-button">등록</button>
+            <button class="record-button exercise-button">등록</button>
         </div>
     </div>
     
@@ -327,7 +345,7 @@
             <div class="modal-body">
                 <div class="points-info">
                     <div class="points-label">사용 가능 포인트</div>
-                    <div class="points-value">700 cp</div>
+                    <div class="points-value"><span id="cheatPoint" th:text="${user.getCheatingDay()}"></span> cp</div>
                 </div>
                 <button class="use-button">사용</button>
             </div>
@@ -336,9 +354,9 @@
     </div>
     
     <div id="cheatDayTooltip" class="popover-tooltip">
-        치팅데이는 식단 계획에서 일시적으로 벗어날 수 있는 특별한 날입니다.
-        칼로리 제한을 초과한 경우, 초과한 칼로리만큼 치팅데이 포인트(cp)를 소모하여 해당 날을 치팅데이로 설정하고 식단 완수를 이어나갈 수 있습니다.
-        포인트는 당일 식단 기록을 자정 전에 완료하고 식단 목표를 달성할 시 일정량 획득할 수 있으며, 최대 1,000포인트까지 보유 가능합니다.
+        칼로리 제한을 초과한 경우, 초과한 칼로리만큼 <span class="accent">치팅데이 포인트(cp)</span>를 소모하여 해당 날을 치팅데이로 설정하고 식단 완수를 이어나갈 수 있습니다.<br>
+        포인트는 <span class="accent">당일 식단 기록을 자정 전에 완료</span>하고 <span class="accent">식단 목표를 달성할 시</span> 일정량 획득할 수 있으며, <br><span class="accent">최대 1,000포인트까지 보유 가능합니다.</span><br>
+        <span class="accent">치팅데이로 설정된 날짜의 식단과 운동 기록은 추후 수정이 불가능</span>하니, 식단 기록을 완료한 후 설정해주시기 바랍니다.
     </div>
 
 
