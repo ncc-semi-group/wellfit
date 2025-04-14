@@ -16,9 +16,7 @@
         <h2>다른 사용자</h2>
         <div th:each="user : ${users}" class="user-item" 
              th:onclick="'window.location.href=\'/userpage/' + ${user.id} + '\''">
-            <img th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
-                user.profileImage : 
-                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" class="user-profile-image" alt="프로필 이미지">
+            <img th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" class="user-profile-image" alt="프로필 이미지">
             <div class="user-info">
                 <div class="user-name" th:text="${user.nickname}">사용자 이름</div>
                 <div class="user-stats">

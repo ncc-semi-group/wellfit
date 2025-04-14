@@ -23,21 +23,19 @@
         </div>
         
         <div class="profile-content">
-            <img class="my-profile-image" th:src="@{${user.profileImage != null and user.profileImage.startsWith('/') ? 
-                user.profileImage : 
-                (user.profileImage != null ? '/images/' + user.profileImage : '/static/images/default-profile.png')}}" alt="프로필 이미지">
+            <img class="my-profile-image" th:src="${user.profileImage != null ? user.profileImage : '/static/images/default-profile.png'}" alt="프로필 이미지">
             <div class="profile-info">
-                <div class="profile-stats">
+                <div class="profile-stats" id="friend-link">
                     <div class="stat-item friend-link" th:data-user-id="${user.id}">
                         <div class="stat-number" th:text="${user.friendCount}"></div>
                         <div class="stat-label">친구</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${user.userId2}"></div>
+                    <div class="stat-item" id="follower" th:data-user-id="${user.id}">
+                        <div class="stat-number" th:text="${user.followerCount}"></div>
                         <div class="stat-label">팔로워</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${user.userId1}"></div>
+                    <div class="stat-item" id="following" th:data-user-id="${user.id}">
+                        <div class="stat-number" th:text="${user.followingCount}"></div>
                         <div class="stat-label">팔로잉</div>
                     </div>
                 </div>

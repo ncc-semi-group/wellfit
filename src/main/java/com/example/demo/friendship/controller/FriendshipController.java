@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.example.demo.dto.friendship.FriendshipRequestDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.service.FriendshipRequestService;
 import com.example.demo.friendship.service.FriendshipService;
+import com.example.demo.user.service.UserPageService;
 import com.example.demo.user.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -27,6 +29,7 @@ public class FriendshipController {
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final FriendshipRequestService friendshipRequestService;
+    private final UserPageService userPageService;
 
     // 친구 페이지
     @GetMapping("/friendpage")
@@ -125,5 +128,38 @@ public class FriendshipController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("친구 요청 거절 중 오류가 발생했습니다.");
         }
+    }
+    
+ // 특정 유저의 친구 목록 페이지
+    @GetMapping("/userpage/friends/{userId}")
+    public String userFriendsList(@PathVariable("userId") int userId, HttpSession session, Model model) {
+        Integer currentUserId = (Integer) session.getAttribute("userId");
+        if (currentUserId == null) {
+            return "redirect:/loginpage";
+        }
+
+        // 해당 유저의 친구 목록 조회
+        List<UserDto> friends = friendshipService.getFriendsByUserId(userId);
+        System.out.println("친구 목록:");
+        for (UserDto friend : friends) {
+            // 프로필 이미지 경로 처리
+            if (friend.getProfileImage() != null && !friend.getProfileImage().startsWith("http")) {
+                friend.setProfileImage("/images/" + friend.getProfileImage());
+            }
+            System.out.println("ID: " + friend.getId() + ", Nickname: " + friend.getNickname() + ", ProfileImage: " + friend.getProfileImage());
+        }
+        
+        // 해당 유저의 정보 조회
+        UserDto userDto = userPageService.getUserProfile(userId);
+        if (userDto.getProfileImage() != null && !userDto.getProfileImage().startsWith("/")) {
+            userDto.setProfileImage("/images/" + userDto.getProfileImage());
+        }
+        
+        model.addAttribute("user", userDto);
+        model.addAttribute("friends", friends);
+        model.addAttribute("showHeader", false);
+        model.addAttribute("showFooter", false);
+        
+        return "views/friendpage/userfriendpage";
     }
 }

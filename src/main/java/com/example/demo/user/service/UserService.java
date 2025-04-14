@@ -184,4 +184,16 @@ public class UserService {
     public void insertUser(UserDto userDto) {
     	userMapper.insertUser(userDto);
     }
+
+	public UserDto getUserProfile(int userId) {
+		return userMapper.getUserProfile(userId);
+	}
+
+	public List<UserDto> getUserFollowers(int userId) {
+		return userMapper.getUserFollowers(userId);
+	}
+
+	public List<UserDto> getUserFollowing(int userId) {
+		return userMapper.getUserFollowing(userId);
+	}
 }

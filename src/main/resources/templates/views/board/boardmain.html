@@ -747,7 +747,9 @@
                             <div class="post-container" data-post-id="${post.id}">
                                 <div class="post-user">
                                     <div class="post-user-image post-profile-trigger" data-user='${JSON.stringify(post.user)}'>
-                                        <img src="/images/${post.user.profileImage}" alt="Profile">
+                                        <img src="${post.user.profileImage != null && post.user.profileImage != '' ? post.user.profileImage : '/images/default-profile.jpg'}" 
+                                             alt="Profile"
+                                             onerror="this.src='/images/default-profile.jpg'">
                                     </div>
                                     <div class="post-user-info">
                                         <div class="post-user-details">

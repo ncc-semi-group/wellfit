@@ -2,7 +2,7 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout}" >
+      layout:decorate="~{layouts/layout2}" >
 
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,7 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <i class="bi bi-arrow-left back-btn"></i>
 	<div class="content-container">
 		<div class="search-container">
 			<div class="search-wrapper">
@@ -36,12 +37,14 @@
 
 		<div class="list-container">
 			<th:block th:each="friend : ${friends}">
-				<div class="friend-wrapper">
-					<img th:src="@{'/images/' + ${friend.profileImage}}"/>
-	                    <div class="profile">
-	                    	<div th:text="${friend.nickname}" class="name"></div>
-	                    	<div th:text="${friend.myIntro}" class="intro"></div>
-                    	</div>
+				<div class="friend-wrapper" id="friend-item" th:data-user-id="${friend.id}">
+					<img th:src="${friend.profileImage != null && friend.profileImage != '' ? friend.profileImage : '/images/default-profile.jpg'}"
+						 th:alt="${friend.nickname}"
+						 onerror="this.src='/images/default-profile.jpg'">
+                    <div class="profile">
+                    	<div th:text="${friend.nickname}" class="name"></div>
+                    	<div th:text="${friend.myIntro != null ? friend.myIntro : '자기소개가 없습니다.'}" class="intro"></div>
+                    </div>
 				</div>
 			</th:block>
 		</div>

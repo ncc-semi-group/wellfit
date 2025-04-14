@@ -47,6 +47,8 @@ public class UserDto {
 	private int commentCount;
 	private int userId1;
 	private int userId2;
+	private int followerCount; // 팔로워 수
+	private int followingCount; // 팔로잉 수
 
 	// 좋아요 목록용 필드
 	private String title;
