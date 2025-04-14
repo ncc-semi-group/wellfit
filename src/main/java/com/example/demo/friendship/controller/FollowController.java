@@ -1,6 +1,7 @@
 package com.example.demo.friendship.controller;
 
-import com.example.demo.dto.UserDto;
+
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.service.FollowService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

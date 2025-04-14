@@ -3,8 +3,8 @@ package com.example.demo.friendship.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.dto.FollowDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.board.FollowDto;
+import com.example.demo.dto.user.UserDto;
 
 import java.util.List;
 import java.util.Map;

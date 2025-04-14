@@ -1,8 +1,8 @@
 package com.example.demo.friendship.service;
 
 
-import com.example.demo.dto.FollowDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.board.FollowDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.mapper.FollowMapper;
 
 import lombok.RequiredArgsConstructor;

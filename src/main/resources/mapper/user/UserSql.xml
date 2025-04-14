@@ -137,7 +137,7 @@
        VALUES (#{userId}, #{salt})
    </insert>
     
-    <update id="updateUserInitInfo1" parameterType="com.example.demo.dto.UserDto">
+    <update id="updateUserInitInfo1" parameterType="UserDto">
 	    UPDATE user
 	    SET 
 	        gender = #{gender},
@@ -149,7 +149,7 @@
 	    WHERE id = #{id}
 	</update>
 	
-	<update id="updateUserInitInfo2" parameterType="com.example.demo.dto.UserDto">
+	<update id="updateUserInitInfo2" parameterType="UserDto">
 	    UPDATE user
 	    SET 
 	        type = #{type},

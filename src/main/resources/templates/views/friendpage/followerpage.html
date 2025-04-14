@@ -28,7 +28,7 @@
 		</div>
 
 		<div class="list-container">
-			<th:block th:each="follower : followerList">
+			<th:block th:each="follower : ${followerList}">
 				<div class="follower-wrapper">
 					<img th:src="@{'/images/' + ${follower.profileImage}}"/>
 	                <div class="profile">
