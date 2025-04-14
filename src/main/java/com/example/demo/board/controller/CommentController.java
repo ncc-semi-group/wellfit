@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.CommentService;
-import com.example.demo.dto.CommentDto;
+import com.example.demo.dto.board.CommentDto;
 
 import lombok.RequiredArgsConstructor;
 

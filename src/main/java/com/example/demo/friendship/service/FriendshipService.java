@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.dto.FriendshipDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.friendship.FriendshipDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.mapper.FriendshipMapper;
 import com.example.demo.friendship.mapper.FriendshipRequestMapper;
 

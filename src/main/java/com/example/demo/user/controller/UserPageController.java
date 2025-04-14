@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.badge.service.BadgeService;
 import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.board.service.BoardLikeService;
-import com.example.demo.dto.BadgeDto;
-import com.example.demo.dto.UserBadgeDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.BadgeDto;
+import com.example.demo.dto.user.UserBadgeDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.service.UserPageService;
 
 import jakarta.servlet.http.HttpSession;

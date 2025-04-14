@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>음식 입력</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/add_form.css}">
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    
+    <div id="serving-tooltip" class="popover-tooltip">
+        제품 영양정보의 기준이 1회 제공량/섭취량인 경우, 해당 값을 입력해주세요. 입력하지 않으면 제품의 내용량을 기준으로 영양정보가 저장됩니다.
+    </div>
+    
+    <div class="header">
+        <button class="back-button"><i class="bi bi-arrow-left"></i></button>
+        <h1 th:text="${type == 'edit' ? '음식 정보 수정' : '음식 정보 입력'}"></h1>
+    </div>
+    
+    <div class="form-container">
+        <input type="hidden" id="food-id" th:value="${type == 'edit' && food.id != null ? food.id : ''}">
+        <div class="form-group">
+            <label for="brand">브랜드 / 제조사명</label>
+            <input type="text" id="brand" class="full-width-input"
+                   th:value="${type == 'edit' && food.manufacturerName != null ? food.manufacturerName : ''}">
+        </div>
+        
+        <div class="form-group">
+            <label for="food-name">음식 이름 / 제품명 <span class="required">*</span></label>
+            <input type="text" id="food-name" class="full-width-input" required
+                   th:value="${type == 'edit' && food.name != null ? food.name : ''}">
+        </div>
+        
+        <div class="nutrition-section">
+            <div class="unit-selection">
+                <label>단위 <span class="required">*</span></label>
+                <div class="unit-buttons">
+                    <button class="unit-button selected" id="g-unit">g</button>
+                    <button class="unit-button" id="ml-unit">ml</button>
+                    <script th:if="${type == 'edit' && food.standard == '100ml'}">
+                        $('#g-unit').removeClass('selected');
+                        $('#ml-unit').addClass('selected');
+                    </script>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>내용량 <span class="required">*</span></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-weight" placeholder="0" required class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.weight != null ?
+                           (food.weight % 1 == 0 ? #numbers.formatInteger(food.weight, 0) : food.weight) : ''}">
+                    <span class="unit" th:text="${type == 'edit' && food.standard == '100ml' ? 'ml' : 'g'}"></span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>1회 섭취량 <i class="bi bi-question-circle-fill" id="serving-detail"></i></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-serving-size" placeholder="0" class="integer-input"
+                           th:value="${type == 'edit' && food.servingSize != 0 ? food.servingSize : ''}">
+                    <span class="unit" th:text="${type == 'edit' && food.standard == '100ml' ? 'ml' : 'g'}"></span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>칼로리 <span class="required">*</span></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-kcal" placeholder="0" required class="integer-input"
+                           th:value="${type == 'edit' && food.kcal != null ? food.kcal : ''}">
+                    <span class="unit">kcal</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nutrition-section">
+            <div class="nutrition-row">
+                <label>탄수화물 <span class="required">*</span></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-carbohydrate" placeholder="0" required class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.carbohydrate != 0 ? (food.carbohydrate % 1 == 0
+                           ? #numbers.formatInteger(food.carbohydrate, 1) : food.carbohydrate) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>당류</label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-sugar" placeholder="0" class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.sugar != 0 ? (food.sugar % 1 == 0
+                           ? #numbers.formatInteger(food.sugar, 1) : food.sugar) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>단백질 <span class="required">*</span></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-protein" placeholder="0" required class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.protein != 0 ? (food.protein % 1 == 0
+                           ? #numbers.formatInteger(food.protein, 1) : food.protein) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>지방 <span class="required">*</span></label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-fat" placeholder="0" required class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.fat != 0 ? (food.fat % 1 == 0
+                           ? #numbers.formatInteger(food.fat, 1) : food.fat) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>포화지방</label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-saturated-fat" placeholder="0" class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.saturatedFat != 0 ? (food.saturatedFat % 1 == 0
+                           ? #numbers.formatInteger(food.saturatedFat, 1) : food.saturatedFat) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>트랜스지방</label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-transFat" placeholder="0" class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.transFat != 0 ? (food.transFat % 1 == 0
+                           ? #numbers.formatInteger(food.transFat, 1) : food.transFat) : ''}">
+                    <span class="unit">g</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nutrition-section">
+            <div class="nutrition-row">
+                <label>나트륨</label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-natrium" placeholder="0" class="integer-input"
+                    th:value="${type == 'edit' && food.natrium != 0 ? food.natrium : ''}">
+                    <span class="unit">mg</span>
+                </div>
+            </div>
+            
+            <div class="nutrition-row">
+                <label>콜레스테롤</label>
+                <div class="input-with-unit">
+                    <input type="number" id="input-cholesterol" placeholder="0" class="decimal-input" inputmode="decimal"
+                           th:value="${type == 'edit' && food.cholesterol != 0 ? (food.cholesterol % 1 == 0
+                           ? #numbers.formatInteger(food.cholesterol, 1) : food.cholesterol) : ''}">
+                    <span class="unit">mg</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="button-container">
+            <th:block th:if="${type == 'add'}">
+                <button class="reset-button">초기화</button>
+                <button class="save-button">저장하기</button>
+            </th:block>
+            <th:block th:if="${type == 'edit'}">
+                <button class="delete-button">삭제</button>
+                <button class="update-button">수정하기</button>
+            </th:block>
+
+        </div>
+    </div>
+</div>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/record/add_form.js}"></script>
+</th:block>
+</body>
+
+</html>

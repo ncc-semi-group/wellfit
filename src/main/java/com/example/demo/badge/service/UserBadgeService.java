@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.badge.mapper.UserBadgeMapper;
-import com.example.demo.dto.UserBadgeDto;
+import com.example.demo.dto.user.UserBadgeDto;
 
 import lombok.AllArgsConstructor;
 

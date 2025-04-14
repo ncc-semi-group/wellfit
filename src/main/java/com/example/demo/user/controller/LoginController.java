@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.dto.UserDto;
 import com.example.demo.user.mapper.UserMapper;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.service.UserService;
 import com.example.demo.util.CalorieCalculator;
 

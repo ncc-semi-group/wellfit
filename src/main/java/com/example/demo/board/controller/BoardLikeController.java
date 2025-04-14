@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.board.service.BoardLikeService;
-import com.example.demo.dto.BoardDto;
+import com.example.demo.dto.board.BoardDto;
 
 import lombok.RequiredArgsConstructor;
 
