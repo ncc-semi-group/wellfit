@@ -69,6 +69,7 @@ function getChatroomDetail(){
         success: function(response){
             const roomName = document.querySelector(".roomName");
             roomName.textContent = response.roomName;
+            setRoomDetail(response.roomName, response.roomImage);
         }
     });
 }
@@ -392,6 +393,7 @@ $(document).ready(function () {
             stompConnect();
         });
     });
+    let file = null;
 
     document.querySelector(".chat button").addEventListener("click", async function () {
         const message = document.getElementById("text").value;
@@ -404,11 +406,9 @@ $(document).ready(function () {
             messageType: "TALK",
             createdAt: new Date().toISOString()
         };
-
+        // 이미지 업로드
+        await uploadImage();
         try {
-            // updateLatestReadTime이 비동기적으로 완료될 때까지 기다립니다.
-            await updateLatestReadTime(userId, chatMessage.createdAt);
-
             if (stompClient && stompClient.connected) {
                 stompClient.send("/pub/chat/talk", {}, JSON.stringify(chatMessage));
             } else {
@@ -422,7 +422,29 @@ $(document).ready(function () {
             console.error("Error updating latest read time:", error);
         }
     });
+    async function uploadImage(){
+        // 이미지 파일이 있는 경우
+        if (file) {
+            console.log("Image Exists");
+            const formData = new FormData();
+            formData.append("file", file);
 
+            const res = await fetch("/chat/upload/image", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            const imageUrl = data.url;
+
+            stompClient.send("/pub/chat/image", {}, JSON.stringify({
+                type: "IMAGE",
+                roomId: roomId,
+                userId: userId,
+                imageUrl: imageUrl,
+                createdAt: new Date().toISOString()
+            }));
+        }
+    }
     document.getElementById("text").addEventListener("keydown", function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -430,7 +452,7 @@ $(document).ready(function () {
         }
     });
     document.getElementById("imageUpload").addEventListener("change", function(event) {
-        const file = event.target.files[0];
+        file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -508,7 +530,18 @@ function exitChatroom(){
         });
     }
 }
-
+function setRoomDetail(roomName, roomImage){
+    const roomImageContainer = document.querySelector(".room-detail");
+    const roomNameContainer = document.querySelector(".room-name");
+    if(roomImage != null){
+        const img = document.createElement("img");
+        img.src = roomImage;
+        img.alt = "Room Image";
+        img.className = "room-image";
+        roomImageContainer.appendChild(img);
+    }
+    roomNameContainer.textContent = roomName;
+}
 function goToList() {
     window.location.href = "/chat"; // 리스트 페이지 URL 설정
 }

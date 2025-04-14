@@ -34,8 +34,10 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.apache.commons:commons-pool2' // 커넥션 풀
-	// NCP S3용 Spring Cloud AWS Starter
+	implementation 'org.apache.commons:commons-pool2' // 커넥션 풀dependencies {
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+// NCP S3용 Spring Cloud AWS Starter
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 
 	// AWS SDK for S3 (v1.x)

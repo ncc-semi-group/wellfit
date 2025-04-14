@@ -3,7 +3,6 @@ package com.example.demo.chat.controller;
 import com.example.demo.chat.dto.*;
 import com.example.demo.chat.service.ChatRedisService;
 import com.example.demo.chat.service.ChatService;
-import com.example.demo.ncp.storage.NaverConfig;
 import com.example.demo.ncp.storage.NcpObjectStorageService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -24,7 +25,7 @@ public class ChatController {
     private final ChatService chatService;
     private final ChatRedisService redis;
     private final NcpObjectStorageService ncpObjectStorageService;
-    private String bucketName = "bucketcamp148";
+    private String bucketName = "wellfit";
     public ChatController(ChatService chatService, ChatRedisService redis, NcpObjectStorageService ncpObjectStorageService) {
         this.chatService = chatService;
         this.redis = redis;
@@ -40,6 +41,9 @@ public class ChatController {
     @GetMapping("/chat")
     public String chatroomList(HttpSession session, Model model) {
         Long userId = ((Integer)session.getAttribute("userId")).longValue();
+        if(userId == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        }
         // 채팅방 목록을 가져와서 모델에 추가
         chatService.findChatroomList(userId);
         model.addAttribute("userId", userId);
@@ -72,6 +76,9 @@ public class ChatController {
     public String chatroomForm(Model model, HttpSession session) {
         Long userId = ((Integer)session.getAttribute("userId")).longValue();
         model.addAttribute("userId", userId);
+        if(userId == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        }
         return "/chat/chatroomForm";
     }
 
@@ -80,6 +87,9 @@ public class ChatController {
                            @PathVariable Long roomId,
                            HttpSession session) {
         Long userId = ((Integer)session.getAttribute("userId")).longValue();
+        if(userId == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        }
         model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
         model.addAttribute("userId", userId);
         model.addAttribute("roomId", roomId);
@@ -117,26 +127,56 @@ public class ChatController {
         redis.updateLatestReadTime(chatDto.getRoomId(), chatDto.getUserId(), chatDto.getCreatedAt());
         chatService.read(chatDto);
     }
+    @MessageMapping("/chat/image")
+    public void image(ChatRequestDto chatDto){
+        // 현재 채팅방에 이미지 전송, DB에 저장
+        chatService.image(chatDto);
+        // Redis에 최신 읽기 시간 업데이트
+        redis.updateLatestReadTime(chatDto.getRoomId(), chatDto.getUserId(), chatDto.getCreatedAt());
+    }
+    @PostMapping("/chat/upload/image")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            // 파일이 존재하면 S3에 업로드
+            if (file != null && !file.isEmpty()) {
+                log.info("File uploaded: " + file.getOriginalFilename());
+                log.info("File size: " + file.getSize() + " bytes");
+                String fileUrl = ncpObjectStorageService.uploadFile(bucketName,"image/chat" ,file);
+                log.info("File URL: " + fileUrl);
+                Map<String, String> response = new HashMap<>();
+                response.put("url", fileUrl);
+                return ResponseEntity.ok(response); // 업로드된 이미지 URL을 반환
+            } else {
+                return ResponseEntity.badRequest().body("No file uploaded");
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
+        }
+    }
     @PostMapping("/chatroom/create")
     public String createChatroom(HttpSession session ,@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
         try{
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
             dto.setUserId(userId);
-            Long roomId = chatService.createChatroom(dto);
 
             // 파일이 존재하면 S3에 업로드
             if (file != null && !file.isEmpty()) {
                 log.info("File uploaded: " + file.getOriginalFilename());
-                String fileUrl = ncpObjectStorageService.uploadFile(bucketName,"image/chatroom/" ,file);
+                log.info("File size: " + file.getSize() + " bytes");
+                String fileUrl = ncpObjectStorageService.uploadFile(bucketName,"image/chatroom" ,file);
+                log.info("File URL: " + fileUrl);
                 dto.setImageUrl(fileUrl); // 업로드된 이미지 URL을 DTO에 설정
             }else{
                 log.info("No file uploaded, using default image.");
                 dto.setImageUrl("https://bucketcamp148.s3.ap-northeast-2.amazonaws.com/image/chatroom/default.png");
             }
 
+            Long roomId = chatService.createChatroom(dto);
             System.out.println("userId = " + userId);
             System.out.println("roomId = " + roomId);
-            chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId()).roomId(roomId).createdAt(new Timestamp(System.currentTimeMillis())).imageUrl(dto.getImageUrl()).build());
+            System.out.println("chatroomImage = " + dto.getImageUrl() + ", chatroomName = " + dto.getImageUrl());
+            chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId()).roomId(roomId).createdAt(new Timestamp(System.currentTimeMillis())).build());
             return "redirect:/chat";
         }catch (RuntimeException e){
             e.printStackTrace();
@@ -196,6 +236,7 @@ public class ChatController {
         }
     }
     @GetMapping("/chatroom/{roomId}/members")
+    @ResponseBody
     public ResponseEntity<?> getChatroomMembers(@PathVariable(value = "roomId") Long roomId) {
         try {
             // 채팅방 사용자 목록 가져오기

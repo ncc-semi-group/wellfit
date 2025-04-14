@@ -3,7 +3,7 @@ function goToList() {
 }
 $(document).ready(function () {
     // input[type="file"] 변경 감지
-    $('input[type="file"][name="img"]').on('change', function (event) {
+    $('input[type="file"][name="chatroomImage"]').on('change', function (event) {
         const file = event.target.files[0];
         if (file && file.type.startsWith("image/")) {
             const reader = new FileReader();

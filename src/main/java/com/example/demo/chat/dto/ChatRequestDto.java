@@ -28,6 +28,8 @@ public class ChatRequestDto {
                 .build();
         if(type == MessageType.TALK){
             chat.setMessage(message);
+        } else if(type == MessageType.IMAGE){
+            chat.setMessage(imageUrl);
         } else {
             chat.setMessage(type.message);
         }
