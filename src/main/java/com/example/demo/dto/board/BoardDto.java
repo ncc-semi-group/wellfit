@@ -3,6 +3,7 @@ package com.example.demo.dto.board;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.example.demo.dto.hashtag.HashtagDto;
 import com.example.demo.dto.user.UserDto;
 import org.apache.ibatis.type.Alias;
 

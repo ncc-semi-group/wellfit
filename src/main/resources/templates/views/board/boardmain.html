@@ -51,7 +51,7 @@
 	color: #888;
 }
 
-.search-tag {
+.plus-button {
 	width: 1.5625rem;
 	height: 1.5625rem;
 	background-color: transparent;
@@ -390,7 +390,7 @@
 	color: #888;
 }
 
-.comment-like, .comment-reply {
+.comment-reply {
 	cursor: pointer;
 }
 
@@ -468,6 +468,46 @@
 	fill: red;
 	stroke: red;
 }
+
+.post-images-wrapper {
+	overflow-x: hidden; /* 가로 스크롤 제거 */
+	-webkit-overflow-scrolling: touch;
+	scroll-snap-type: x mandatory;
+	display: flex;
+	transition: height 0.3s ease; /* 높이 전환 애니메이션 */
+}
+
+.post-images-scroll {
+	display: flex;
+	width: 100%;
+	overflow-x: auto; /* 가로 스크롤 여기서 처리 */
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
+}
+
+.post-images-scroll::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+.post-image-container {
+	flex: 0 0 100vw; /* 화면 전체 너비로 고정 */
+	scroll-snap-align: start;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 5px;
+}
+
+.post-image-swipe {
+	width: 98vw;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	max-height: 100vh; /* 너무 큰 이미지 제한 */
+	border-radius: 5%;
+}
 </style>
 </th:block>
 </head>
@@ -478,10 +518,18 @@
 			<!-- 피드 상단 탐색 영역 -->
 			<div class="search-bar">
 				<div class="search-options">
-					<span class="search-option active" id="allFeed">전체</span> <span
-						class="search-option inactive" id="followingFeed">팔로잉</span> <span
-						class="search-option inactive" id="popularFeed">인기</span>
+					<span id="allFeed" class="search-option active">전체</span> 
+					<span id="followingFeed" class="search-option inactive">팔로잉</span> 
+					<span id="popularFeed" class="search-option inactive">인기</span>
 				</div>
+				<button class="plus-button">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+						viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   						<line x1="12" y1="5" x2="12" y2="19"></line>
+    					<line x1="5" y1="12" x2="19" y2="12"></line>
+ 					 </svg>
+				</button>
 			</div>
 
 			<!-- 카테고리 탭 -->
@@ -696,9 +744,15 @@ $(document).ready(function() {
                                     <button class="follow-button" data-user-id="${post.user.id}"> ${post.followedByCurrentUser ? '팔로잉' : '팔로우'}</button>
                                 </div>
                             </div>
-                            ${post.images.map(image => `
-                                <img src="/images/${image.fileName}" alt="Post Image" class="post-image">
-                            `).join('')}
+                            <div class="post-images-wrapper">
+                            <div class="post-images-scroll">
+                              ${post.images.map(image => `
+                                <div class="post-image-container">
+                                  <img src="/images/${image.fileName}" alt="Post Image" class="post-image-swipe" ondblclick="handleImageDoubleClick(${post.id})">
+                                </div>
+                              `).join('')}
+                            </div>
+                          </div>
                             <div class="post-actions">
                                 <div class="post-action-buttons">
                                     <button class="like-button ${post.likedByCurrentUser ? 'liked' : ''}" data-post-id="${post.id}" data-liked="${post.likedByCurrentUser}">
@@ -720,6 +774,14 @@ $(document).ready(function() {
                         </div>
                     `;
                     $('#postsContainer').append(postHtml);
+                });
+                $('.post-images-scroll').each(function () {
+                    const scrollContainer = $(this)[0];
+                    const scrollWidth = scrollContainer.scrollWidth;
+                    const visibleWidth = scrollContainer.clientWidth;
+                    const scrollAmount = (scrollWidth - visibleWidth) / 2;
+
+                    scrollContainer.scrollLeft = scrollAmount;
                 });
 
                 attachEventHandlers();
@@ -833,6 +895,14 @@ $(document).ready(function() {
                 }
             });
         });
+        
+        $('.post-image-swipe').on('dblclick', function() {
+            const postId = $(this).closest('.post-container').data('post-id');
+            handleLikeOnDoubleClick(postId);
+        });
+
+        
+        
     }
 
     // 카테고리 탭 클릭 이벤트
@@ -843,18 +913,24 @@ $(document).ready(function() {
         loadPosts();
     });
 
+
     
-    loadPosts();
-    $('#followingFeed').on('click', function () {
+    
+    
+    loadPosts();  
+    $(document).on('click', '#allFeed', function () {
+        window.location.href = '/feed/all';
+    });
+    $(document).on('click', '#followingFeed', function () {
         window.location.href = '/feed/following';
+    });
+    $(document).on('click', '#popularFeed', function () {
+        window.location.href = '/feed/popular';
     });
 
 });
 </script>
-
-
 	</th:block>
-
 </body>
 
 </html>

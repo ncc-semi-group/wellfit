@@ -6,31 +6,26 @@
 <head>
 <th:block layout:fragment="css">
 	<style>
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+	font-size: 1rem;
 }
 
-body {
-	background-color: #f5f5f5;
-	display: flex;
-	justify-content: center;
-	min-height: 100vh;
-}
+
 
 .container {
-  width: 375px;
-  background-color: white;
-  min-height: 90vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
- 
+	width: 100%;
+	background-color: white;
+	min-height: 90vh;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	position: relative;
+	display: flex;
+	flex-direction: column;
 }
-
 
 /* Top search bar styles - using your original code */
 .search-bar {
@@ -58,9 +53,9 @@ body {
 	color: #888;
 }
 
-.search-tag {
-	width: 25px;
-	height: 25px;
+.plus-button {
+	width: 1.5625rem;
+	height: 1.5625rem;
 	background-color: transparent;
 	border: none;
 	display: flex;
@@ -70,18 +65,18 @@ body {
 }
 
 .feed-grid {
-  display: grid;
-  width: 100%; /* or fixed like 300px */
-  aspect-ratio: 1 / 1;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: repeat(9, 1fr);
-  gap: 4px;
+	display: grid;
+	width: 100%; /* or fixed like 300px */
+	aspect-ratio: 1/1;
+	grid-template-columns: repeat(9, 1fr);
+	grid-template-rows: repeat(9, 1fr);
+	gap: 4px;
 }
-
 
 .feed-item {
 	position: relative;
 	overflow: hidden;
+	aspect-ratio: 1/1;
 }
 
 .feed-item img {
@@ -89,6 +84,7 @@ body {
 	height: 100%;
 	object-fit: cover;
 	display: block;
+	border-radius: 7%;
 }
 
 .feed-item.large {
@@ -100,17 +96,6 @@ body {
 	grid-column: span 3;
 	grid-row: span 3;
 }
-
-.feed-date {
-	position: absolute;
-	bottom: 0.3rem;
-	right: 0.3rem;
-	background-color: rgba(0, 0, 0, 0.6);
-	color: #fff;
-	padding: 0.2rem 0.4rem;
-	font-size: 0.7rem;
-	border-radius: 0.5rem;
-}
 </style>
 </th:block>
 </head>
@@ -120,46 +105,26 @@ body {
 			<!-- Search Bar -->
 			<div class="search-bar">
 				<div class="search-options">
-					<span class="search-option inactive">전체</span> <span
-						class="search-option inactive">팔로잉</span> <span
-						class="search-option active">인기</span>
+					<span id="allFeed" class="search-option inactive">전체</span> <span
+						id="followingFeed" class="search-option inactive">팔로잉</span> <span
+						id="popularFeed" class="search-option active">인기</span>
 				</div>
-				<button class="search-tag">
+				<button class="plus-button">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<circle cx="11" cy="11" r="8"></circle>
-						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-					</svg>
+   						<line x1="12" y1="5" x2="12" y2="19"></line>
+    					<line x1="5" y1="12" x2="19" y2="12"></line>
+ 					 </svg>
 				</button>
 			</div>
+			<div class="feed-grid" id="feedGrid"></div>
 
 
 
-			<div class="feed-grid" id="feedGrid">
-	
-		</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		<th:block layout:fragment="script">
-			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-			<script>
+			<th:block layout:fragment="script">
+				<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+				<script>
 			let page = 0;
 			let loading = false;
 			const pageSize = 18;
@@ -206,10 +171,12 @@ body {
 			            const itemClass = (positionInGroup === largeIndex) ? "large" : "small";
 
 			            const itemHtml = `
-			              <div class="feed-item ${itemClass}">
-			                <img src="${imgUrl}" alt="게시물 이미지">
-			              </div>
-			            `;
+			            	  <div class="feed-item ${itemClass}">
+			            	    <a href="/board/detail/${board.id}">
+			            	      <img src="${imgUrl}" alt="게시물 이미지">
+			            	    </a>
+			            	  </div>
+			            	`;
 			            $grid.append(itemHtml);
 
 			            imageCounter++;
@@ -242,10 +209,20 @@ body {
 			    loadBoards();
 			    $(window).on("scroll", handleScroll);
 			  });
-			</script>
 
+		
+			    $('#allFeed').on('click', function () {
+			        window.location.href = '/feed/all';
+			    });
+			    $('#followingFeed').on('click', function () {
+			        window.location.href = '/feed/following';
+			    });
+			 
+			    $('#popularFeed').on('click', function () {
+			        window.location.href = '/feed/popular';
+			    });
 
-
-		</th:block>
+			  </script>
+			</th:block>
 </body>
 </html>

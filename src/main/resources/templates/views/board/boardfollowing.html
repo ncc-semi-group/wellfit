@@ -11,22 +11,19 @@
 	padding: 0;
 	box-sizing: border-box;
 	font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+	font-size: 1rem;
 }
 
-body {
-	background-color: #f5f5f5;
-	display: flex;
-	justify-content: center;
-	min-height: 100vh;
-}
 
 .container {
-	width: 375px;
+	width: 100%;
+	max-width: 46.875rem;
 	background-color: white;
-	min-height: 90vh;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	min-height: 100vh;
+	box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
 	position: relative;
 }
+
 
 /* Top search bar styles - using your original code */
 .search-bar {
@@ -54,9 +51,9 @@ body {
 	color: #888;
 }
 
-.search-tag {
-	width: 25px;
-	height: 25px;
+.plus-button {
+	width: 1.5625rem;
+	height: 1.5625rem;
 	background-color: transparent;
 	border: none;
 	display: flex;
@@ -107,30 +104,30 @@ body {
 }
 
 .profile-cards-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  display: flex;
-  padding-bottom: 10px;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scroll-snap-type: x mandatory;
+	display: flex;
+	padding-bottom: 10px;
 }
 
 .profile-cards {
-  display: flex;
-  gap: 15px;
-  padding: 10px;
-  width: max-content;
+	display: flex;
+	gap: 15px;
+	padding: 10px;
+	width: max-content;
 }
 
 .profile-card {
-  background-color: #f5f7f9;
-  border-radius: 10px;
-  padding: 15px;
-  width: 160px; /* 두 개씩 보여지도록 고정 */
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  scroll-snap-align: start;
+	background-color: #f5f7f9;
+	border-radius: 10px;
+	padding: 15px;
+	width: 160px; /* 두 개씩 보여지도록 고정 */
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	scroll-snap-align: start;
 }
 
 .profile-image {
@@ -164,11 +161,10 @@ body {
 	background-color: #065F79;
 	color: white;
 	border: none;
-	border-radius: 20px;
-	padding: 5px 15px;
-	font-size: 12px;
+	border-radius: 0.25rem;
+	padding: 0.3125rem 0.625rem;
+	font-size: 0.75rem;
 	cursor: pointer;
-	width: 70px;
 }
 
 /* Bottom navigation - using your original code */
@@ -524,7 +520,7 @@ body {
 	color: #888;
 }
 
-.comment-like, .comment-reply {
+.comment-reply {
 	cursor: pointer;
 }
 
@@ -583,6 +579,7 @@ body {
 	cursor: default;
 }
 
+
 .modal-overlay {
 	position: fixed;
 	top: 0;
@@ -602,26 +599,66 @@ body {
 	fill: red;
 	stroke: red;
 }
+
+.post-images-wrapper {
+	overflow-x: hidden; /* 가로 스크롤 제거 */
+	-webkit-overflow-scrolling: touch;
+	scroll-snap-type: x mandatory;
+	display: flex;
+	transition: height 0.3s ease; /* 높이 전환 애니메이션 */
+}
+
+.post-images-scroll {
+	display: flex;
+	width: 100%;
+	overflow-x: auto; /* 가로 스크롤 여기서 처리 */
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
+}
+
+.post-images-scroll::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+.post-image-container {
+	flex: 0 0 100vw; /* 화면 전체 너비로 고정 */
+	scroll-snap-align: start;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 5px;
+}
+
+.post-image-swipe {
+	width: 98vw;
+	height: auto;
+	object-fit: contain;
+	display: block;
+	max-height: 100vh; /* 너무 큰 이미지 제한 */
+	border-radius: 5%;
+}
+
 </style>
 </th:block>
 </head>
 <body>
 	<div layout:fragment="content">
 		<div class="container">
-			<!-- Search Bar -->
 			<div class="search-bar">
 				<div class="search-options">
-					<span class="search-option inactive">전체</span> <span
-						class="search-option active">팔로잉</span> <span
-						class="search-option inactive">인기</span>
+					<span id="allFeed" class="search-option inactive">전체</span> 
+					<span id="followingFeed" class="search-option active">팔로잉</span> 
+					<span id="popularFeed" class="search-option inactive">인기</span>
 				</div>
-				<button class="search-tag">
+				<button class="plus-button">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 						viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<circle cx="11" cy="11" r="8"></circle>
-						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-					</svg>
+   						<line x1="12" y1="5" x2="12" y2="19"></line>
+    					<line x1="5" y1="12" x2="19" y2="12"></line>
+ 					 </svg>
 				</button>
 			</div>
 
@@ -654,24 +691,35 @@ body {
 			<!-- Main Feed Section -->
 			<div id="mainContentWrapper" style="display: none;">
 				<div id="postsContainer"></div>
+						<div class="comments-modal" id="commentsModal">
+			<div class="comments-modal-header">
+				<!-- 댓글 모달 닫기 버튼 -->
+				<button class="close-button" id="closeCommentsButton">×</button>
+				<div class="comments-title">댓글</div>
+				<div style="width: 20px;"></div>
+				<!-- 우측 여백용 -->
+			</div>
+
+			<div class="comments-list" id="commentsList">
+				<!-- 댓글 리스트는 동적으로 추가됩니다 -->
+			</div>
+
+
+			<!-- 댓글 입력 영역 -->
+			<div class="comment-input-container">
+				<div class="comment-user-image-small">
+					<img src="/images/default-profile.jpg" alt="Your Profile">
+				</div>
+				<div class="comment-input-wrapper">
+					<input type="text" class="comment-input" id="commentInput"
+						placeholder="댓글 달기...">
+					<button class="comment-submit" id="submitComment" disabled>게시</button>
+				</div>
+			</div>
+		</div>
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -802,9 +850,15 @@ body {
 		                                    </button>
 		                                </div>
 		                            </div>
-		                            ${post.images.map(image => `
-		                                <img src="/images/${image.fileName}" alt="Post Image" class="post-image">
-		                            `).join('')}
+		                            <div class="post-images-wrapper">
+		                            <div class="post-images-scroll">
+		                              ${post.images.map(image => `
+		                                <div class="post-image-container">
+		                                  <img src="/images/${image.fileName}" alt="Post Image" class="post-image-swipe" ondblclick="handleImageDoubleClick(${post.id})">
+		                                </div>
+		                              `).join('')}
+		                            </div>
+		                          </div>
 		                            <div class="post-actions">
 		                                <div class="post-action-buttons">
 		                                    <button class="like-button ${post.likedByCurrentUser ? 'liked' : ''}" data-post-id="${post.id}" data-liked="${post.likedByCurrentUser}">
@@ -827,7 +881,14 @@ body {
 		                    `;
 		                    $('#postsContainer').append(postHtml);
 		                });
+		                $('.post-images-scroll').each(function () {
+		                    const scrollContainer = $(this)[0];
+		                    const scrollWidth = scrollContainer.scrollWidth;
+		                    const visibleWidth = scrollContainer.clientWidth;
+		                    const scrollAmount = (scrollWidth - visibleWidth) / 2;
 
+		                    scrollContainer.scrollLeft = scrollAmount;
+		                });
 		                attachEventHandlers();
 		            },
 		            error: function (xhr, status, error) {
@@ -848,6 +909,46 @@ body {
 		            openProfileModal(userData);
 		        });
 
+		        
+		        $('#commentInput').on('input', function() {
+		            $('#submitComment').prop('disabled', !$(this).val().trim());
+		        });
+
+		        $('#submitComment').on('click', function() {
+		            const commentText = $('#commentInput').val().trim();
+		            if (!commentText || !currentPostId) return;
+
+		            const newComment = {
+		                boardId: currentPostId,
+		                userId: 2,
+		                comment: commentText
+		            };
+
+		            $.ajax({
+		                url: '/api',
+		                method: 'POST',
+		                contentType: 'application/json',
+		                data: JSON.stringify(newComment),
+		                success: function() {
+		                    $('#commentInput').val('');
+		                    $('#submitComment').prop('disabled', true);
+		                    loadComments(currentPostId);
+		                },
+		                error: function(xhr, status, error) {
+		                    console.error('댓글 추가 실패:', error);
+		                }
+		            });
+		        });
+
+		        $('#commentInput').on('keypress', function(e) {
+		            if (e.key === 'Enter' && !e.shiftKey && !$('#submitComment').prop('disabled')) {
+		                e.preventDefault();
+		                $('#submitComment').click();
+		            }
+		        });
+		        
+		        $('#closeCommentsButton').on('click', closeCommentsModal);
+		        
 		        $('.follow-button').on('click', function () {
 		            const button = $(this);
 		            const targetUserId = button.data('user-id');
@@ -878,7 +979,13 @@ body {
 		                }
 		            });
 		        });
+		        
+		        $('.post-image-swipe').on('dblclick', function() {
+		            const postId = $(this).closest('.post-container').data('post-id');
+		            handleLikeOnDoubleClick(postId);
+		        });
 
+		        
 		        $('.like-button').on('click', function () {
 		            const likeButton = $(this);
 		            const postId = likeButton.data('post-id');
@@ -907,6 +1014,13 @@ body {
 		        $('#commentmodalOverlay').addClass('show');
 		        document.body.style.overflow = 'hidden';
 		        setTimeout(() => $('#commentInput').focus(), 300);
+		    }
+		    
+		    function closeCommentsModal() {
+		        $('#commentsModal').removeClass('show');
+		        $('#commentmodalOverlay').removeClass('show');
+		        document.body.style.overflow = 'auto';
+		        currentPostId = null;
 		    }
 
 		    function loadComments(postId) {
@@ -943,6 +1057,7 @@ body {
 		            }
 		        });
 		    }
+		    
 
 		    $('.category-tab').on('click', function () {
 		        $('.category-tab').removeClass('active');
@@ -950,10 +1065,20 @@ body {
 		        selectedCategory = $(this).text().trim();
 		        loadFollowingFeed(currentUserId, []);
 		    });
+		    
+		   
 
-		    $('#followingFeed').on('click', function () {
+		    $(document).on('click', '#allFeed', function () {
+		        window.location.href = '/feed/all';
+		    });
+		    $(document).on('click', '#followingFeed', function () {
 		        window.location.href = '/feed/following';
 		    });
+		    $(document).on('click', '#popularFeed', function () {
+		        window.location.href = '/feed/popular';
+		    });
+
+
 		});
 		</script>
 
