@@ -7,20 +7,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @Builder
 public class ChatRequestDto {
-    private String userId;
-    private String roomId;
+    private Long userId;
+    private Long roomId;
     private String message;
-    private String createdAt;
+    private Timestamp createdAt;
     private String messageType;
+    private String imageUrl;
     public Chat toEntity(MessageType type){
         Chat chat = Chat.builder()
-                .userId(Long.parseLong(userId))
-                .chatroomId(Long.parseLong(roomId))
+                .userId(userId)
+                .chatroomId(roomId)
                 .messageType(type)
+                .imageUrl(imageUrl)
                 .build();
         if(type == MessageType.TALK){
             chat.setMessage(message);
@@ -28,7 +32,7 @@ public class ChatRequestDto {
             chat.setMessage(type.message);
         }
         if(createdAt != null){
-            chat.setCreatedAt(StringTimestampConverter.stringToTimestamp(createdAt));
+            chat.setCreatedAt(createdAt);
         }
         return chat;
     }
@@ -40,6 +44,7 @@ public class ChatRequestDto {
                 ", message='" + message + '\'' +
                 ", createdAt=" + createdAt +
                 ", messageType='" + messageType + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

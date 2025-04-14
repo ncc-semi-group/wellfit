@@ -3,7 +3,6 @@ let socket = null;
 let stompClient = null;
 const reconnectInterval = 5000; // 5초 후 재연결 시도
 // unreadCount
-let readingCount = 0;
 let userCount = null;
 // date
 let latestDateStr = null;
@@ -16,53 +15,51 @@ function exitChatroom() {
 }
 
 async function getUserList(initial) {
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/chatroom/" + roomId + "/members",
-        dataType: "json",
-        success: function (response) {
-            const list = document.querySelector(".participants");
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/chatroom/" + roomId + "/members",
+            dataType: "json",
+            success: function (response) {
+                const list = document.querySelector(".participants");
 
-            // ✅ 기존 유저 목록 비우기
-            list.innerHTML = "";
+                // ✅ 기존 유저 목록 비우기
+                list.innerHTML = "";
 
-            response.forEach(user => {
-                const li = document.createElement("li");
-                li.className = "participant";
+                response.forEach(user => {
+                    const li = document.createElement("li");
+                    li.className = "participant";
 
-                const userMeta = document.createElement("div");
-                userMeta.className = "user";
-                userMeta.id = user.userId;
-                userMeta.setAttribute("latestReadTime", new Date(user.latestReadTime).toISOString());
-                userMeta.style.display = "none"; // invisible div
-                userMeta.setAttribute("active", user.active);
-                console.log("active : " + user.active);
-                const img = document.createElement("img");
-                img.src = user.profileImage;
+                    const userMeta = document.createElement("div");
+                    userMeta.className = "user";
+                    userMeta.id = user.userId;
+                    userMeta.setAttribute("latest_read_time", new Date(user.latestReadTime).toISOString());
+                    userMeta.style.display = "none"; // invisible div
+                    const img = document.createElement("img");
+                    img.src = user.profileImage;
 
-                const span = document.createElement("span");
-                span.textContent = user.nickname;
+                    const span = document.createElement("span");
+                    span.textContent = user.nickname;
 
-                li.appendChild(img);
-                li.appendChild(span);
-                li.appendChild(userMeta);
-                list.appendChild(li);
-            });
+                    li.appendChild(img);
+                    li.appendChild(span);
+                    li.appendChild(userMeta);
+                    list.appendChild(li);
+                });
 
-            const participants = document.getElementsByClassName("participant");
-            for (let i = 0; i < participants.length; i++) {
-                if (participants[i].getAttribute("active") === "true") {
-                    readingCount++;
-                }
+                userCount = response.length;
+                console.log("userCount : " + userCount);
+
+                resolve();  // AJAX 완료 후 resolve 호출
+            },
+            error: function (error) {
+                console.error("Error fetching user list:", error);
+                reject(error);  // 실패 시 reject 호출
             }
-            userCount = response.length;
-            console.log("userCount : " + userCount);
-        },
-        error: function (error) {
-            console.error("Error fetching user list:", error);
-        }
+        });
     });
 }
+
 
 function getChatroomDetail(){
     $.ajax({
@@ -72,7 +69,6 @@ function getChatroomDetail(){
         success: function(response){
             const roomName = document.querySelector(".roomName");
             roomName.textContent = response.roomName;
-            console.log("readingCount : " + readingCount);
         }
     });
 }
@@ -90,8 +86,7 @@ async function getChats(){
             response.forEach(chat => {
                 if(chat.messageType=="TALK"){
                     changeDate(chat.createdAt);
-                    addTalkMessageWithDB(chat);
-                    activeUsersRead();
+                    addTalkMessageWith(chat, 'db');
                 }else if(chat.messageType=="CREATE"){
                     changeDate(chat.createdAt);
                     addCreateMessage(chat);
@@ -120,12 +115,40 @@ function getHourMinuteFromISO(isoString) {
 }
 
 function extractDateOnly(isoString) {
-    return isoString.split('T')[0];  // "2025-04-07"
+    if (!isoString || isNaN(Date.parse(isoString))) {
+        console.warn("⚠️ Invalid date passed to extractDateOnly:", isoString);
+        return "Invalid-Date";
+    }
+
+    // 문자열을 ISO 포맷으로 파싱
+    const utcDate = new Date(isoString);
+
+    // 한국 시간 (UTC+9)으로 변환
+    const koreaTime = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+
+    const yyyy = koreaTime.getFullYear();
+    const mm = String(koreaTime.getMonth() + 1).padStart(2, '0');
+    const dd = String(koreaTime.getDate()).padStart(2, '0');
+
+    return `${yyyy}-${mm}-${dd}`;
+}
+function updateLatestReadTime(userId, time) {
+    return new Promise((resolve, reject) => {
+        const userElement = document.getElementById(userId);
+        if (userElement) {
+            userElement.setAttribute("latest_read_time", time);
+            console.log("User " + userId + " latest read time updated to " + time);
+            resolve();  // 처리가 완료되었음을 알려줍니다.
+        } else {
+            console.error("User element not found for ID: " + userId);
+            reject("User element not found for ID: " + userId);  // 실패 처리
+        }
+    });
 }
 
 function changeDate(date) {
     const currentDateStr = extractDateOnly(date);  // "2025-04-07"
-
+    console.log("currentDateStr : "+currentDateStr);
     if (latestDateStr === null || latestDateStr !== currentDateStr) {
         latestDateStr = currentDateStr;
 
@@ -143,72 +166,75 @@ function changeDate(date) {
         messageContainer.appendChild(messageElement);
     }
 }
-function onMessageReceived(payload) {
+function sendReadMessage(message) {
+    if (message.messageType === "TALK") {
+        const jsonData = {
+            //  {"roomId":1,"userId":1,"latest_read_time":"2025-03-31 14:00:00.000"}
+            roomId: roomId,
+            userId: userId,
+            createdAt: new Date().toISOString()
+        };
+        stompClient.send("/pub/chat/read", {}, JSON.stringify(jsonData));
+    }
+}
+async function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
-    if(message.messageType=="TALK"){
+    if (message.messageType === "TALK") {
         changeDate(message.createdAt);
-        addTalkMessageWithSocket(message);
-    }else if(message.messageType=="CREATE"){
+        addTalkMessageWith(message, "socket");
+        sendReadMessage(message);
+    } else if(message.messageType === "READ"){
+        const date = document.getElementById(message.userId).getAttribute("latest_read_time");
+        console.log("latest_read_time : "+date);
+        readMessages(date, message.createdAt);
+        await updateLatestReadTime(message.userId, message.createdAt);
+
+        console.log("userId : "+message.userId);
+    } else if (message.messageType === "CREATE") {
         changeDate(message.createdAt);
-        getUserList().then(() => addCreateMessage(message))
-        ;
-    }else if(message.messageType=="DELETE"){
+        await getUserList();  // 사용자 목록 완전히 로드된 후
+        addCreateMessage(message);
+    } else if (message.messageType === "DELETE") {
         changeDate(message.createdAt);
         addDeleteMessage(message);
-    }else if(message.messageType=="ENTER"){
+    } else if (message.messageType === "ENTER") {
+        changeDate(message.createdAt);
+        await getUserList();  // 사용자 목록 완전히 로드된 후
         addEnterMessage(message);
-    }else if(message.messageType=="EXIT"){
+        sendReadMessage(message);
+    } else if (message.messageType === "EXIT") {
         addExitMessage(message);
-    }else if(message.messageType=="IMAGE") {
+        sendReadMessage(message);
+    } else if (message.messageType === "IMAGE") {
         changeDate(message.createdAt);
         addImageMessage(message);
     }
 }
-function addTalkMessageWithDB(message) {
+function addTalkMessageWith(message, mode) {
     const messageContainer = document.querySelector(".chat-container");
-    let unreadCount = userCount - message.readCount;
-    console.log("message.readCount : " + message.readCount);
-    console.log("unreadCount : " +unreadCount);
-    console.log("readingCount : " + readingCount);
-    //const messageElement = createTalkMessageElement(message, (userCount - message.readCount==0?"":userCount - message.readCount));
-    const messageElement = createTalkMessageElement(message, (unreadCount==0?"":unreadCount));
-    messageContainer.appendChild(messageElement);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-}
+    // LatestReadTime 이 message.createdAt 보다 작으면 읽음 처리
+    let count = 0;
+    if(mode == "db"){
+        const users = document.getElementsByClassName("user");
+        for (let i = 0; i < users.length; i++) {
+            const user = users[i];
+            const latestReadTime = user.getAttribute("latest_read_time");
+            if (latestReadTime<= message.createdAt) {
+                count++;
+            }
+            console.log("count : "+count);
+        }
+    }
+    const messageElement = createTalkMessageElement(message, (userCount - count == 0 ? "" : userCount - count ));
+    console.log("userCount : "+userCount);
 
-function addTalkMessageWithSocket(message) {
-    const messageContainer = document.querySelector(".chat-container");
-    const messageElement = createTalkMessageElement(message, (userCount - message.readCount - readingCount==0?"":userCount - message.readCount - readingCount));
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
-}
-function activeUsersRead(){
-    const users = document.getElementsByClassName("user");
-    let activeUsers = [];
-    for(let i = 0; i < users.length; i++){
-        const user = users[i];
-        if(user.getAttribute("active") == "true"){
-            activeUsers.push(user);
-        }
-    }
-    for(let i = 0; i < activeUsers.length; i++){
-        const user = users[i];
-        console.log("activeUsers : " + user.getAttribute("active") + " / latestReadTime : " + user.getAttribute("latestReadTime") + " / id : " + user.getAttribute("id"));
-        if(user.getAttribute("active") == "true"){
-            const tempLRT = user.getAttribute("latestReadTime");
-            const newReadTime = new Date().toISOString();
-            console.log("readMessages:", tempLRT, "→", newReadTime);
-            readMessages(tempLRT, newReadTime);
-        }
-    }
 }
 function readMessages(time1, time2){
     const chatList = document.querySelectorAll(".message .meta");
     const from = new Date(time1);
     const to = new Date(time2);
-    // console.log("🕓 readMessages:", time1, "→", time2);
-    // console.log("✅ time1 Date:", new Date(time1));
-    // console.log("✅ time2 Date:", new Date(time2));
     let flag = false;
 
     for (let i = chatList.length - 1; i >= 0; i--) {
@@ -225,7 +251,7 @@ function readMessages(time1, time2){
         }
 
         if (flag) {
-            if (isoTime > to) break;
+            if (isoTime >= to) break;
 
             const unreadEl = item.querySelector(".unread-count");
             if (!unreadEl) {
@@ -308,33 +334,18 @@ function addDeleteMessage(message){
     // messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 function addEnterMessage(message){
-    readingCount++;
-    const users = document.getElementsByClassName("user");
-    for(let i = 0; i < users.length; i++){
-        const user = users[i];
-        if(user.getAttribute("id") == message.userId){
-            user.setAttribute("active", "true");
-            console.log("active : " + user.getAttribute("active"));
-            break;
-        }
-    }
-    console.log("readingCount : "+readingCount);
     const userId = message.userId;
     const user = document.getElementById(userId);
-    const tempLRT = user.getAttribute("latestReadTime");
+    const tempLRT = user.getAttribute("latest_read_time");
     const newReadTime = new Date().toISOString();
-    console.log("readMessages:", tempLRT, "→", newReadTime);
-    user.setAttribute("latestReadTime", newReadTime);
+    user.setAttribute("latest_read_time", newReadTime);
     readMessages(tempLRT, newReadTime);
 }
 function addExitMessage(message){
-    readingCount--;
-    console.log("Exit Message -- readingCount : "+readingCount);
     const userId = message.userId;
     const user = document.getElementById(userId);
-    const newReadTime = message.latestReadTime;
-    user.setAttribute("latestReadTime", new Date(newReadTime).toISOString());
-    user.setAttribute("active", "false");
+    const newReadTime = message.createdAt;
+    user.setAttribute("latest_read_time", new Date(newReadTime).toISOString());
 }
 function addImageMessage(message){
     const messageContainer = document.querySelector(".chat-container");
@@ -360,20 +371,17 @@ function stompConnect(){
 
         // 4. JSON 데이터를 서버로 전송
         const jsonData = {
-            //  {"roomId":1,"userId":1,"latestReadTime":"2025-03-31 14:00:00.000"}
+            //  {"roomId":1,"userId":1,"latest_read_time":"2025-03-31 14:00:00.000"}
             roomId: roomId,
             userId: userId,
-            latestReadTime: new Date().toISOString()
+            createdAt: new Date().toISOString()
         };
-        stompClient.send("/pub/chat/on", {}, JSON.stringify(jsonData));
+        stompClient.send("/pub/chat/read", {}, JSON.stringify(jsonData));
     });
     // ✅ WebSocket 연결 종료 시 /pub/chat/off 에 메시지 전송
     socket.onclose = function () {
         console.log("⚠️ WebSocket Disconnected. Sending disconnect signal...");
         sendDisconnectSignal();
-        // 🔻 readingCount 감소 처리
-        readingCount--;
-        console.log("🔌 disconnected, readingCount:", readingCount);
         setTimeout(stompConnect, reconnectInterval); // 5초 후 재연결 시도
     };
 }
@@ -385,8 +393,7 @@ $(document).ready(function () {
         });
     });
 
-    // EventListener
-    document.querySelector(".chat button").addEventListener("click", function () {
+    document.querySelector(".chat button").addEventListener("click", async function () {
         const message = document.getElementById("text").value;
         if (message.trim() === "") return;
 
@@ -398,15 +405,24 @@ $(document).ready(function () {
             createdAt: new Date().toISOString()
         };
 
-        if (stompClient && stompClient.connected) {
-            stompClient.send("/pub/chat/talk", {}, JSON.stringify(chatMessage));
-        }else{
-            console.error("STOMP client is not connected.");
+        try {
+            // updateLatestReadTime이 비동기적으로 완료될 때까지 기다립니다.
+            await updateLatestReadTime(userId, chatMessage.createdAt);
+
+            if (stompClient && stompClient.connected) {
+                stompClient.send("/pub/chat/talk", {}, JSON.stringify(chatMessage));
+            } else {
+                console.error("STOMP client is not connected.");
+            }
+
+            document.getElementById("text").value = ""; // 전송 후 입력창 비움
+            document.getElementById("imagePreviewContainer").innerHTML = ""; // 미리보기 초기화
+            document.getElementById("imageUpload").value = ""; // 파일 입력 초기화
+        } catch (error) {
+            console.error("Error updating latest read time:", error);
         }
-        document.getElementById("text").value = ""; // 전송 후 입력창 비움
-        document.getElementById("imagePreviewContainer").innerHTML = ""; // 미리보기 초기화
-        document.getElementById("imageUpload").value = ""; // 파일 입력 초기화
     });
+
     document.getElementById("text").addEventListener("keydown", function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -463,20 +479,10 @@ function sendDisconnectSignal() {
         const disconnectData = {
             roomId: roomId,
             userId: userId,
-            latestReadTime: new Date().toISOString()
+            createdAt: new Date().toISOString()
         };
         stompClient.send("/pub/chat/off", {}, JSON.stringify(disconnectData));
         stompClient.disconnect();
-        userActiveChange(userId, "false");
-    }
-}
-function userActiveChange(userId, activeStatus) {
-    const userElement = document.getElementById(userId);
-    if (userElement) {
-        userElement.setAttribute("active", activeStatus);
-        console.log("User " + userId + " active status changed to " + activeStatus);
-    } else {
-        console.error("User element not found for ID: " + userId);
     }
 }
 window.addEventListener("beforeunload", sendDisconnectSignal);

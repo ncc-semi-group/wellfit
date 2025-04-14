@@ -1,10 +1,10 @@
 package com.example.demo.chat.controller;
 
-import com.example.demo.chat.dto.ChatEnterDto;
-import com.example.demo.chat.dto.ChatExitDto;
-import com.example.demo.chat.dto.ChatRequestDto;
-import com.example.demo.chat.dto.ChatroomCreateDto;
+import com.example.demo.chat.dto.*;
+import com.example.demo.chat.service.ChatRedisService;
 import com.example.demo.chat.service.ChatService;
+import com.example.demo.ncp.storage.NaverConfig;
+import com.example.demo.ncp.storage.NcpObjectStorageService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,15 +15,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Controller
 @Slf4j
 public class ChatController {
     private final ChatService chatService;
-    public ChatController(ChatService chatService) {
+    private final ChatRedisService redis;
+    private final NcpObjectStorageService ncpObjectStorageService;
+    private String bucketName = "bucketcamp148";
+    public ChatController(ChatService chatService, ChatRedisService redis, NcpObjectStorageService ncpObjectStorageService) {
         this.chatService = chatService;
+        this.redis = redis;
+        this.ncpObjectStorageService = ncpObjectStorageService;
     }
 
     // Test
@@ -81,9 +86,10 @@ public class ChatController {
         return "chat/chatroom"; // Thymeleaf 템플릿
     }
 
-
     @MessageMapping("/chat/off")
     public void exit(ChatExitDto exitDto) {
+        // Redis에 최신 읽기 시간 업데이트
+        redis.updateLatestReadTime(exitDto.getRoomId(), exitDto.getUserId(), exitDto.getCreatedAt());
         // 현재 유저의 퇴장 메시지 채팅 전송, DB에 저장
         chatService.offChatroom(exitDto);
         log.info("User EXIT");
@@ -93,6 +99,8 @@ public class ChatController {
     public void enter(ChatEnterDto enterDto) {
         // 현재 채팅방에 메시지 전송, DB에 저장
         chatService.onChatroom(enterDto);
+        // Redis에 최신 읽기 시간 업데이트
+        redis.updateLatestReadTime(enterDto.getRoomId(), enterDto.getUserId(), enterDto.getCreatedAt());
         log.info("User ENTER");
     }
 
@@ -100,6 +108,14 @@ public class ChatController {
     public void talk(ChatRequestDto chatDto){
         // 현재 채팅방에 메시지 전송, DB에 저장
         chatService.talk(chatDto);
+        // Redis에 최신 읽기 시간 업데이트
+        redis.updateLatestReadTime(chatDto.getRoomId(), chatDto.getUserId(), chatDto.getCreatedAt());
+    }
+    @MessageMapping("/chat/read")
+    public void read(ChatRequestDto chatDto) {
+        // Redis에 최신 읽기 시간 업데이트
+        redis.updateLatestReadTime(chatDto.getRoomId(), chatDto.getUserId(), chatDto.getCreatedAt());
+        chatService.read(chatDto);
     }
     @PostMapping("/chatroom/create")
     public String createChatroom(HttpSession session ,@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
@@ -107,14 +123,24 @@ public class ChatController {
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
             dto.setUserId(userId);
             Long roomId = chatService.createChatroom(dto);
+
+            // 파일이 존재하면 S3에 업로드
+            if (file != null && !file.isEmpty()) {
+                log.info("File uploaded: " + file.getOriginalFilename());
+                String fileUrl = ncpObjectStorageService.uploadFile(bucketName,"image/chatroom/" ,file);
+                dto.setImageUrl(fileUrl); // 업로드된 이미지 URL을 DTO에 설정
+            }else{
+                log.info("No file uploaded, using default image.");
+                dto.setImageUrl("https://bucketcamp148.s3.ap-northeast-2.amazonaws.com/image/chatroom/default.png");
+            }
+
             System.out.println("userId = " + userId);
             System.out.println("roomId = " + roomId);
-            chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId().toString()).roomId(roomId.toString()).createdAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).build());
+            chatService.createChatroomUser(ChatRequestDto.builder().userId(dto.getUserId()).roomId(roomId).createdAt(new Timestamp(System.currentTimeMillis())).imageUrl(dto.getImageUrl()).build());
             return "redirect:/chat";
         }catch (RuntimeException e){
             e.printStackTrace();
             return "redirect:/chatroom/form";
-
         }
     }
     @GetMapping("/chatroom/{chatRoomId}/chats")
@@ -172,10 +198,29 @@ public class ChatController {
     @GetMapping("/chatroom/{roomId}/members")
     public ResponseEntity<?> getChatroomMembers(@PathVariable(value = "roomId") Long roomId) {
         try {
-            return ResponseEntity.ok(chatService.findChatroomUserByChatroomId(roomId));
+            // 채팅방 사용자 목록 가져오기
+            List<ChatroomUserDto> chatroomUsers = chatService.findChatroomUserByChatroomId(roomId);
+
+            // 각 사용자에 대해 최신 읽기 시간을 Redis에서 가져오고 없으면 DB에서 가져옴
+            for (ChatroomUserDto userDto : chatroomUsers) {
+                Timestamp latestReadTime = redis.getLatestReadTime(userDto.getRoomId(), userDto.getUserId());
+                if (latestReadTime == null) {
+                    // Redis에 없으면 DB에서 조회
+                    latestReadTime = userDto.getLatestReadTime();
+                    // DB에서 가져온 값은 Redis에 저장하여 추후 빠르게 접근 가능하도록 함
+                    if (latestReadTime != null) {
+                        redis.updateLatestReadTime(userDto.getRoomId(), userDto.getUserId(), latestReadTime);
+                    }
+                }
+                // 최신 읽기 시간을 DTO에 설정 (선택 사항)
+                userDto.setLatestReadTime(latestReadTime);
+            }
+
+            return ResponseEntity.ok(chatroomUsers);
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
         }
     }
+
 }

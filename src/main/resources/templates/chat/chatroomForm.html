@@ -17,6 +17,9 @@
 </script>
 <body>
 <div >
+    <div class="preview-container">
+        <img class="preview" src="https://via.placeholder.com/200?text=Upload+Image">
+    </div>
     <form action="./create" method="post" enctype="multipart/form-data">
         <table class="table table-bordered">
             <tr>
@@ -28,19 +31,21 @@
                 <td><input type="text" required name="description" class="form-control"></td>
             </tr>
             <tr>
-                <th width="100">사진</th>
-                <td><input type="file" name="img" class="form-control"></td>
-            </tr>
-            <tr>
                 <th width="100">최대인원</th>
                 <td>
                     <select name="maxUser" class="form-select">
+                        <option>5</option>
                         <option>10</option>
+                        <option>15</option>
                         <option>20</option>
+                        <option>25</option>
                         <option>30</option>
+                        <option>35</option>
                         <option>40</option>
+                        <option>45</option>
                         <option>50</option>
                     </select>
+
                 </td>
             </tr>
             <tr>
@@ -50,6 +55,7 @@
                 </td>
             </tr>
         </table>
+        <input type="file" id="imgInput" accept="image/*" name="img" class="form-control">
     </form>
 </div>
 </body>

@@ -9,6 +9,6 @@ import java.sql.Timestamp;
 public class ChatExitDto {
     private Long roomId;
     private Long userId;
-    private Timestamp latestReadTime;
+    private Timestamp createdAt;
     private MessageType messageType = MessageType.EXIT;
 }

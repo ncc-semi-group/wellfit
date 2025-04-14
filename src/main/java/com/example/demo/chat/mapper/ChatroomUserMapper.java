@@ -6,6 +6,7 @@ import com.example.demo.chat.dto.ChatroomUserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -19,4 +20,5 @@ public interface ChatroomUserMapper {
     void updateLatestReadTime(@Param("roomId") Long roomId, @Param("userId") Long userId);
     int getChatroomUserCount(@Param("roomId") Long roomId);
     void updateActive(@Param("userId") Long userId, @Param("roomId") Long roomId);
+    void updateLatestReadTime(@Param("roomId") Long roomId, @Param("userId") Long userId, @Param("timestamp") Timestamp timestamp);
 }
