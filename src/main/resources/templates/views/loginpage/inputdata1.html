@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/loginpage/inputdata1.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+	<a th:href="@{/welcome}" class="btn-back">
+		<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" fill="currentColor" stroke="currentColor" stroke-width="0.8" class="bi bi-arrow-left" viewBox="0 0 16 16">
+			<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+		</svg>
+	</a>
+	<div class="step-container">
+		<div class="current-step">1</div>
+		<div class="step">2</div>
+	</div>
+	<div class="content-container">
+		<div class="notice">기본 정보를 알려주세요.</div>
+	
+		<div class="value-container">
+		    <div class="value-category">성별</div>
+		    <div class="value-select-wrapper">
+		        <input type="radio" id="female" name="gender" class="value-select-radio" hidden checked>
+		        <label for="female" class="value-select1">여성</label>
+		
+		        <input type="radio" id="male" name="gender" class="value-select-radio" hidden>
+		        <label for="male" class="value-select1">남성</label>
+		    </div>
+		</div>
+	
+		<div class="input-container">
+			<div class="input-wrapper">
+				<div class="value-category">나이</div>
+				<input class="value-input" placeholder="0">
+				<span class="unit">세</span>
+			</div>
+			<div class="input-wrapper">
+				<div class="value-category">키</div>
+				<input class="value-input" placeholder="0">
+				<span class="unit">cm</span>
+			</div>
+		</div>
+		
+		<div class="input-container">
+			<div class="input-wrapper">
+				<div class="value-category">현재 체중</div>
+				<input class="value-input" placeholder="0">
+				<span class="unit">Kg</span>
+			</div>
+			<div class="input-wrapper">
+				<div class="value-category">목표 체중</div>
+				<input class="value-input" placeholder="0">
+				<span class="unit">Kg</span>
+			</div>
+		</div>
+
+		<div class="value-container">
+			<div class="value-category">활동량</div>
+			<div class="value-select-wrapper">
+				<input type="radio" id="very-low" name="activity"
+					class="value-select-radio" hidden checked> <label
+					for="very-low" class="value-select2">매우 적음</label> <input
+					type="radio" id="low" name="activity" class="value-select-radio"
+					hidden> <label for="low" class="value-select2">적음</label>
+
+				<input type="radio" id="medium" name="activity"
+					class="value-select-radio" hidden> <label for="medium"
+					class="value-select2">보통</label> <input type="radio" id="high"
+					name="activity" class="value-select-radio" hidden> <label
+					for="high" class="value-select2">많음</label>
+			</div>
+
+			<div class="value-detail-wrapper" id="activity-detail">
+				<div class="value-detail" id="activity-main">거의 앉아서 생활</div>
+				<div class="value-detail" id="activity-sub">(사무직, 재택근무 등)</div>
+			</div>
+		</div>
+
+		<a class="btn-next" th:href="@{/inputdata2}">다음</a>
+	</div>
+</div>
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+	<script th:src="@{/js/loginpage/inputdata1.js}"></script>
+</th:block>
+</body>
+</html>

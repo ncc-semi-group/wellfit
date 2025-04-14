@@ -98,23 +98,44 @@
     <!-- ================================== -->
     
     <!-- 모든 유저 조회 -->
-    <select id="getAllUsers" resultType="com.example.demo.dto.UserDto">
+    <select id="getAllUsers" resultType="com.example.demo.dto.user.UserDto">
         SELECT id, email, nickname, profile_image 
         FROM user
     </select>
 
 	<!-- 닉네임으로 유저 조회 -->
-    <select id="searchUsersByNickname" resultType="com.example.demo.dto.UserDto">
+    <select id="searchUsersByNickname" resultType="com.example.demo.dto.user.UserDto">
 	    SELECT id, email, nickname, profile_image as profileImage, my_intro as myIntro
 	    FROM user
 	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
 	</select>
+  
+  	<!-- 로그인: 이메일로 사용자 조회 -->
+    <select id="getUserByEmail" parameterType="String" resultType="UserDto">
+        SELECT id, email, password
+        FROM user
+        WHERE email = #{email}
+    </select>
+    
+    <!-- 사용자 ID로 Salt 조회 -->
+    <select id="getSaltByUserId" parameterType="int" resultType="String">
+        SELECT salt FROM user_salt WHERE user_id = #{userId}
+    </select>
 
-<!--     유저 삽입
-    <insert id="insertUser" parameterType="com.example.demo.dto.UserDto">
-        INSERT INTO user (email, password, nickname, profile_image, created_at)
-        VALUES (#{email}, #{password}, #{nickname}, #{profileImage}, CURRENT_TIMESTAMP)
-    </insert> -->
+    <!-- 유저 삽입 -->
+	<insert id="insertUserAccount" parameterType="UserDto">
+	    INSERT INTO user (email, password, nickname)
+	    VALUES (#{email}, #{password}, #{nickname});
+	    <selectKey resultType="int" keyProperty="id" order="AFTER">
+	        SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+	
+	<!-- salt 삽입 -->
+	<insert id="insertUserSalt">
+	    INSERT INTO user_salt (user_id, salt)
+	    VALUES (#{userId}, #{salt})
+	</insert>
     
     <!-- 프로필 이미지 경로 확인용 쿼리 -->
     <select id="checkProfileImages" resultType="UserDto">

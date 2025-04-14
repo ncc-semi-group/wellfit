@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.TemplateDetailMapper">
+    
+    <select id="getTemplateItems" parameterType="int" resultType="FoodNutrition">
+        <!-- food_type이 'system'인 경우의 조회 -->
+        select
+        ti.id as id,
+        ti.amount as amount,
+        ti.serving as serving,
+        fn.id as foodId,
+        'system' as foodType,
+        fn.name as name,
+        fn.standard,
+        fn.kcal,
+        fn.protein,
+        fn.fat,
+        fn.carbohydrate,
+        fn.sugar,
+        fn.natrium,
+        fn.cholesterol,
+        fn.saturated_fat as saturatedFat,
+        fn.trans_fat as transFat
+        from
+        template_items ti
+        join
+        food_nutrition fn on ti.food_id = fn.id
+        where
+        ti.food_template_id = #{templateId}
+        and ti.food_type = 'system'
+
+        union all
+
+        <!-- food_type이 'user'인 경우의 조회 -->
+        select
+        ti.id as id,
+        ti.amount as amount,
+        ti.serving as serving,
+        ifn.id as foodId,
+        'user' as foodType,
+        ifn.name as name,
+        ifn.standard,
+        ifn.kcal,
+        ifn.protein,
+        ifn.fat,
+        ifn.carbohydrate,
+        ifn.sugar,
+        ifn.natrium,
+        ifn.cholesterol,
+        ifn.saturated_fat as saturatedFat,
+        ifn.trans_fat as transFat
+        from
+        template_items ti
+        join
+        individual_food_nutrition ifn on ti.food_id = ifn.id
+        where
+        ti.food_template_id = #{templateId}
+        and ti.food_type = 'user'
+    </select>
+
+    <select id="getTemplateItemsOnly" parameterType="int" resultType="TemplateItems">
+        select
+            food_id as foodId,
+            food_type as foodType,
+            amount,
+            serving
+        from template_items
+        where food_template_id = #{templateId}
+    </select>
+
+    <insert id="addFoodRecordItems" parameterType="list">
+        insert into record_items (food_records_id, food_id, food_type, amount, serving)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.foodRecordsId}, #{item.foodId}, #{item.foodType}, #{item.amount}, #{item.serving})
+        </foreach>
+    </insert>
+
+    <delete id="deleteFoodTemplates" parameterType="int">
+        delete from food_templates
+        where id = #{templateId}
+    </delete>
+
+</mapper>

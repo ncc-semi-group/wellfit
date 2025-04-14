@@ -5,18 +5,62 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.config.PasswordHashingUtil;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.mapper.UserMapper;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 	private final UserMapper userMapper;
+
+	public UserDto login(String email, String password) {
+		UserDto user = userMapper.getUserByEmail(email);
+		if (user == null) return null;
+
+		String salt = userMapper.getSaltByUserId(user.getId());
+		if (salt == null) return null;
+
+		String hashedInput = PasswordHashingUtil.hashPassword(password, salt);
+		if (hashedInput.equals(user.getPassword())) {
+			return user;
+		}
+		return null;
+	}
+
+	public boolean signup(String email, String password, String nickname) {
+		if (email == null || email.trim().isEmpty()
+				|| password == null || password.trim().isEmpty()
+				|| nickname == null || nickname.trim().isEmpty()) {
+			return false;
+		}
+
+		// 이메일 중복 체크
+		if (userMapper.getUserByEmail(email) != null) {
+			return false;
+		}
+
+		String salt = PasswordHashingUtil.generateSalt();
+		String hashedPassword = PasswordHashingUtil.hashPassword(password, salt);
+
+		UserDto user = new UserDto();
+		user.setEmail(email);
+		user.setPassword(hashedPassword);
+		user.setNickname(nickname);
+
+		int result = userMapper.insertUserAccount(user); // user 저장
+		userMapper.insertUserSalt(user.getId(), salt); // salt 저장
+
+		return result > 0;
+	}
+
+	public String getSaltByUserId(int userId) {
+		return userMapper.getSaltByUserId(userId);
+	}
 	
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -92,14 +136,6 @@ public class UserService {
         }
         return false;
     }
-
-    public UserDto login(String email, String password) {
-        UserDto user = userMapper.getUserById(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        }
-        return null;
-    }
     
     // ==========================
    
@@ -116,6 +152,6 @@ public class UserService {
     }
 
     public void insertUser(UserDto userDto) {
-        userMapper.insertUser(userDto);
+    	userMapper.insertUser(userDto);
     }
 }

@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.BoardService;
-import com.example.demo.dto.BoardDto;
-import com.example.demo.dto.CommentDto;
-import com.example.demo.dto.LikeRequestDto;
-import com.example.demo.dto.UserDto;
-import com.example.demo.user.service.UserService;
+import com.example.demo.dto.board.BoardDto;
+import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.board.LikeRequestDto;
+import com.example.demo.dto.user.UserDto;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 

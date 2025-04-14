@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>기록</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <!-- 개별 css 파일에서 불러올 경우 -->
+        <link rel="stylesheet" th:href="@{/css/record/record.css}">
+    
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    <div class="date-header" th:data-year="${year}" th:data-month="${month}" th:data-day="${day}">
+        <div class="arrow" id="prev-date">&#9664;</div>
+        <div class="date">
+            <span class="calendar-icon" id="calendar-btn">&#128197;</span>
+            <input type="date" id="date-input">
+            <span id="current-date" th:text="${month} + '.' + ${day}"></span>
+        </div>
+        <div class="arrow" id="next-date">&#9654;</div>
+    </div>
+
+    
+    <div class="main-content">
+        <div class="header">
+            <h1>오늘의 기록</h1>
+            <div class="share-button"><i class="bi bi-bar-chart-line"></i></div>
+        </div>
+        <div class="sub-container">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">1970</div>
+                    <div class="stat-label">내 목표</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200</div>
+                    <div class="stat-label">소모량</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2170</div>
+                    <div class="stat-label">섭취 가능</div>
+                </div>
+            </div>
+            
+            <div class="calories-info">625 kcal 섭취 가능</div>
+            
+            <div class="calories-and-label">
+                <div class="calories-count">
+                    1545 <span class="total">/ 2170</span> <span class="unit">kcal</span>
+                </div>
+                
+                <div class="progress-label" id="cheatDay">치팅데이 설정</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill">
+                    <div class="fill-carb" data-current="50" data-target="150"></div>
+                    <div class="fill-protein" data-current="30" data-target="105"></div>
+                    <div class="fill-fat" data-current="40" data-target="50"></div>
+                </div>
+            </div>
+            
+            <div class="nutrition-section">
+                <div class="nutrition-row">
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">탄수화물</div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-fill carb-fill" data-current="50" data-target="150"></div>
+                        </div>
+                        <div class="nutrition-value">50 / 150g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">단백질</div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-fill protein-fill" data-current="30" data-target="105"></div>
+                        </div>
+                        <div class="nutrition-value">30 / 105g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">지방</div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-fill fat-fill" data-current="40" data-target="50"></div>
+                        </div>
+                        <div class="nutrition-value">40 / 50g</div>
+                    </div>
+                </div>
+                
+                <div class="detail-button" id="detailBtn">+ 상세보기</div>
+                
+                <div id="detailSection">
+                    <div class="nutrition-row">
+                        <div class="nutrition-item">
+                            <div class="nutrition-label">콜레스트롤</div>
+                            <div class="nutrition-bar">
+                                <div class="nutrition-fill cholesterol-fill" data-current="20" data-target="50"></div>
+                            </div>
+                            <div class="nutrition-value">20 / 50mg</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-label">나트륨</div>
+                            <div class="nutrition-bar">
+                                <div class="nutrition-fill sodium-fill" data-current="1200" data-target="2400"></div>
+                            </div>
+                            <div class="nutrition-value">1200 / 2400mg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-row">
+                        <div class="nutrition-item">
+                            <div class="nutrition-label">당류</div>
+                            <div class="nutrition-bar">
+                                <div class="nutrition-fill sugar-fill" data-current="50" data-target="150"></div>
+                            </div>
+                            <div class="nutrition-value">50 / 150g</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-label">포화지방</div>
+                            <div class="nutrition-bar">
+                                <div class="nutrition-fill saturated-fill" data-current="30" data-target="105"></div>
+                            </div>
+                            <div class="nutrition-value">30 / 105g</div>
+                        </div>
+                        <div class="nutrition-item">
+                            <div class="nutrition-label">트랜스지방</div>
+                            <div class="nutrition-bar">
+                                <div class="nutrition-fill trans-fill" data-current="40" data-target="50"></div>
+                            </div>
+                            <div class="nutrition-value">40 / 50g</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- 타이틀 -->
+        <div class="sub-container">
+            <div class="header">
+                <h1>식사</h1>
+            </div>
+            
+            <!-- 식사 목록 -->
+            <div class="meals-container">
+                <!-- 아침 식사 -->
+                <div class="meal-card" data-meal_type="breakfast">
+                    <div class="meal-icon breakfast-icon">
+                        <!-- 아침 아이콘 (컵과 접시) -->
+                        <span>🍳</span>
+                    </div>
+                    <div class="meal-name">아침</div>
+                    <div class="meal-calories"
+                         th:text="${foodRecords.containsKey('breakfast') ? foodRecords.get('breakfast').kcal + 'kcal' : '0kcal'}">
+                    </div>
+                    <div class="status-icon"></div>
+                </div>
+                
+                <!-- 점심 식사 -->
+                <div class="meal-card" data-meal_type="lunch">
+                    <div class="meal-icon lunch-icon">
+                        <!-- 점심 아이콘 (태양) -->
+                        <span>☀️</span>
+                    </div>
+                    <div class="meal-name">점심</div>
+                    <div class="meal-calories"
+                         th:text="${foodRecords.containsKey('lunch') ? foodRecords.get('lunch').kcal + 'kcal' : '0kcal'}">
+                    </div>
+                    <div class="status-icon"></div>
+                </div>
+                
+                <!-- 저녁 식사 -->
+                <div class="meal-card" data-meal_type="dinner">
+                    <div class="meal-icon dinner-icon">
+                        <!-- 저녁 아이콘 (달) -->
+                        <span>🌙</span>
+                    </div>
+                    <div class="meal-name">저녁</div>
+                    <div class="meal-calories"
+                         th:text="${foodRecords.containsKey('dinner') ? foodRecords.get('dinner').kcal + 'kcal' : '0kcal'}">
+                    </div>
+                    <div class="status-icon"></div>
+                </div>
+                
+                <!-- 간식 -->
+                <div class="meal-card" data-meal_type="snack">
+                    <div class="meal-icon snack-icon">
+                        <!-- 간식 아이콘 (음료와 과자) -->
+                        <span>🧃</span>
+                    </div>
+                    <div class="meal-name">간식</div>
+                    <div class="meal-calories"
+                         th:text="${foodRecords.containsKey('snack') ? foodRecords.get('snack').kcal + 'kcal' : '0kcal'}">
+                    </div>
+                    <div class="status-icon"></div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- 체중 정보 섹션 -->
+        <div class="sub-container">
+            <div class="header">
+                <h1>체중</h1>
+            </div>
+            
+            
+            <!-- 체중 정보 레이아웃 -->
+            <div class="weight-info">
+                <!-- 체중 데이터 헤더 -->
+                <div class="weight-header">
+                    <!-- 현재 체중 -->
+                    <div class="current-weight">80 kg</div>
+                    
+                    <!-- BMI 정보 -->
+                    <div class="bmi-info">BMI : 23.5</div>
+                </div>
+                
+                <!-- BMI 범위 표시 -->
+                <div class="bmi-range-container">
+                    <div class="bmi-range-bar"></div>
+                    <div class="bmi-marker"></div>
+                    <div class="bmi-labels">
+                        <span>저체중</span>
+                        <span>정상</span>
+                        <span>과체중</span>
+                        <span>비만</span>
+                        <span>고도비만</span>
+                    </div>
+                </div>
+                
+                <!-- 체중 변화 정보 -->
+                <div class="weight-changes">
+                    <div class="weight-change">
+                        <span>일주일 동안</span>
+                        <span>-1kg</span>
+                    </div>
+                    <div class="weight-change">
+                        <span>한 달 동안</span>
+                        <span>-5kg</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 등록 버튼 -->
+            <button class="record-button">등록</button>
+        </div>
+        
+        
+        <!-- 운동 정보 섹션 -->
+        <div class="sub-container">
+            <div class="header">
+                <h1>운동</h1>
+            </div>
+            
+            <!-- 운동 정보 레이아웃 -->
+            <div class="exercise-info">
+                <!-- 덤벨 아이콘 -->
+                <div class="dumbbell-container">
+                    <div class="circle-bg">
+                        <div class="dumbbell">
+                            <div class="dumbbell-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 운동 데이터 -->
+                <div class="exercise-data">
+                    <!-- 운동 시간 라벨 -->
+                    <div class="exercise-time-label">오늘의 운동 시간</div>
+                    
+                    <!-- 운동 시간 값 -->
+                    <div class="exercise-time-value">50분</div>
+                    
+                    <!-- 칼로리 정보 -->
+                    <div class="burn-calories-info">
+                        <span class="fire-icon">🔥</span>
+                        <span>200 kcal</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 등록 버튼 -->
+            <button class="record-button">등록</button>
+        </div>
+    </div>
+    
+    <!-- 체중 입력 모달 -->
+    <div class="modal-overlay" id="weightModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">체중 입력</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="weight-input-container">
+                    <div class="weight-input-group">
+                        <input type="number" class="weight-input" id="weightInput" value="79.6" step="0.1"
+                               inputmode="decimal" min="20" max="200">
+                        <span class="weight-unit">kg</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-button cancel-button" id="cancelButton">취소</button>
+                <button class="modal-button submit-button" id="submitButton">등록</button>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- 치팅데이 설정 모달 -->
+    <div class="modal-overlay" id="cheatDayModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">치팅데이 설정
+                    <i class="bi bi-question-circle-fill" id="cheatDetail"></i>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="points-info">
+                    <div class="points-label">사용 가능 포인트</div>
+                    <div class="points-value">700 cp</div>
+                </div>
+                <button class="use-button">사용</button>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="cheatDayTooltip" class="popover-tooltip">
+        치팅데이는 식단 계획에서 일시적으로 벗어날 수 있는 특별한 날입니다.
+        칼로리 제한을 초과한 경우, 초과한 칼로리만큼 치팅데이 포인트(cp)를 소모하여 해당 날을 치팅데이로 설정하고 식단 완수를 이어나갈 수 있습니다.
+        포인트는 당일 식단 기록을 자정 전에 완료하고 식단 목표를 달성할 시 일정량 획득할 수 있으며, 최대 1,000포인트까지 보유 가능합니다.
+    </div>
+
+
+</div>
+
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    
+    <!-- 개별 js 파일에서 불러올 경우 -->
+    <script th:src="@{/js/record/record.js}"></script>
+
+
+</th:block>
+</body>
+
+</html>

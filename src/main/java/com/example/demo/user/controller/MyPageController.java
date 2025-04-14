@@ -3,7 +3,6 @@ package com.example.demo.user.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -19,12 +18,12 @@ import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.board.service.BoardLikeService;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.CommentService;
-import com.example.demo.dto.BadgeDto;
-import com.example.demo.dto.BoardDto;
-import com.example.demo.dto.BoardLikeDto;
-import com.example.demo.dto.CommentDto;
-import com.example.demo.dto.UserBadgeDto;
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.user.BadgeDto;
+import com.example.demo.dto.board.BoardDto;
+import com.example.demo.dto.board.BoardLikeDto;
+import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.user.UserBadgeDto;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.service.UserService;
 
 import jakarta.servlet.http.HttpSession;

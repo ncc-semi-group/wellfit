@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/loginpage/loginpage.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="login-container">
+        <div class="comment">로그인</div>
+        <form method="post" action="/logincheck">
+            <div class="mb-3">
+                <input type="email" class="input-field" name="email" placeholder="이메일" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="input-field" name="password" placeholder="비밀번호" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-login">로그인</button>
+        </form>
+        <a class="btn-signup" th:href="@{/signuppage}">회원가입</a> 
+    </div>
+</div>
+</body>
+</html>
