@@ -30,4 +30,5 @@ public class BoardDto {
 	private int imageCount;
 	private String thumbnailImage;
 	private List<String> imageUrls;
+	
 }

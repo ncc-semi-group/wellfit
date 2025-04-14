@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.board.service.BoardImageService;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.dto.board.BoardDto;
+
+import com.example.demo.dto.board.BoardImageDto;
+import com.example.demo.dto.user.UserDto;
+
 import com.example.demo.user.service.UserPageService;
 
 import java.util.HashMap;
@@ -29,7 +33,17 @@ public class BoardController {
 
     @GetMapping("/feed/all")
     public String board(@RequestParam(name = "userId", required = false, defaultValue = "2") int userId,  Model model) {
-        List<BoardDto> posts = boardService.getAllBoardWithDetails(userId);
+    List<BoardDto> posts = boardService.getAllBoardWithDetails(userId);
+        // 프로필 이미지 경로 처리
+        for (BoardDto post : posts) {
+            if (post.getUser() != null && post.getUser().getProfileImage() != null) {
+                String profileImage = post.getUser().getProfileImage();
+                if (!profileImage.startsWith("http") && !profileImage.startsWith("/images/")) {
+                    post.getUser().setProfileImage("/images/" + profileImage);
+                }
+            }
+        }
+        
         model.addAttribute("posts", posts);
         model.addAttribute("showHeader", false);
         model.addAttribute("currentPage", "community");

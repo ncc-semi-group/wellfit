@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.badge.service.BadgeService;
@@ -202,5 +203,23 @@ public class MyPageController {
         model.addAttribute("showHeader", false);
         
         return "views/mypage/mypageLike";
+    }
+
+    @GetMapping("/follower/{userId}")
+    public String followerList(@PathVariable int userId, Model model) {
+        UserDto user = userService.getUserProfile(userId);
+        List<UserDto> followers = userService.getUserFollowers(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("followers", followers);
+        return "views/mypage/followerpage";
+    }
+
+    @GetMapping("/following/{userId}")
+    public String followingList(@PathVariable int userId, Model model) {
+        UserDto user = userService.getUserProfile(userId);
+        List<UserDto> following = userService.getUserFollowing(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("following", following);
+        return "views/mypage/followingpage";
     }
 }

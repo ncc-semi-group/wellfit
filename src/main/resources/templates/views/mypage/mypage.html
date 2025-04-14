@@ -23,22 +23,21 @@
 
     <div th:if="${dto != null}">
         <div class="profile">
-            <img th:src="@{${dto.profileImage != null and dto.profileImage.startsWith('/') ? 
-                dto.profileImage : 
-                (dto.profileImage != null ? '/images/' + dto.profileImage : '/static/images/default-profile.png')}}" 
-                class="my-profile-image">
+            <img th:src="${dto.profileImage != null ? dto.profileImage : '/static/images/default-profile.png'}" 
+     class="my-profile-image"
+     onerror="this.src='/static/images/default-profile.png'">
             <div class="profile-info">
                 <div class="profile-stats">
                     <div class="stat-item" id="friend-link">
                         <div class="stat-number" th:text="${dto.friendCount}"></div>
                         <div class="stat-label">친구</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${dto.userId2}"></div>
+                    <div class="stat-item" id="follower">
+                        <div class="stat-number" th:text="${dto.followerCount}"></div>
                         <div class="stat-label">팔로워</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" th:text="${dto.userId1}"></div>
+                    <div class="stat-item" id="following">
+                        <div class="stat-number" th:text="${dto.followingCount}"></div>
                         <div class="stat-label">팔로잉</div>
                     </div>
                 </div>
@@ -56,13 +55,13 @@
             <h5>내 업적</h5>
             <div class="achievement-in">
                 <div class="badge-cnt1" th:data-user-id="${dto.id}">
-                    <img th:src="@{/static/images/업적.png}" class="ach-image">
+                    <img th:src="@{/images/업적.png}" class="ach-image">
                     <h5>보유 뱃지 수</h5>
                     <h4 th:text="${dto.badgeCount + '개'}" ></h4>
                 </div>
 
                 <div class="badge-cnt2">
-                    <img th:src="@{/static/images/업적2.png}" class="ach-image">
+                    <img th:src="@{/images/업적2.png}" class="ach-image">
                     <h5>목표 달성 수</h5>
                     <h4 th:text="${dto.achievementCount + '개'}"></h4>
                 </div>

@@ -53,6 +53,9 @@
 						<th:block th:each="friend : ${recommandFriends}">
 							<div class="recommand-friend-wrapper">
 								<div class="comment">Wellfit의 추천</div>
+								<img th:src="${friend.profileImage != null ? friend.profileImage : '/static/images/default-profile.jpg'}"
+									th:alt="${friend.nickname}"
+									onerror="this.src='/static/images/default-profile.jpg'">
 								<img th:src="@{'/images/' + ${friend.profileImage}}"/>
 								<div th:text="${friend.nickname}" class="name"></div>
 								<div th:text="${friend.myIntro}" class="intro"></div>
@@ -69,6 +72,9 @@
 					</th:block>
 					<th:block th:each="req : ${requests}">
 						<div class="friend-accept-wrapper">
+							<img th:src="${senderMap[req.senderId] != null ? senderMap[req.senderId].profileImage : '/static/images/default-profile.jpg'}"
+								th:alt="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}"
+								onerror="this.src='/static/images/default-profile.jpg'">
 							<img th:src="@{ '/images/' + ${senderMap[req.senderId].profileImage} }"/>
 							<div class="profile">
 								<div th:text="${senderMap[req.senderId].nickname}" class="name"></div>

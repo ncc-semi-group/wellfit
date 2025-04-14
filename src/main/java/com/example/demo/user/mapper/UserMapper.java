@@ -25,10 +25,15 @@ public interface UserMapper {
 
 	// 이메일로 사용자 조회
 	public UserDto selectUserByEmail(@Param("email") String email);
-  public UserDto getUserByEmail(@Param("email") String email);
-  public String getSaltByUserId(@Param("userId") int userId);
-  public void insertUserSalt(@Param("userId") int userId, @Param("salt") String salt);
 
+	public UserDto getUserByEmail(@Param("email") String email);
+	public String getSaltByUserId(@Param("userId") int userId);
+	public void insertUserSalt(@Param("userId") int userId, @Param("salt") String salt);
+  
+	// 사용자 기본 정보 업데이트
+	public void updateUserInitInfo1(UserDto userdto);
+	public void updateUserInitInfo2(UserDto userdto);
+	
 	// 사용자 목록 조회
 	public List<UserDto> selectAllUsers();
 
@@ -38,4 +43,8 @@ public interface UserMapper {
 	public List<UserDto> getAllUsers();
 	public UserDto getUserById(@Param("id") int id);
 	public List<UserDto> searchUsersByNickname(@Param("nickname") String nickname);
+	
+	public UserDto getUserProfile(int userId);
+	public List<UserDto> getUserFollowers(int userId);
+	public List<UserDto> getUserFollowing(int userId);
 }
