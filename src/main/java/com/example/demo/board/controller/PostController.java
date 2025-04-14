@@ -1,5 +1,6 @@
 package com.example.demo.board.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.BoardService;
 import com.example.demo.dto.BoardDto;
 import com.example.demo.dto.CommentDto;
 import com.example.demo.dto.LikeRequestDto;
+import com.example.demo.dto.UserDto;
+import com.example.demo.user.service.UserService;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -28,6 +32,7 @@ public class PostController {
 
 	@Autowired
 	BoardService boardService;
+
 
 	@GetMapping("api/comments/{boardId}")
 	@ResponseBody
@@ -70,12 +75,71 @@ public class PostController {
 
 	        return ResponseEntity.ok(response);
 	    }
+	  
+	  
+	  
+	  // 팔로우 상태 토글 (팔로우/팔로우 취소)
+	    @PostMapping("/api/follow/toggle")
+	    public boolean toggleFollow(@RequestParam("userId") int userId, @RequestParam("targetUserId") int targetUserId) {
+	        return boardService.toggleFollow(userId, targetUserId);
+	    }
+
+	    // 특정 사용자의 팔로워 수 가져오기
+	    @GetMapping("/api/follow/followers")
+	    public int getFollowers(@RequestParam("targetUserId") int targetUserId) {
+	        return boardService.getFollowerCount(targetUserId);
+	    }
   
-    
+	    
+	    @GetMapping("/api/following-users")
+	    public ResponseEntity<List<Long>> getFollowingUserIds(@RequestParam("userId") Long userId) {
+	        List<Long> followingUserIds = boardService.getFollowingUserIds(userId);
+	        return ResponseEntity.ok(followingUserIds);
+	    }
+	    
+	    
+	    
+	    
+	    
+	 // 팔로워 수 기준 추천 유저 5명 가져오기
+	    @GetMapping("/api/recommended-users")
+	    public ResponseEntity<List<UserDto>> getRecommendedUsers(@RequestParam("userId") int userId) {
+	        List<UserDto> recommendedUsers = boardService.getRecommendedUsersByFollowers(userId);
+
+	        if (recommendedUsers != null && !recommendedUsers.isEmpty()) {
+	            return new ResponseEntity<>(recommendedUsers, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+	        }
+	    }
+	    
+	    
+	    
+	    
+	    @GetMapping("/api/boards/top-liked")
+	    public List<BoardDto> getTopLikedBoards() {
+	        return boardService.getTopLikedBoardsWithImages();
+	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	   
 	@GetMapping("api/with-details")
-	public List<BoardDto> getAllBoardsWithDetails() 
+	public List<BoardDto> getAllBoardsWithDetails(@RequestParam(name = "userId", required = false, defaultValue = "2") int userId) 
 	{
-		return boardService.getAllBoardWithDetails();
+		return boardService.getAllBoardWithDetails(userId);
 	
 	}
 	

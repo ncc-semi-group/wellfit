@@ -3,7 +3,7 @@ package com.example.demo.board.service;
 import com.example.demo.board.mapper.BoardMapper;
 import com.example.demo.dto.BoardDto;
 import com.example.demo.dto.CommentDto;
-
+import com.example.demo.dto.UserDto;
 
 import lombok.AllArgsConstructor;
 
@@ -27,8 +27,8 @@ public class BoardService {
 	}
 
 
-	public List<BoardDto> getAllBoardWithDetails(){
-		return boardMapper.selectAllBoardsWithDetails();
+	public List<BoardDto> getAllBoardWithDetails(int userId){
+		return boardMapper.selectAllBoardsWithDetails(userId);
 	}
 
 	public List<BoardDto> getSelectUserId(int userId){
@@ -63,5 +63,43 @@ public class BoardService {
 	        return boardMapper.countLikes(postId);
 	    }
 	
+	    
+	    // 팔로우/팔로우 취소 기능
+	    @Transactional
+	    public boolean toggleFollow(int userId, int targetUserId) {
+	        // 이미 팔로우한 상태인지 확인
+	        boolean alreadyFollowed = boardMapper.isFollowed(userId, targetUserId) > 0;
+
+	        if (alreadyFollowed) {
+	            // 팔로우 취소
+	            boardMapper.deleteFollow(userId, targetUserId);
+	            return false; // 팔로우 취소 상태
+	        } else {
+	            // 팔로우
+	            boardMapper.insertFollow(userId, targetUserId);
+	            return true; // 팔로우 상태
+	        }
+	    }
+
+	    // 팔로워 수 가져오기
+	    public int getFollowerCount(int targetUserId) {
+	        return boardMapper.countFollowers(targetUserId);
+	    }
+	    
+	    public List<Long> getFollowingUserIds(Long userId) {
+	        return boardMapper.selectFollowingUserIds(userId);
+	    }
+	    
+	    
+	    public List<UserDto> getRecommendedUsersByFollowers(int userId) {
+	        return boardMapper.getRecommendedUsersByFollowers(userId);
+	    }
+	    
+	    public List<BoardDto> getTopLikedBoardsWithImages() {
+	        return boardMapper.selectTopLikedBoardsWithImages();
+	    }
+
+	    
+	    
 	
 }

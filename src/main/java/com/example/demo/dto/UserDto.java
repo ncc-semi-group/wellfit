@@ -52,4 +52,8 @@ public class UserDto {
 	
 	// 좋아요 목록용 필드
 	private String title;
+	
+	
+	private int followerCount;
+	
 }

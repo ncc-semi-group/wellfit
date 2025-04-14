@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.board.service.BoardImageService;
@@ -29,8 +30,8 @@ public class BoardController {
     private UserPageService userPageService;
 
     @GetMapping("/feed/all")
-    public String board(Model model) {
-        List<BoardDto> posts = boardService.getAllBoardWithDetails();
+    public String board(@RequestParam(name = "userId", required = false, defaultValue = "2") int userId,  Model model) {
+        List<BoardDto> posts = boardService.getAllBoardWithDetails(userId);
         model.addAttribute("posts", posts);
         model.addAttribute("showHeader", false);
         model.addAttribute("currentPage", "community");
@@ -56,19 +57,22 @@ public class BoardController {
         return response;
     }
     
-    
-    
-    
-    
     @GetMapping("/feed/following")
     public String boardfollowing(Model model) {
         model.addAttribute("showHeader", false);
         model.addAttribute("currentPage", "community");
         return "views/board/boardfollowing";
     }
+    
+    
+    @GetMapping("/feed/posting")
+    public String boardPost() {
+        return "views/board/BoardPost";
+    }
 
     @GetMapping("/feed/popular")
     public String boardmost(Model model) {
+        model.addAttribute("showHeader", false);
         model.addAttribute("currentPage", "community");
         return "views/board/boardmost";
     }
