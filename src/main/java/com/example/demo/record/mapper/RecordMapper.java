@@ -35,4 +35,7 @@ public interface RecordMapper {
     void updateCheatingKcal(DailyStatisticsDto dailyStatistics);
     
     void updateCheatingDay(UserDto user);
+    
+    List<Integer> getAchievedUsersByStatistics(DailyStatisticsDto dailyStatistics);
+    
 }

@@ -94,4 +94,16 @@
         where id = #{id}
     </update>
 
+    <select id="getAchievedUsersByStatistics" parameterType="DailyStatisticsDto" resultType="int">
+        select user_id
+        from daily_statistics
+        where date = #{date} and is_achieved = 1
+    </select>
+
+    <select id="getCheatPointByUser" parameterType="int" resultType="int">
+        select cheating_day
+        from user
+        where id = #{userId}
+    </select>
+
 </mapper>

@@ -4,7 +4,6 @@ import com.example.demo.daily.service.DailyStatisticsService;
 import com.example.demo.dto.record.FoodRecordsDto;
 import com.example.demo.dto.statistics.DailyStatisticsDto;
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.record.mapper.RecordMapper;
 import com.example.demo.record.service.RecordService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

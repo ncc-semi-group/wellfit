@@ -238,4 +238,33 @@ public class RecordService {
         recordMapper.updateCheatingKcal(dailyStatistics);
     }
     
+    // 치팅 포인트 업데이트
+    @Transactional
+    public void updateCheatPoint(LocalDate yesterday) {
+        // 통계 테이블에서 date : 전날, is_achieved : true인 userId 가져오기
+        DailyStatisticsDto dailyStatistics = new DailyStatisticsDto();
+        dailyStatistics.setDate(yesterday);
+        List<Integer> userIds = recordMapper.getAchievedUsersByStatistics(dailyStatistics);
+        
+        // userId 마다 userDto 가져오기
+        for (Integer userId : userIds) {
+            UserDto user = recordMapper.getUserById(userId);
+            
+            // 유틸 클래스에서 amr 계산
+            Map<String, Object> kcalDataMap = KcalDataConverter.getKcalData(user);
+            int amr = (int) kcalDataMap.get("amr");
+            
+            // 부여할 치팅 포인트 계산 (amr * 0.05)
+            int plusCheatPoint = (int) (amr * 0.05);
+            
+            // 유저의 치팅포인트 + 부여할 치팅포인트, 1000 이상이면 1000으로 설정
+            int newCheatPoint = user.getCheatingDay() + plusCheatPoint;
+            if (newCheatPoint > 1000) newCheatPoint = 1000;
+            
+            // 유저 정보 업데이트
+            user.setCheatingDay(newCheatPoint);
+            recordMapper.updateCheatingDay(user);
+        }
+    }
+    
 }

@@ -32,7 +32,7 @@ public class ExerciseFormController {
         List<ExerciseData> exerciseList = new ArrayList<>();
         exerciseList.add(new ExerciseData("걷기", 3.5f));
         exerciseList.add(new ExerciseData("달리기", 9.0f));
-        exerciseList.add(new ExerciseData("등산", 8.0f));
+        exerciseList.add(new ExerciseData("등산", 6.5f));
         exerciseList.add(new ExerciseData("자전거", 8.5f));
         exerciseList.add(new ExerciseData("줄넘기", 10.0f));
         exerciseList.add(new ExerciseData("헬스", 5.0f));
