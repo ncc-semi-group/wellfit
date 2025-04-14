@@ -2,6 +2,7 @@ package com.example.demo.record.controller;
 
 import com.example.demo.dto.record.ExerciseRecordDto;
 import com.example.demo.record.service.ExerciseDetailService;
+import com.example.demo.record.service.RecordService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,19 @@ import java.util.List;
 public class ExerciseDetailController {
     
     private final ExerciseDetailService exerciseDetailService;
+    private final RecordService recordService;
     
     @GetMapping("/record/exercise_detail")
     public String exerciseDetail(Model model, HttpSession session) {
         model.addAttribute("showHeader",false);
         model.addAttribute("showFooter",false);
         
-        // userId 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
         
         // 세션에서 날짜 가져오기
         java.sql.Date sqlDate = (java.sql.Date) session.getAttribute("sqlDate");
@@ -52,11 +58,22 @@ public class ExerciseDetailController {
                                                @RequestParam int exerciseId,
                                                @RequestParam int burnedKcal,
                                                @RequestParam int exerciseTime) {
-        // 유저 ID 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
-        System.out.println("exerciseId: " + exerciseId);
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
+        
         // 세션에서 날짜 가져오기
         java.sql.Date sqlDate = (java.sql.Date) session.getAttribute("sqlDate");
+        
+        // 치팅데이 여부 확인
+        boolean isCheatDay = recordService.cheatingCheck(userId, sqlDate);
+        if (isCheatDay) {
+            return ResponseEntity.status(403).body("치팅데이로 설정한 날짜에 대해선 운동 추가/삭제가 불가능합니다.");
+        }
+        
         
         // 운동 기록 삭제
         exerciseDetailService.deleteExerciseRecord(exerciseId, burnedKcal, exerciseTime, userId, sqlDate);

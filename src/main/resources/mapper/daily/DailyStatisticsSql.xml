@@ -36,7 +36,7 @@
             weight = #{weight},
             total_burned_kcal = #{totalBurnedKcal},
             total_exercise_time = #{totalExerciseTime},
-            recommended_kcal = #{recommendedKcal},
+            recommend_kcal = #{recommendKcal},
             is_achieved = #{isAchieved}
         WHERE id = #{id}
     </update>

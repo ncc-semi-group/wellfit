@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #f5f5f5;
+    background-color: #d7e1e4;
 }
 
 .container {
@@ -15,12 +15,24 @@ body {
     background-color: white;
 }
 
+
 .date-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px;
     border-bottom: 1px solid #eee;
+    position: fixed; /* 헤더를 화면에 고정 */
+    width: 100%; /* 화면 너비에 맞춤 */
+    background-color: white; /* 배경색 설정 */
+    top: 70px; /* 화면 상단에 배치 */
+    transition: transform 0.3s ease; /* 부드러운 애니메이션 효과 추가 */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+}
+
+/* 헤더가 숨겨졌을 때 적용할 클래스 */
+.date-header-hidden {
+    transform: translateY(-100%); /* 위로 숨기기 */
 }
 
 .date-header .date {
@@ -49,6 +61,7 @@ body {
 }
 
 .main-content {
+    margin-top: 60px; /* 헤더 높이만큼 여백 추가 */
     background-color: #d7e1e4;
     padding: 20px;
 }
@@ -101,7 +114,6 @@ body {
 
 .calories-info {
     font-size: 14px;
-    margin-bottom: 10px;
     color: #555;
 }
 
@@ -111,6 +123,11 @@ body {
     font-size: 26px;
     font-weight: bold;
     margin-bottom: 15px;
+}
+
+.cheat-kcal {
+    font-size: 20px;
+    color: deepskyblue;
 }
 
 .calories-count .total {
@@ -141,6 +158,8 @@ body {
 }
 
 .progress-fill {
+    width: 100%;
+    position: relative;
     height: 100%;
     border-radius: 10px;
     display: flex;
@@ -161,6 +180,14 @@ body {
 
 .fill-fat {
     background-color: #f3e37c;
+}
+
+.distinctive-line {
+    height: 18px;
+    background-color: #666;
+    width: 0.15rem;
+    position: absolute;
+    left: 90.9%;
 }
 
 .nutrition-section {
@@ -366,11 +393,15 @@ body {
     margin-top: 4px;
 }
 
+.bmi-labels-margin {
+    margin-left: 10px;
+}
+
 /* 체중 데이터 컨테이너 */
 .weight-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 5px;
 }
 
@@ -378,6 +409,28 @@ body {
 .current-weight {
     font-size: 38px;
     font-weight: bold;
+}
+
+/* 정보 컨테이너 (BMI와 목표 체중을 포함하는 컨테이너) */
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+/* 목표 체중 정보 */
+.goal-info {
+    font-size: 16px;
+    font-weight: bold;
+    color: #364fc7;
+}
+
+/* BMI 정보 */
+.bmi-info {
+    font-size: 16px;
+    font-weight: bold;
+    color: #364fc7;
 }
 
 /* 체중 변화 정보 */
@@ -400,13 +453,6 @@ body {
     margin-bottom: 0;
 }
 
-/* BMI 정보 */
-.bmi-info {
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 5px;
-    color: #364fc7;
-}
 
 /* 등록 버튼 */
 .record-button {
@@ -529,25 +575,6 @@ body {
     color: #f97316;
     font-size: 20px;
     margin-right: 8px;
-}
-
-/* 등록 버튼 */
-.record-button {
-    background-color: #0b6e99;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 12px 0;
-    width: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-}
-
-/* 등록 버튼 호버 효과 */
-.record-button:hover {
-    background-color: #0a5d82;
 }
 
 
@@ -777,4 +804,10 @@ body {
 .popover-tooltip.show {
     display: block;
     opacity: 1;
+}
+
+/* 툴팁 내용 강조 */
+.accent {
+    font-weight: bold;
+    color: palevioletred;
 }

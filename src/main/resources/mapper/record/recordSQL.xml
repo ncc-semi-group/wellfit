@@ -7,4 +7,91 @@
         where user_id = #{userId} and date = #{date}
     </select>
 
+    <update id="updateDailyStatistics" parameterType="DailyStatisticsDto">
+        update daily_statistics
+        set recommend_kcal = #{recommendKcal},
+            weight = #{weight},
+            goal_weight = #{goalWeight},
+            target = #{target}
+        where user_id = #{userId} and date = #{date}
+    </update>
+
+    <select id="getUserById" parameterType="int" resultType="UserDto">
+        SELECT gender,
+               height,
+               current_weight as currentWeight,
+               age,
+               type,
+               activity_level as activityLevel,
+               goal_weight    as goalWeight,
+               cheating_day as cheatingDay,
+               carbohydrate,
+               protein,
+               fat
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="getWeightInfoByStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">
+        select date, weight
+        from daily_statistics
+        where user_id = #{userId}
+          and date between date_sub(#{date}, interval 6 month) and #{date}
+          and weight != 0
+        order by date desc
+        limit 31
+    </select>
+
+    <select id="getGoalWeightInfoByStatistics" parameterType="map" resultType="DailyStatisticsDto">
+        select date, goal_weight
+        from daily_statistics
+        where user_id = #{userId}
+          and date between #{startDate} and #{endDate}
+          and goal_weight != 0
+        order by date
+    </select>
+
+    <update id="updateUserWeight" parameterType="UserDto">
+        update user
+        set current_weight = #{currentWeight}
+        where id = #{id}
+    </update>
+    
+    <select id="getTotalKcal" parameterType="foodRecords" resultType="int">
+        select sum(kcal) as totalKcal
+        from food_records
+        where user_id = #{userId} and date = #{date}
+    </select>
+
+    <select id="getArchivedDataByStatistics" parameterType="foodRecords" resultType="DailyStatisticsDto">
+        select recommend_kcal, target, is_achieved, user_id, date
+        from daily_statistics
+        where user_id = #{userId} and date = #{date}
+    </select>
+
+    <update id="updateAchieved" parameterType="DailyStatisticsDto">
+        update daily_statistics
+        set is_achieved = #{isAchieved}
+        where user_id = #{userId} and date = #{date}
+    </update>
+
+    <select id="getCheatingKcalByStatistics" parameterType="map" resultType="int">
+        select cheating_kcal
+        from daily_statistics
+        where user_id = #{userId} and date = #{date}
+    </select>
+    
+    <update id="updateCheatingKcal" parameterType="DailyStatisticsDto">
+        update daily_statistics
+        set cheating_kcal = #{cheatingKcal},
+            is_achieved = #{isAchieved}
+        where user_id = #{userId} and date = #{date}
+    </update>
+
+    <update id="updateCheatingDay" parameterType="UserDto">
+        update user
+        set cheating_day = #{cheatingDay}
+        where id = #{id}
+    </update>
+
 </mapper>

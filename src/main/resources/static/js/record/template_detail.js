@@ -19,15 +19,15 @@ $(document).ready(function () {
     $.each($('.food-item'), function () {
         // food-item의 자식 요소
         const foodInfo = $(this).find('.food-info');
-        totalKcal += parseInt(foodInfo.data('kcal'));
-        totalCarbohydrate += parseFloat(foodInfo.data('carbohydrate'));
-        totalSugar += parseFloat(foodInfo.data('sugar'));
-        totalProtein += parseFloat(foodInfo.data('protein'));
-        totalFat += parseFloat(foodInfo.data('fat'));
-        totalSaturatedFat += parseFloat(foodInfo.data('saturated_fat'));
-        totalTransFat += parseFloat(foodInfo.data('trans_fat'));
-        totalNatrium += parseInt(foodInfo.data('natrium'));
-        totalCholesterol += parseFloat(foodInfo.data('cholesterol'));
+        totalKcal += parseInt(foodInfo.attr('data-kcal'));
+        totalCarbohydrate += parseFloat(foodInfo.attr('data-carbohydrate'));
+        totalSugar += parseFloat(foodInfo.attr('data-sugar'));
+        totalProtein += parseFloat(foodInfo.attr('data-protein'));
+        totalFat += parseFloat(foodInfo.attr('data-fat'));
+        totalSaturatedFat += parseFloat(foodInfo.attr('data-saturated_fat'));
+        totalTransFat += parseFloat(foodInfo.attr('data-trans_fat'));
+        totalNatrium += parseInt(foodInfo.attr('data-natrium'));
+        totalCholesterol += parseFloat(foodInfo.attr('data-cholesterol'));
     });
 
     // 영양소 비율
@@ -97,7 +97,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/record/add_template_food',
             type: 'POST',
-            data: { templateId: templateId, kcal: totalKcal },
+            data: {templateId: templateId, kcal: totalKcal},
             success: function (response) {
                 // 성공적으로 추가된 경우
                 window.showToast(response);
@@ -107,6 +107,16 @@ $(document).ready(function () {
                 }, 1000);
             },
             error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                } else if (error.status === 403) {
+                    window.showToast(error.responseText);
+                    // 버튼 활성화
+                    $(this).prop('disabled', false);
+                    return;
+                }
                 // 오류 발생 시
                 window.showToast('식품 추가에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error adding food:', error);
@@ -128,7 +138,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/record/delete_template',
             type: 'POST',
-            data: { templateId: templateId },
+            data: {templateId: templateId},
             success: function (response) {
                 // 성공적으로 삭제된 경우
                 window.showToast(response);

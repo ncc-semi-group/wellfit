@@ -18,7 +18,7 @@ public class AddFormController {
     private final AddFormService addFormService;
     
     @GetMapping("/record/add_form")
-    public String addForm(Model model, HttpSession session,
+    public String addForm(Model model,
                           @RequestParam String type,
                           @RequestParam(name = "food_id", required = false) Integer foodId) {
         model.addAttribute("showHeader",false);
@@ -62,8 +62,12 @@ public class AddFormController {
     public ResponseEntity<?> addFoodNutrition(HttpSession session,
                                               @RequestBody FoodNutritionDto foodNutrition) {
         
-        // 유저 ID 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
         
         // 유저 id 추가
         foodNutrition.setUserId(userId);
@@ -80,8 +84,12 @@ public class AddFormController {
     public ResponseEntity<?> updateFoodNutrition(HttpSession session,
                                                   @RequestBody FoodNutritionDto foodNutrition) {
         
-        // 유저 ID 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
         
         // 유저 id 추가
         foodNutrition.setUserId(userId);
@@ -98,13 +106,24 @@ public class AddFormController {
     public ResponseEntity<?> deleteFoodNutrition(HttpSession session,
                                                   @RequestParam int foodId) {
         
-        // 유저 ID 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
         
-        // delete
-        addFormService.deleteFoodNutrition(foodId, userId);
-        
-        // 성공 응답
-        return ResponseEntity.ok().body("삭제되었습니다.");
+        // 템플릿에서 사용중인 foodId인지 검증
+        boolean exists = addFormService.checkFoodItemExists(foodId, userId);
+        if (exists) {
+            return ResponseEntity.status(400).body("템플릿에 등록한 음식은 삭제할 수 없습니다.");
+        } else {
+            // delete
+            addFormService.deleteFoodNutrition(foodId);
+            
+            // 성공 응답
+            return ResponseEntity.ok().body("삭제되었습니다.");
+        }
     }
+
 }
