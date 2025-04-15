@@ -35,14 +35,25 @@ public class BoardController {
     public String board(@RequestParam(name = "userId", required = false, defaultValue = "2") int userId,  Model model) {
     List<BoardDto> posts = boardService.getAllBoardWithDetails(userId);
         // 프로필 이미지 경로 처리
-        for (BoardDto post : posts) {
+        
+    for (BoardDto post : posts) {
             if (post.getUser() != null && post.getUser().getProfileImage() != null) {
                 String profileImage = post.getUser().getProfileImage();
                 if (!profileImage.startsWith("http") && !profileImage.startsWith("/images/")) {
                     post.getUser().setProfileImage("/images/" + profileImage);
                 }
             }
+         // 게시물 이미지 경로 가공
+            if (post.getImages() != null) {
+                for (BoardImageDto image : post.getImages()) {
+                    String fileName = image.getFileName();
+                    if (!fileName.startsWith("http") && !fileName.startsWith("/images/board/")) {
+                        image.setFileName("/images/board/" + fileName);
+                    }
+                }
+            }
         }
+    
         
         model.addAttribute("posts", posts);
         model.addAttribute("showHeader", false);
@@ -50,25 +61,7 @@ public class BoardController {
         return "views/board/boardmain";
     }
 
-    // 프로필 이미지 반환 API
-    @GetMapping("/get-profile-image")
-    @ResponseBody
-    public Map<String, String> getProfileImage() {
-        // 프로필 이미지 URL을 JSON 형태로 반환
-        Map<String, String> response = new HashMap<>();
-        response.put("profileImageUrl", "/images/프로필_이미지.svg");
-        return response;
-    }
-
-    @GetMapping("/get-post-image")
-    @ResponseBody
-    public Map<String, String> getPostImage() {
-        // 프로필 이미지 URL을 JSON 형태로 반환
-        Map<String, String> response = new HashMap<>();
-        response.put("postImageUrl", "/images/고릴라.png");
-        return response;
-    }
-    
+  
     @GetMapping("/feed/following")
     public String boardfollowing(Model model) {
         model.addAttribute("showHeader", false);

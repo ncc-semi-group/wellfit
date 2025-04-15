@@ -3,6 +3,7 @@ package com.example.demo.board.mapper;
 
 import com.example.demo.dto.board.BoardDto;
 import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.hashtag.HashtagDto;
 import com.example.demo.dto.user.UserDto;
 
 import org.apache.ibatis.annotations.*;
@@ -55,6 +56,15 @@ public interface BoardMapper {
 	//
     public List<BoardDto> selectTopLikedBoardsWithImages();
   
+    
+    
+    
+    public void insertBoard(BoardDto boardDto);
+
+    public void insertBoardImage(@Param("boardId") int boardId, @Param("fileName") String fileName);
+
+
+    public void insertBoardHashtag(@Param("boardId") int boardId, @Param("tagId") int tagId);
     
     
     

@@ -74,7 +74,7 @@
 	</resultMap>
 
 
-	<!-- 모든 게시판 목록 상세 정보 조회 -->
+
 	<!-- 모든 게시판 목록 상세 정보 조회 -->
 	<select id="selectAllBoardsWithDetails"
 		resultMap="BoardDetailResultMap">
@@ -327,6 +327,32 @@
         ORDER BY likes_count DESC
         LIMIT 10
     </select>
+
+
+
+
+  <insert id="insertBoard" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO board (user_id, content)
+    VALUES (#{userId}, #{content})
+  </insert>
+
+  <insert id="insertBoardImage">
+    INSERT INTO board_image (board_id, file_name)
+    VALUES (#{boardId}, #{fileName})
+  </insert>
+
+
+
+
+  <insert id="insertBoardHashtag" >
+    INSERT INTO board_hashtag (board_id, tag_id)
+    VALUES (#{boardId}, #{tagId})
+  </insert>
+
+
+
+
+
 
 
 </mapper>

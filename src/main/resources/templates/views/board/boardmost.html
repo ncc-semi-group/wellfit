@@ -150,7 +150,7 @@
 			      boards.forEach((board) => {
 			        if (board.images && board.images.length > 0) {
 			          board.images.forEach((img) => {
-			            const imgUrl = "/images/" + img.fileName;
+			            const imgUrl = ""+ img.fileName;
 
 			            const groupIndex = Math.floor(imageCounter / 6); // 6개 단위 묶음
 			            const positionInGroup = imageCounter % 6;
@@ -220,6 +220,9 @@
 			 
 			    $('#popularFeed').on('click', function () {
 			        window.location.href = '/feed/popular';
+			    });
+			    $(document).on('click', '.plus-button', function () {
+			        window.location.href = '/feed/posting';
 			    });
 
 			  </script>

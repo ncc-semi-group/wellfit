@@ -2,13 +2,17 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.mapper.BoardMapper;
 import com.example.demo.dto.board.BoardDto;
+import com.example.demo.dto.board.BoardHashtagDto;
 import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.hashtag.HashtagDto;
 import com.example.demo.dto.user.UserDto;
+import com.example.demo.naver.storage.NcpObjectStorageService;
 
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,7 +22,8 @@ import java.util.List;
 public class BoardService {
 
 	BoardMapper boardMapper;
-	
+	NcpObjectStorageService storageService;
+
 
 
 	// 특정 게시판 조회
@@ -101,5 +106,23 @@ public class BoardService {
 
 	    
 	    
-	
+	    
+	    
+	    public void uploadBoard(BoardDto board, List<Integer> tags, List<MultipartFile> images) {
+	        // 게시글 저장
+	        boardMapper.insertBoard(board); // board.id 자동 채번됨
+
+	        // 이미지 업로드 & DB 저장
+	        for (MultipartFile file : images) {
+	            String imageUrl = storageService.uploadImage(file); // 업로드된 이미지의 URL 반환
+	            boardMapper.insertBoardImage(board.getId(), imageUrl); // URL을 DB에 저장
+	        }
+
+	        // 태그 연결 (태그 ID 바로 사용)
+	        for (Integer tagId : tags) {
+	            boardMapper.insertBoardHashtag(board.getId(), tagId); // 게시글과 태그 연결
+	        }
+	    }
 }
+	
+

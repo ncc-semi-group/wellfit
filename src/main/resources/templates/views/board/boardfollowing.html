@@ -322,32 +322,9 @@
 	display: inline-block;
 }
 
-/* Profile Modal Styles */
-.profile-modal {
-	position: fixed;
-	bottom: 2.5rem;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	max-width: 23.4375rem;
-	background-color: #f3f9fb;
-	border-top-left-radius: 1.25rem;
-	border-top-right-radius: 1.25rem;
-	z-index: 100;
-	box-shadow: 0 -0.125rem 0.625rem rgba(0, 0, 0, 0.1);
-	display: none;
-}
 
-.profile-modal.show {
-	display: block;
-}
 
-.profile-modal-header {
-	display: flex;
-	justify-content: flex-end;
-	padding: 0.625rem;
-}
-
+/* Comments Modal Styles */
 .close-button {
 	background: none;
 	border: none;
@@ -355,82 +332,6 @@
 	color: #888;
 	cursor: pointer;
 }
-
-.profile-modal-content {
-	padding: 0.625rem 1.25rem 1.25rem;
-	text-align: center;
-}
-
-.profile-image-large {
-	width: 5rem;
-	height: 5rem;
-	border-radius: 50%;
-	margin: 0 auto 0.9375rem;
-	overflow: hidden;
-	background-color: #ddd;
-}
-
-.profile-image-large img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.profile-name {
-	font-size: 1.125rem;
-	font-weight: bold;
-	margin-bottom: 0.3125rem;
-}
-
-.profile-description {
-	color: #888;
-	font-size: 0.875rem;
-	margin-bottom: 1.25rem;
-}
-
-.profile-stats {
-	display: flex;
-	justify-content: center;
-	border-top: 0.0625rem solid #e0e0e0;
-	border-bottom: 0.0625rem solid #e0e0e0;
-	padding: 0.9375rem 0;
-	margin-bottom: 1.25rem;
-}
-
-.stat {
-	flex: 1;
-	text-align: center;
-}
-
-.stat-number {
-	font-size: 1.125rem;
-	font-weight: bold;
-}
-
-.stat-label {
-	font-size: 0.75rem;
-	color: #888;
-}
-
-.profile-actions {
-	display: flex;
-	justify-content: center;
-	gap: 0.625rem;
-	margin-bottom: 1.25rem;
-}
-
-.action-button {
-	background-color: #f0f0f0;
-	border: none;
-	border-radius: 1.25rem;
-	padding: 0.5rem 0.9375rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-}
-
-/* Comments Modal Styles */
 .comments-modal {
 	position: fixed;
 	bottom: 4.375rem;
@@ -724,10 +625,12 @@
 
 
 	<th:block layout:fragment="script">
+
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script>
+		<script th:inline="javascript">
 		$(document).ready(function () {
-		    const currentUserId = 2; // 실제 로그인된 유저 ID로 설정
+		    const currentUserId =  /*[[${session.userId}]]*/ 0;
+		    console.log("현재 로그인한 유저 ID:", currentUserId);
 		    let selectedCategory = '전체';
 		    let currentPostId = null;
 
@@ -765,7 +668,7 @@
                                 const userHtml = `
                                     <div class="profile-card">
                                         <div class="profile-image">
-                                            <img src="/images/${user.profileImage || '기본이미지.png'}" alt="${user.nickname} 프로필">
+                                            <img src="${user.profileImage || '기본이미지.png'}" alt="${user.nickname} 프로필">
                                         </div>
                                         <div class="profile-name">${user.nickname}</div>
                                         <div class="profile-followers">팔로워 ${user.followerCount}</div>
@@ -823,7 +726,7 @@
 		        $.ajax({
 		            url: '/api/with-details',
 		            method: 'GET',
-		            data: { userId: userId },
+		            data: { userId: currentUserId },
 		            success: function (data) {
 		                $('#postsContainer').empty();
 
@@ -838,7 +741,7 @@
 		                        <div class="post-container" data-post-id="${post.id}">
 		                            <div class="post-user">
 		                                <div class="post-user-image post-profile-trigger" data-user='${JSON.stringify(post.user)}'>
-		                                    <img src="/images/${post.user.profileImage}" alt="Profile">
+		                                    <img src="${post.user.profileImage}" alt="Profile">
 		                                </div>
 		                                <div class="post-user-info">
 		                                    <div class="post-user-details">
@@ -854,7 +757,7 @@
 		                            <div class="post-images-scroll">
 		                              ${post.images.map(image => `
 		                                <div class="post-image-container">
-		                                  <img src="/images/${image.fileName}" alt="Post Image" class="post-image-swipe" ondblclick="handleImageDoubleClick(${post.id})">
+		                                  <img src="${image.fileName}" alt="Post Image" class="post-image-swipe" ondblclick="handleImageDoubleClick(${post.id})">
 		                                </div>
 		                              `).join('')}
 		                            </div>
@@ -899,15 +802,33 @@
 
 		    // 좋아요, 댓글, 팔로우 기능 처리
 		    function attachEventHandlers() {
+		    	
+		    	
+		    	 $(document).on('click', '.post-user-image', function () {
+		    	        const user = $(this).data('user');
+		    	        if (user && user.id) {
+		    	        	window.location.href = '/userpage/friends/' + user.id;
+		    	        }
+		    	    });
+		    	 $(document).on('click', '.comment-user-image', function () {
+		    		    const userId = $(this).data('user-id');
+		    		    if (userId) {
+		    		        window.location.href = '/userpage/friends/' + userId;
+		    		    }
+		    		});
+		    	    $(document).on('click', '.profile-image img', function () {
+		    	        const userId = $(this).closest('.profile-card').find('.follow-button').data('user-id');
+		    	        if (userId) {
+		    	            window.location.href = '/userpage/friends/' + userId; // 유저의 프로필 페이지로 이동
+		    	        }
+		    	    })
+		    	
 		        $('.comment-button').on('click', function () {
 		            const postId = $(this).closest('.post-container').data('post-id');
 		            openCommentsModal(postId);
 		        });
 
-		        $('.post-profile-trigger').on('click', function () {
-		            const userData = $(this).data('user');
-		            openProfileModal(userData);
-		        });
+		     
 
 		        
 		        $('#commentInput').on('input', function() {
@@ -920,7 +841,7 @@
 
 		            const newComment = {
 		                boardId: currentPostId,
-		                userId: 2,
+		                userId: currentUserId,
 		                comment: commentText
 		            };
 
@@ -1033,16 +954,14 @@
 		                    data.comments.forEach(comment => {
 		                        const commentHtml = `
 		                            <div class="comment-item">
-		                                <div class="comment-user-image">
-		                                    <img src="/images/${comment.user.profileImage}" alt="Profile">
+		                                <div class="comment-user-image"  data-user-id="${comment.user.id}">
+		                                    <img src="${comment.user.profileImage}" alt="Profile">
 		                                </div>
-		                                <div class="comment-content">
+		                                <div class="comment-content" >
 		                                    <div class="comment-user-name">${comment.user.nickname}</div>
 		                                    <div class="comment-text">${comment.comment}</div>
 		                                    <div class="comment-time">${comment.createdAt}</div>
-		                                    <div class="comment-actions">
-		                                        <span class="comment-reply">답글 달기</span>
-		                                    </div>
+		  
 		                                </div>
 		                            </div>
 		                        `;
@@ -1076,6 +995,9 @@
 		    });
 		    $(document).on('click', '#popularFeed', function () {
 		        window.location.href = '/feed/popular';
+		    });
+		    $(document).on('click', '.plus-button', function () {
+		        window.location.href = '/feed/posting';
 		    });
 
 

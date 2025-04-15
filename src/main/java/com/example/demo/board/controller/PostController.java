@@ -125,18 +125,6 @@ public class PostController {
 	    
 	    
 	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
 	   
 	@GetMapping("api/with-details")
 	public List<BoardDto> getAllBoardsWithDetails(@RequestParam(name = "userId", required = false, defaultValue = "2") int userId) 
