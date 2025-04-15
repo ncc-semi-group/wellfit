@@ -102,33 +102,43 @@ public class FriendshipController {
         return ResponseEntity.ok(userList);
     }
     
-    // 친구 요청 수락
+ // 친구 요청 수락
     @PostMapping("/accept")
-    public ResponseEntity<String> acceptFriendRequest(@RequestBody FriendshipRequestDto dto) {
+    public ResponseEntity<Map<String, String>> acceptFriendRequest(@RequestBody FriendshipRequestDto dto) {
+        Map<String, String> response = new HashMap<>();
         try {
             System.out.println("친구 요청 수락 ID: " + dto.getId() + ", 사용자 ID: " + dto.getUserId() + ", 송신자 ID: " + dto.getSenderId());
             friendshipService.acceptFriendRequest(dto.getId(), dto.getUserId(), dto.getSenderId());
             System.out.println("친구 요청을 수락했습니다.");
-            return ResponseEntity.ok("친구 요청을 수락했습니다.");
+            
+            response.put("status", "OK");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("친구 요청 수락 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("친구 요청 수락 중 오류가 발생했습니다.");
+            
+            response.put("status", "error");
+            return ResponseEntity.status(500).body(response);
         }
     }
 
     // 친구 요청 거절
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectFriendRequest(@RequestBody FriendshipRequestDto dto) {
+    public ResponseEntity<Map<String, String>> rejectFriendRequest(@RequestBody FriendshipRequestDto dto) {
+        Map<String, String> response = new HashMap<>();
         try {
             System.out.println("친구 요청 거절 ID: " + dto.getId());
             friendshipRequestService.rejectFriendRequest(dto.getId());
             System.out.println("친구 요청을 거절했습니다.");
-            return ResponseEntity.ok("친구 요청을 거절했습니다.");
+            
+            response.put("status", "OK");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("친구 요청 거절 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("친구 요청 거절 중 오류가 발생했습니다.");
+            
+            response.put("status", "error");
+            return ResponseEntity.status(500).body(response);
         }
     }
     

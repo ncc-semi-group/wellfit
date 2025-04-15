@@ -8,8 +8,10 @@ document.addEventListener("DOMContentLoaded", function() {
         const nickname = friendElement.querySelector('.name').textContent;
         const profileImage = friendElement.querySelector('img').src;
         const myIntro = friendElement.querySelector('.intro').textContent;
+        const userId = friendElement.getAttribute('data-user-id');
 
         friendsList.push({
+            userId: userId,
             nickname: nickname,
             profileImage: profileImage,
             myIntro: myIntro
@@ -17,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // 친구 항목 클릭 이벤트 추가
         friendElement.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
             if (userId) {
                 window.location.href = `/userpage/` + userId;
             }
@@ -59,6 +60,8 @@ function updateFriendList(friends) {
 
         const friendElement = document.createElement('div');
         friendElement.classList.add('friend-wrapper');
+        friendElement.setAttribute('data-user-id', friend.userId);
+
         friendElement.innerHTML = `
             <img src="${imageUrl}" alt="${friend.nickname}" />
             <div class="profile">
@@ -66,6 +69,15 @@ function updateFriendList(friends) {
                 <div class="intro">${friend.myIntro}</div>
             </div>
         `;
+
+        // 친구 항목 클릭 이벤트 추가
+        friendElement.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = `/userpage/` + userId;
+            }
+        });
+
         listContainer.appendChild(friendElement);
     });
 }
