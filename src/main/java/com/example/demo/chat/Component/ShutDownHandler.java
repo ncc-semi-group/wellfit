@@ -1,4 +1,4 @@
-package com.example.demo.Component;
+package com.example.demo.chat.Component;
 
 import com.example.demo.chat.mapper.ChatroomMapper;
 import com.example.demo.chat.service.ChatRedisService;

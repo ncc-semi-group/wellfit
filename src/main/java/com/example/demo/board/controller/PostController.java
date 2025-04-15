@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.board.service.BoardService;
 import com.example.demo.dto.board.BoardDto;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.demo.dto.board.CommentDto;
 import com.example.demo.dto.board.LikeRequestDto;
 

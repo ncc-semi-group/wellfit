@@ -16,8 +16,8 @@
             u.type,
             u.my_intro as myIntro,
             (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id OR user2_id = u.id) as friendCount,
-            (SELECT COUNT(*) FROM friendship WHERE user1_id = u.id) as userId1,
-            (SELECT COUNT(*) FROM friendship WHERE user2_id = u.id) as userId2
+			(SELECT COUNT(*) FROM follow WHERE user_id1 = u.id) as followingCount,
+        	(SELECT COUNT(*) FROM follow WHERE user_id2 = u.id) as followerCount
         FROM user u
         WHERE u.id = #{userId}
     </select>

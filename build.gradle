@@ -37,11 +37,10 @@ dependencies {
 	implementation 'org.apache.commons:commons-pool2' // 커넥션 풀dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-// NCP S3용 Spring Cloud AWS Starter
-	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
+	//add gradle-naver storage
+	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4'
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.416'
 
-	// AWS SDK for S3 (v1.x)
-	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.416'
 	// MySQL Connector
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -53,6 +52,11 @@ dependencies {
 
 	// websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// JFreeChart 의존성
+	implementation 'org.jfree:jfreechart:1.5.3'
+	implementation 'org.jfree:jcommon:1.0.24'
+
 }
 
 tasks.named('test') {

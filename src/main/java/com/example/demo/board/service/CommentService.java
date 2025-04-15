@@ -5,6 +5,8 @@ import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.dto.board.CommentDto;
 import com.example.demo.dto.user.UserBadgeDto;
 
+import lombok.AllArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

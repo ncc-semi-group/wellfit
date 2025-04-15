@@ -1,0 +1,101 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    padding: 20px;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto; /* 수직 스크롤 허용 */
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin: 60px auto 70px;
+    border-radius: 15px;
+}
+
+/* 정보 표시줄 스타일 */
+.info-bar {
+    padding: 0 5px 15px 5px;
+    margin-bottom: 20px;
+    font-size: 20px;  /* 글자 크기 키움 */
+    line-height: 1.6;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.info-bar .left {
+    text-align: right;
+    font-weight: 500;
+}
+
+.info-bar .right {
+    text-align: right;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.info-bar .kcal-info {
+    font-weight: bold;
+}
+
+.info-bar .emoji {
+    margin-right: 5px;
+    font-size: 18px;  /* 이모티콘 크기도 비례해서 키움 */
+}
+
+.info-bar .goal-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;  /* 목표 정보 글자 크기 약간 작게 */
+}
+
+.tab-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    padding: 20px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: #4a7aff;
+    color: white;
+    font-weight: bold;
+}
+
+.chart-container {
+    margin-bottom: 30px;
+    position: relative;
+    height: 220px;  /* 차트 높이 증가 */
+    padding: 5px 0; /* 상하 여백 추가 */
+}
+
+.chart-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}

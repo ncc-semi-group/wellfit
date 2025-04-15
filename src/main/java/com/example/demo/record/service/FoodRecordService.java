@@ -20,6 +20,7 @@ public class FoodRecordService {
     
     private final FoodRecordMapper foodRecordMapper;
     private final SearchMapper searchMapper;
+    private final RecordService recordService;
     
     @Transactional
     public int getFoodRecordsId(int userId, String mealType, Date date) {
@@ -54,6 +55,9 @@ public class FoodRecordService {
         params.put("date", sqlDate);
         System.out.println("params = " + params);
         foodRecordMapper.updateDailyStatisticsFromFoodRecords(params);
+        
+        // 성취 여부 검증
+        recordService.achievedCheck(userId, sqlDate);
     }
     
     // 식단기록 템플릿 추가

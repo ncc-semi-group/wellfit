@@ -14,9 +14,23 @@ document.addEventListener("DOMContentLoaded", function() {
             profileImage: profileImage,
             myIntro: myIntro
         });
+
+        // 친구 항목 클릭 이벤트 추가
+        friendElement.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = `/userpage/` + userId;
+            }
+        });
     });
 
-    updateFriendList(friendsList);
+    // 뒤로가기 버튼 클릭 이벤트
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            window.history.back();
+        });
+    }
 });
 
 // 닉네임으로 친구 검색

@@ -29,75 +29,78 @@
 		<div class="step">1</div>
 		<div class="current-step">2</div>
 	</div>
-	<div class="content-container">
+	<form method="post" action="/updateinputdata2" class="content-container">
 		<div class="notice">
 			탄단지 계산 완료!<br> 섭취량을 바꿀 수도 있어요.
 		</div>
-
 		<div class="value-select-container">
 			<div class="value-category">
 				식단
 				<div class="value-detail" id="mealDesc">균형잡힌 탄단지 구성</div>
 			</div>
 			<div class="value-select-wrapper">
-				<input type="radio" id="common" name="meal_type" class="value-select-radio" hidden checked>
+				<input type="radio" id="common" name="type" value="common" class="value-select-radio" hidden checked>
 				<label for="common" class="value-select" data-desc="일반적인 균형잡힌 식단">일반</label>
 			
-				<input type="radio" id="health" name="meal_type" class="value-select-radio" hidden>
+				<input type="radio" id="health" name="type" value="health" class="value-select-radio" hidden>
 				<label for="health" class="value-select" data-desc="근육 증가와 회복을 위한 고단백 식단">운동</label>
 			
-				<input type="radio" id="quito" name="meal_type" class="value-select-radio" hidden>
+				<input type="radio" id="quito" name="type" value="quito" class="value-select-radio" hidden>
 				<label for="quito" class="value-select" data-desc="탄수화물을 최소화한 지방 중심 식단">키토</label>
 			
-				<input type="radio" id="vegan" name="meal_type" class="value-select-radio" hidden>
+				<input type="radio" id="vegan" name="type" value="vegan" class="value-select-radio" hidden>
 				<label for="vegan" class="value-select" data-desc="동물성 식품을 배제한 채식 식단">비건</label>
 			</div>
-
 		</div>
+
 
 		<div class="value-category">순탄수</div>
 		<div class="value-container">
 			<div class="input-wrapper">
-				<input id="carbs" class="value-input" value="57"> <span class="unit">%</span>
+				<input id="carbohydrate" name="carbohydrate" class="value-input"
+					value="57" oninput="updateMacros()"> <span class="unit">%</span>
 			</div>
-
 			<div class="value-wrapper">
-				<div class="value">14210Kcal</div>
-				<div class="value">50.9g</div>
+				<div class="value" id="carbCal">- Kcal</div>
+				<div class="value" id="carbGram">- g</div>
 			</div>
 		</div>
 
 		<div class="value-category">단백질</div>
 		<div class="value-container">
 			<div class="input-wrapper">
-				<input id="protein" class="value-input" value="18"> <span class="unit">%</span>
+				<input id="protein" name="protein" class="value-input" value="18"
+					oninput="updateMacros()"> <span class="unit">%</span>
 			</div>
-
 			<div class="value-wrapper">
-				<div class="value">14210Kcal</div>
-				<div class="value">50.9g</div>
+				<div class="value" id="proteinCal">- Kcal</div>
+				<div class="value" id="proteinGram">- g</div>
 			</div>
 		</div>
 
 		<div class="value-category">지방</div>
 		<div class="value-container">
 			<div class="input-wrapper">
-				<input id="fat" class="value-input" value="25"> <span class="unit">%</span>
+				<input id="fat" name="fat" class="value-input" value="25"
+					oninput="updateMacros()"> <span class="unit">%</span>
 			</div>
-
 			<div class="value-wrapper">
-				<div class="value">14210Kcal</div>
-				<div class="value">50.9g</div>
+				<div class="value" id="fatCal">- Kcal</div>
+				<div class="value" id="fatGram">- g</div>
 			</div>
 		</div>
-
-		<div class="result-wrapper">
+		
+		<div id="targetCalDisplay" class="result-wrapper">
 			<div>내목표칼로리</div>
-			<div>23684Kcal</div>
+			<span id="calorieHolder"
+			      th:text="${targetCalories + ' Kcal'}"
+			      th:attr="data-calories=${targetCalories}">
+			</span>
+
 		</div>
 
-		<a class="btn-next" th:href="@{/friends?userId=1}">시작하기</a>
-	</div>
+		<button type="submit" class="btn-next">시작하기</button>
+	</form>
 </div>
 <!-- JavaScript -->
 <th:block layout:fragment="script">

@@ -38,6 +38,10 @@ out/
 
 ### application properties ###
 application.properties
+<<<<<<< HEAD
+.metadata
+=======
 
 ### metadata ###
 .metadata/
+>>>>>>> branch 'main' of https://github.com/ncc-semi-group/wellfit.git

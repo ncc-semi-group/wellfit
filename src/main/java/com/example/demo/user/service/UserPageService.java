@@ -3,6 +3,7 @@ package com.example.demo.user.service;
 import org.springframework.stereotype.Service;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.user.mapper.UserPageMapper;
+import com.example.demo.friendship.service.FriendshipService;
 
 import lombok.RequiredArgsConstructor;
 import java.util.List;
@@ -16,6 +17,8 @@ public class UserPageService {
     public UserDto getUserProfile(int userId) {
         return userPageMapper.getUserProfile(userId);
     }
+    
+    
     
     public List<UserDto> getOtherUsers(int currentUserId) {
         return userPageMapper.getOtherUsers(currentUserId);

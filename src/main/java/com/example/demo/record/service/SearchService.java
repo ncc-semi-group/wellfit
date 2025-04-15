@@ -1,6 +1,7 @@
 package com.example.demo.record.service;
 
 import com.example.demo.dto.record.*;
+import com.example.demo.dto.statistics.DailyStatisticsDto;
 import com.example.demo.record.elasticsearch.FoodDocument;
 import com.example.demo.record.mapper.FoodRecordMapper;
 import com.example.demo.record.mapper.SearchMapper;
@@ -32,6 +33,7 @@ public class SearchService {
     private final ElasticsearchOperations elasticsearchOperations;
     private final SearchMapper searchMapper;
     private final FoodRecordMapper foodRecordMapper;
+    private final RecordService recordService;
     
     
     // 고급 검색 메소드 - ElasticsearchOperations 사용
@@ -159,7 +161,6 @@ public class SearchService {
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         params.put("date", sqlDate);
-        System.out.println("params = " + params);
         
         // 통계 정보가 없으면 추가
         int count = searchMapper.getStatisticsCount(params);
@@ -167,6 +168,9 @@ public class SearchService {
         
         // 통계 정보 업데이트
         foodRecordMapper.updateDailyStatisticsFromFoodRecords(params);
+        
+        // 성취 여부 검증
+        recordService.achievedCheck(userId, sqlDate);
     }
     
     // 즐겨찾기 목록 가져오기
@@ -210,4 +214,6 @@ public class SearchService {
     public List<TemplateWithFoodsDto> getTemplatesForUser(int userId) {
         return searchMapper.getTemplateWithFoods(userId);
     }
+    
+
 }

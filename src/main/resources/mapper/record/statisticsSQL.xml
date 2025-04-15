@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.record.mapper.StatisticsMapper">
+
+    <select id="getDailyStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">
+        select total_kcal, total_burned_kcal, weight, date
+        from daily_statistics
+        where user_id = #{userId}
+          and date between DATE_SUB(#{date}, INTERVAL 6 DAY) and #{date}
+    </select>
+
+    <select id="getWeeklyAverageStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">
+        WITH RECURSIVE date_ranges AS (SELECT DATE_SUB(#{date}, INTERVAL DAYOFWEEK(#{date}) - 1 DAY) AS week_start_date,
+                                              0                                                      AS week_num
+                                       UNION ALL
+                                       SELECT DATE_SUB(week_start_date, INTERVAL 7 DAY),
+                                              week_num + 1
+                                       FROM date_ranges
+                                       WHERE week_num &lt; 6)
+        SELECT dr.week_start_date                                                              AS date,
+               AVG(CASE WHEN ds.total_kcal > 0 THEN ds.total_kcal ELSE NULL END)               AS total_kcal,
+               AVG(ds.total_burned_kcal) AS total_burned_kcal,
+               AVG(CASE WHEN ds.weight > 0 THEN ds.weight ELSE NULL END)                       AS weight
+        FROM date_ranges dr
+                 LEFT JOIN daily_statistics ds ON
+            ds.date BETWEEN dr.week_start_date AND DATE_ADD(dr.week_start_date, INTERVAL 6 DAY)
+                AND ds.user_id = #{userId}
+        GROUP BY dr.week_start_date, dr.week_num
+        ORDER BY dr.week_start_date
+    </select>
+
+    <select id="getMonthlyAverageStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">
+        WITH RECURSIVE month_ranges AS (SELECT DATE_FORMAT(#{date}, '%Y-%m-01') AS month_start_date,
+                                               0                                AS month_num
+                                        UNION ALL
+                                        SELECT DATE_SUB(month_start_date, INTERVAL 1 MONTH),
+                                               month_num + 1
+                                        FROM month_ranges
+                                        WHERE month_num &lt; 6)
+        SELECT mr.month_start_date                                                             AS date,
+               AVG(CASE WHEN ds.total_kcal > 0 THEN ds.total_kcal ELSE NULL END)               AS total_kcal,
+               AVG(ds.total_burned_kcal) AS total_burned_kcal,
+               AVG(CASE WHEN ds.weight > 0 THEN ds.weight ELSE NULL END)                       AS weight
+        FROM month_ranges mr
+                 LEFT JOIN daily_statistics ds ON
+            ds.date BETWEEN mr.month_start_date AND LAST_DAY(mr.month_start_date)
+                AND ds.user_id = #{userId}
+        GROUP BY mr.month_start_date, mr.month_num
+        ORDER BY mr.month_start_date
+    </select>
+
+</mapper>

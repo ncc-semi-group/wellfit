@@ -125,3 +125,18 @@
 	border: none;
 	border-radius: 0.5rem;
 }
+
+.back-btn {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+	z-index: 1000;
+	position: fixed;
+    top: 0;
+    left: 0;
+    padding-left : 2rem;
+    height: 70px;	
+    font-size : 24px;
+    cursor : pointer;
+    padding-top : 0.4rem;
+}

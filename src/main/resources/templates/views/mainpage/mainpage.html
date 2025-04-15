@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>502 study</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/mainpage/mainpage.css}">
+    </th:block>
+    
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="content-container">
+		<div class="user-info-container">
+			<div class="profile">
+				<img src="/images/도라에몽.jpg">
+				<div th:text="${user.nickname}" class="name"></div>
+			</div>
+			<div class="user-info-wrappers">
+				<div class="user-info-wrapper1">
+					<div class="user-info-title1">목표 체중</div>
+					<hr>
+					<div style="display: flex; flex-direction: row">
+						<div th:text="${user.goalWeight}" class="user-info-detail1"></div>
+						<div class="user-info-detail1-unit">Kg</div>
+					</div>
+				</div>
+				
+				<div class="user-info-wrapper1">
+					<div class="user-info-title1">현재 체중</div>
+					<hr>
+					<div style="display: flex; flex-direction: row">
+						<div th:text="${user.currentWeight}" class="user-info-detail1"></div>
+						<div class="user-info-detail1-unit">Kg</div>
+					</div>
+				</div>
+				
+				<div class="user-info-wrapper">
+					<div class="user-info-title">권장 칼로리</div>
+					<hr>
+					<div style="display: flex; flex-direction: row">
+						<div th:text="${targetCalories}" class="user-info-detail"></div>
+						<div class="user-info-detail-unit">Kcal</div>
+					</div>
+				</div>
+				<div class="user-info-wrapper">
+					<div class="user-info-title">활동 대사량</div>
+					<hr>
+					<div style="display: flex; flex-direction: row">
+						<div th:text="${AMR}" class="user-info-detail"></div>
+						<div class="user-info-detail-unit">Kcal</div>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+	
+		<div class="content-wrappers">
+			<div class="content-wrapper">
+				<div class="content-title">오늘의 섭취 칼로리</div>
+				<hr>
+				<div class="content-detail-wrappers">
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title">아침</div>
+						<div class="content-detail">[[${kcalMap['breakfast']}]]</div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title">점심</div>
+						<div class="content-detail">[[${kcalMap['lunch']}]]</div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title">저녁</div>
+						<div class="content-detail">[[${kcalMap['dinner']}]]</div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title">간식</div>
+						<div class="content-detail">[[${kcalMap['snack']}]]</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="content-wrapper">
+				<div class="content-title">남은 섭취 칼로리</div>
+				<hr>
+				<div class="content-detail-wrappers">
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title" style="color: #008080;">권장</div>
+						<div th:text="${targetCalories} + Kcal" class="content-detail"></div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title" style="color: #FB7861;">섭취</div>
+						<div class="content-detail">[[${kcalMap['total']}]]</div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+						<div class="content-detail-title" style="color: #008080;">운동</div>
+						<div th:text="${burnedKcalByExercise} + Kcal" class="content-detail"></div>
+					</div>
+					
+					<div class="content-detail-wrapper">
+					<div class="content-detail-title">남음</div>
+						<div th:text="${leftKcal} + Kcal" class="content-detail"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="board-preview-wrappers">
+			<div class="board-preview-title">최근 게시물</div>
+			<div class="board-preview-wrapper">
+				<th:block th:each="board : ${boardList}" class="board-preview-wrapper">
+					<div class="board-preview">
+						<img src="/images/도라에몽.jpg">
+						<!-- <img th:src="@{'/images/' + ${board.content}"/> -->
+						<div th:text="${board.content}" class="name"></div>
+					</div>
+				</th:block>
+			</div>
+		</div>
+		
+		<div class="graph-container">
+		    <div class="graph">
+			    <div class="graph-describe-wrappers">
+			        <div class="graph-describe-wrapper">
+			            <div class="graph-describe-point" style="background-color: #8E9F7C;"></div>
+			            <div class="graph-describe-category">이번주 섭취 칼로리</div>
+			        </div>
+			        <div class="graph-describe-wrapper">
+			            <div class="graph-describe-point" style="background-color: #FFF1B0;"></div>
+			            <div class="graph-describe-category">저번주 섭취 칼로리</div>
+			        </div>
+			        <div class="graph-describe-wrapper">
+			            <div class="graph-describe-baseline"></div>
+			            <div class="graph-describe-category">목표 섭취 칼로리</div>
+			        </div>
+			    </div>
+			    <img src="images/calories_chart.png">
+			</div>
+
+		</div>
+		
+						
+	</div>
+</div>
+
+<!-- 외부 JavaScript 파일 호출 -->
+<th:block layout:fragment="script">
+  <script th:src="@{/js/mainpage/mainpage.js}"></script>
+</th:block>
+
+</body>
+</html>

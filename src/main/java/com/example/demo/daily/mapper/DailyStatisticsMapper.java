@@ -3,6 +3,9 @@ package com.example.demo.daily.mapper;
 import com.example.demo.dto.statistics.DailyStatisticsDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import com.example.demo.dto.statistics.DailyStatisticsDto;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;

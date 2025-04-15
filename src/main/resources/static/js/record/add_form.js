@@ -70,10 +70,12 @@ $(document).ready(function () {
 
     // 삭제 버튼 기능
     $('.delete-button').click(function () {
-        if(!confirm('정말 삭제하시겠습니까?')) return;
+        if(!confirm('삭제한 음식에 대해선 식단 정보를 수정할 수 없게 됩니다. 정말 삭제하시겠습니까?')) return;
         $(this).prop('disabled', true); // 버튼 비활성화
 
         let foodId = $('#food-id').val();
+
+
         // AJAX 요청
         $.ajax({
             url: '/api/record/delete_food',
@@ -87,8 +89,16 @@ $(document).ready(function () {
                 }, 1000);
             },
             error: function (error) {
-                window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
-                console.error('Error:', error);
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                } else if (error.status === 400) {
+                    window.showToast(error.responseText);
+                } else {
+                    window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
+                    console.error('Error:', error);
+                }
                 $('.delete-button').prop('disabled', false); // 버튼 활성화
             }
         });
@@ -150,6 +160,11 @@ $(document).ready(function () {
                 }, 1000);
             },
             error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                }
                 window.showToast('식품 추가에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
                 $('.save-button').prop('disabled', false); // 버튼 활성화
@@ -198,6 +213,11 @@ $(document).ready(function () {
                 }, 1000);
             },
             error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                }
                 window.showToast('정보 수정에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
                 $('.update-button').prop('disabled', false); // 버튼 활성화
