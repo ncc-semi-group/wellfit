@@ -66,7 +66,7 @@ body {
 }
 
 #metDetail {
-    color: #aaa;
+    color: #008080;
 }
 
 /* 운동 항목 */
@@ -421,5 +421,5 @@ input[type=number] {
 /* 툴팁 내용 강조 */
 .accent {
     font-weight: bold;
-    color: palevioletred;
+    color: #008080;
 }
