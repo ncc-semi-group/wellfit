@@ -107,7 +107,6 @@ $(document).ready(function () {
             url: '/api/record/delete_item',
             type: 'POST',
             data: {recordId: recordId, kcal: kcal},
-            async: false,
             success: function (response) {
                 window.showToast(response);
             },
@@ -118,6 +117,11 @@ $(document).ready(function () {
                     return;
                 } else if (error.status === 403) {
                     window.showToast(error.responseText);
+
+                    // 2초 후 새로고침
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                     return;
                 }
                 window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
@@ -128,8 +132,6 @@ $(document).ready(function () {
 
     // 삭제 버튼 클릭 이벤트 처리
     $('.remove-button').click(function () {
-        // 버튼 비활성화
-        $(this).prop('disabled', true);
 
         const foodItem = $(this).closest('.food-item');
         const foodInfo = foodItem.find('.food-info');
@@ -159,13 +161,13 @@ $(document).ready(function () {
             fatRatio = 100 - carbohydrateRatio - proteinRatio;
         }
 
+
         // 음식 항목 삭제
         foodItem.fadeOut(300, function () {
+            $(this).remove();
 
             // 삭제 요청
             deleteFoodRecord(recordId, foodKcal);
-
-            $(this).remove();
 
             // food-item이 없을 경우
             if ($('.food-item').length === 0) {
