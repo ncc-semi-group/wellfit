@@ -14,8 +14,6 @@ public interface RecordMapper {
     
     List<FoodRecordsDto> getFoodRecords (FoodRecordsDto foodRecords);
     
-    Integer getTotalKcalByRecords(FoodRecordsDto foodRecords);
-    
     void updateDailyStatistics(DailyStatisticsDto dailyStatistics);
     
     UserDto getUserById(int userId);
