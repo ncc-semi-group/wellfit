@@ -11,9 +11,12 @@ import com.example.demo.dto.board.CommentDto;
 import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.user.UserBadgeDto;
 import com.example.demo.dto.user.UserDto;
+import com.example.demo.naver.storage.NcpObjectStorageService;
 import com.example.demo.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,6 +41,9 @@ public class MyPageController {
 	
 	@Value("${file.upload-dir}")
 	private String uploadDir;
+	
+	@Autowired
+	private NcpObjectStorageService ncpObjectStorageService;
 	
 	@GetMapping("/mypage")
 	public String goMypage(HttpSession session, Model model) {
@@ -85,33 +91,20 @@ public class MyPageController {
 	
 	@PostMapping("/update")
 	public String updateUser(@ModelAttribute UserDto dto, 
-						   @RequestParam(value = "upload", required = false) MultipartFile upload) {
+						   @RequestParam(value = "file", required = false) MultipartFile file) {
 		try {
 			// 프로필 이미지 처리
-			if (upload != null && !upload.isEmpty()) {
-				String originalFileName = upload.getOriginalFilename();
-				String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-				String newFileName = UUID.randomUUID().toString() + fileExtension;
-				
-				// 업로드 디렉토리가 없으면 생성
-				File directory = new File(uploadDir);
-				if (!directory.exists()) {
-					directory.mkdirs();
-				}
-				
-				// 파일 저장
-				File destFile = new File(uploadDir + File.separator + newFileName);
-				upload.transferTo(destFile);
-				
-				// 프로필 이미지 경로 설정
-				dto.setProfileImage(newFileName);
+			if (file != null && !file.isEmpty()) {
+				// 네이버 클라우드 스토리지에 업로드
+				String imageUrl = ncpObjectStorageService.uploadImage(file);
+				dto.setProfileImage(imageUrl);
 			}
 			
 			// 사용자 정보 업데이트
 			userService.mypageUpdateUser(dto);
 			
 			return "redirect:/mypage";
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:/mypageUpdate?error";
 		}
