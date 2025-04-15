@@ -62,7 +62,7 @@
             SELECT chatroom_id
             FROM chatroom_user
             WHERE user_id = #{userId}
-        ) and max_user > 2
+        )
         GROUP BY chatroom.id, chatroom.room_name, chatroom.room_image,
                  chatroom.description, chatroom.created_at,
                  chatroom.reading_count, chatroom.max_user;
