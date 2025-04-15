@@ -342,8 +342,8 @@ $(document).ready(function () {
 
     // 체중 변화량 계산
     function calculateWeightChange(weight) {
-        let weekDiff = weight - pastWeekWeight;
-        let monthDiff = weight - pastMonthWeight;
+        let weekDiff = Math.round((weight - pastWeekWeight) * 10) / 10;
+        let monthDiff = Math.round((weight - pastMonthWeight) * 10) / 10;
 
         if (pastWeekWeight !== 0) {
             if (weekDiff > 0) $('#weekDiff').text('+' + weekDiff + 'kg');
