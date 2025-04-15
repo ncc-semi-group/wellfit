@@ -24,6 +24,9 @@ public interface BoardMapper {
 	// 게시물 상세 정보 조회 (이미지, 좋아요 수 포함)
 	public BoardDto selectBoardDetail(int boardId);
 	
+	// 최신 게시물 정보 조회 (메인페이지 사용)
+	public List<BoardDto> selectBoardPreview();
+	
 	//댓글 정보 조회
 	public List<CommentDto> selectCommentsByBoardId(int boardId);
 	

@@ -61,4 +61,15 @@
         where food_id = #{foodId}
     </delete>
 
+    <select id="checkFoodItemExists" parameterType="map" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM food_templates ft
+                     JOIN template_items ti ON ft.id = ti.food_template_id
+            WHERE ft.user_id = #{userId}
+              AND ti.food_type = 'user'
+              AND ti.food_id = #{foodId}
+        ) AS exists_record;
+    </select>
+
 </mapper>

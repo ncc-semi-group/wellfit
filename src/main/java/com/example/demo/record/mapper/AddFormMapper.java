@@ -1,7 +1,11 @@
 package com.example.demo.record.mapper;
 
 import com.example.demo.dto.record.FoodNutritionDto;
+import com.example.demo.dto.statistics.DailyStatisticsDto;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface AddFormMapper {
@@ -15,4 +19,7 @@ public interface AddFormMapper {
     void deleteFoodNutrition(int foodId);
     
     void deleteFoodFavorites(int foodId);
+    
+    boolean checkFoodItemExists(Map<String, Integer> params);
+    
 }

@@ -8,42 +8,42 @@ import com.example.demo.chat.dto.*;
 import com.example.demo.chat.mapper.ChatMapper;
 import com.example.demo.chat.mapper.ChatroomMapper;
 import com.example.demo.chat.mapper.ChatroomUserMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ChatService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMapper chatMapper;
     private final ChatroomMapper chatroomMapper;
     private final ChatroomUserMapper chatroomUserMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ChatRedisService chatRedisService;
 
-    @Autowired
-    public ChatService(SimpMessagingTemplate simpMessagingTemplate, ChatMapper chatMapper, ChatroomMapper chatroomMapper, ChatroomUserMapper chatroomUserMapper) {
-        this.simpMessagingTemplate = simpMessagingTemplate;
-        this.chatMapper = chatMapper;
-        this.chatroomMapper = chatroomMapper;
-        this.chatroomUserMapper = chatroomUserMapper;
-    }
     public Long createChatroom(ChatroomCreateDto dto){
         Chatroom chatroom = dto.toChatroom();
+        log.info("chatroom : {}", chatroom);
         chatroomMapper.insertChatroom(chatroom);
         return chatroom.getId();
     }
     @Transactional
     public void createChatroomUser(ChatRequestDto chatDto){
         log.info(chatDto.toString());
-        if(!chatroomMapper.isFull(Long.parseLong(chatDto.getRoomId()))){
+        if(!chatroomMapper.isFull(chatDto.getRoomId())){
             Chat chat = chatDto.toEntity(MessageType.CREATE);
             System.out.println("chat = " + chat);
-            simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
             chatroomUserMapper.insertChatroomUser(chat.getChatroomId(), chat.getUserId());
+            simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
             createChat(chat);
         }
     }
@@ -57,19 +57,17 @@ public class ChatService {
     }
     public void onChatroom(ChatEnterDto enterDto){
         simpMessagingTemplate.convertAndSend("/sub/chatroom/" + enterDto.getRoomId(), enterDto);
-        chatroomMapper.addReadingCount(enterDto.getRoomId());
         chatroomUserMapper.updateLatestReadTime(enterDto.getRoomId(), enterDto.getUserId());
     }
     public void offChatroom(ChatExitDto exitDto){
         simpMessagingTemplate.convertAndSend("/sub/chatroom/" + exitDto.getRoomId(), exitDto);
-        chatroomMapper.subtractReadingCount(exitDto.getRoomId());
         chatroomUserMapper.updateLatestReadTime(exitDto.getRoomId(), exitDto.getUserId());
     }
     public void exitChatRoom(ChatRequestDto chatDto){
         Chat chat = chatDto.toEntity(MessageType.DELETE);
         simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
-        chatroomUserMapper.deleteChatroomUser(chat.getChatroomId(), chat.getUserId());
         createChat(chat);
+        chatroomUserMapper.deleteChatroomUser(chat.getChatroomId(), chat.getUserId());
         if(chatroomUserMapper.countChatroomUsers(chat.getChatroomId()) == 0){
             chatroomMapper.deleteChatroom(chat.getChatroomId());
         }
@@ -95,13 +93,7 @@ public class ChatService {
     public List<ChatroomUserDto> findChatroomUserByChatroomId(Long roomId){
         return chatroomUserMapper.findChatroomUserByChatroomId(roomId);
     }
-    public List<ChatroomUserDto> findChatroomUserByUserId(Long userId){
-        return chatroomUserMapper.findChatroomUserByUserId(userId)
-                .stream().map(c -> {
-                    c.setLatestReadTime(chatMapper.findLatestMessageByChatroomId(c.getRoomId()));
-                    return c;
-                }).toList();
-    }
+
     // Chatroom CRUD
     public void deleteChatRoom(Long roomId){
         chatroomMapper.deleteChatroom(roomId);
@@ -117,5 +109,17 @@ public class ChatService {
                     c.setUserCount(chatroomUserMapper.getChatroomUserCount(c.getRoomId()));
                     return c;
                 }).toList();
+    }
+
+    public void read(ChatRequestDto chatDto) {
+        log.info("read : {}", chatDto);
+        Chat chat = chatDto.toEntity(MessageType.READ);
+        simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
+    }
+
+    public void image(ChatRequestDto chatDto) {
+        Chat chat = chatDto.toEntity(MessageType.IMAGE);
+        simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
+        chatMapper.insertChat(chat);
     }
 }

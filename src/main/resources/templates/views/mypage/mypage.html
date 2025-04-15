@@ -43,7 +43,10 @@
                 </div>
             </div>
         </div>
-        <div class="username" th:text="${dto.nickname}"></div>
+        <div class="box1">
+        	<div class="username" th:text="${dto.nickname}"></div>
+        	<div class="my-type" th:text="${dto.type}"></div>
+        </div>
         <h5 class="info" th:text="${dto.gender == 'male' ? '남성' : '여성'} + ' / ' + ${dto.height} + ' / ' + ${dto.currentWeight}"></h5>
         <div class="my-intro">
             <h6>소개</h6>

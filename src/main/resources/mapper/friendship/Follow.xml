@@ -39,7 +39,7 @@
     <!-- 팔로우 추가 -->
     <insert id="insertFollowing" parameterType="FollowDto">
         INSERT INTO follow (user_id1, user_id2)
-        VALUES (#{userId1}, #{userId2})
+        VALUES (#{currentUserId}, #{targetUserId})
     </insert>
 
     <!-- 팔로우 삭제 -->
@@ -47,5 +47,16 @@
         DELETE FROM follow
         WHERE user_id1 = #{userId1} AND user_id2 = #{userId2}
     </delete>
-
+	
+	<!-- 팔로우 관계 확인 -->
+	<select id="isFollow" resultType="int">
+		SELECT COUNT(*) FROM follow
+		WHERE user_id1 = #{userId1} AND user_id2 = #{userId2}
+	</select>
+	
+	<!-- 팔로우 삭제 -->
+	<delete id="deleteFollowByUserIds">
+		DELETE FROM follow
+        WHERE user_id1 = #{userId1} AND user_id2 = #{userId2}
+	</delete>
 </mapper>

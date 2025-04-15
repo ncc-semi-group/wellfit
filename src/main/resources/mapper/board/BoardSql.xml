@@ -354,5 +354,32 @@
 
 
 
+	
+	<!-- 최근 게시글 조회 -->
+	<resultMap id="boardPreviewMap" type="BoardDto">
+	    <id property="id" column="id"/>
+	    <result property="content" column="content"/>
+	    <result property="nickname" column="userNickname"/>
+	    
+	    <collection property="imageUrls" ofType="string">
+	        <result column="imageUrls"/>
+	    </collection>
+	</resultMap>
+	
+	<select id="selectBoardPreview" parameterType="map" resultMap="boardPreviewMap">
+	    SELECT
+	        b.id AS id,
+	        b.content AS content,
+	        u.nickname AS userNickname,
+	        bi.file_name AS imageUrls
+	    FROM 
+	        board b
+	    JOIN user u ON b.user_id = u.id
+	    LEFT JOIN board_image bi ON b.id = bi.board_id
+	    ORDER BY 
+	        b.created_at DESC
+	    LIMIT 10
+	</select>
+
 
 </mapper>

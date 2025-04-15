@@ -22,6 +22,7 @@ public class TemplateDetailService {
     private final TemplateDetailMapper templateDetailMapper;
     private final SearchMapper searchMapper;
     private final FoodRecordMapper foodRecordMapper;
+    private final RecordService recordService;
     
     @Transactional
     public List<FoodNutritionDto> getTemplateItems(int templateId) {
@@ -56,6 +57,9 @@ public class TemplateDetailService {
         params.put("date", sqlDate);
         System.out.println("params = " + params);
         foodRecordMapper.updateDailyStatisticsFromFoodRecords(params);
+        
+        // 성취 여부 검증
+        recordService.achievedCheck(userId, sqlDate);
     }
     
     // 템플릿 삭제

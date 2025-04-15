@@ -23,7 +23,7 @@
 
     <div class="posts-grid">
         <div th:if="${posts != null and !posts.empty}" th:each="post : ${posts}" class="post-item" th:data-post-id="${post.id}">
-            <img th:src="@{${post.thumbnailImage != null ? 'images/' + post.thumbnailImage : 'images/no-board-image.png'}}"
+            <img th:src="${post.thumbnailImage != null ? post.thumbnailImage : '/static/images/no-board-image.png'}"
                  class="post-image" 
                  th:alt="${post.content}">
             <i th:if="${post.imageCount > 1}" class="bi bi-files multiple-images-icon"></i>

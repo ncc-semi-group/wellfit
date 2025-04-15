@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -161,5 +162,76 @@ public class FriendshipController {
         model.addAttribute("showFooter", false);
         
         return "views/friendpage/userfriendpage";
+    }
+
+    // 친구 추가 요청
+    @PostMapping("/api/friends/add")
+    public ResponseEntity<String> addFriend(@RequestBody FriendshipRequestDto dto, HttpSession session) {
+        try {
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            }
+
+            System.out.println("친구 추가 요청 - 현재 사용자 ID: " + currentUserId + ", 대상 ID: " + dto.getUserId());
+            
+            // 이미 친구인지 확인
+            if (friendshipService.isFriend(currentUserId, dto.getUserId())) {
+                return ResponseEntity.badRequest().body("이미 친구입니다.");
+            }
+
+            // 이미 요청을 보냈는지 확인
+            List<FriendshipRequestDto> existingRequests = friendshipRequestService.getFriendRequestsByUserId(dto.getUserId());
+            for (FriendshipRequestDto request : existingRequests) {
+                if (request.getSenderId() == currentUserId) {
+                    return ResponseEntity.badRequest().body("이미 친구 요청을 보냈습니다.");
+                }
+            }
+
+            // 친구 요청 보내기
+            FriendshipRequestDto request = new FriendshipRequestDto();
+            request.setUserId(dto.getUserId());  // 받는 사람 ID
+            request.setSenderId(currentUserId);   // 보내는 사람 ID
+            request.setRequestMessage("친구 요청");
+            friendshipRequestService.sendFriendRequest(request.getUserId(), request.getSenderId(), request.getRequestMessage());
+
+            return ResponseEntity.ok("친구 요청을 보냈습니다.");
+        } catch (Exception e) {
+            System.out.println("친구 요청 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("친구 요청 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 친구 상태 확인
+    @GetMapping("/api/friends/check/{targetId}")
+    public ResponseEntity<?> checkFriendshipStatus(@PathVariable("targetId") int targetId, HttpSession session) {
+        try {
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            }
+
+            boolean isFriend = friendshipService.isFriend(currentUserId, targetId);
+            return ResponseEntity.ok().body(isFriend);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("친구 상태 확인 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 친구 삭제
+    @DeleteMapping("/api/friends/delete/{targetId}")
+    public ResponseEntity<String> deleteFriend(@PathVariable("targetId") int targetId, HttpSession session) {
+        try {
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            }
+
+            friendshipService.deleteFriend(currentUserId, targetId);
+            return ResponseEntity.ok("친구가 삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("친구 삭제 중 오류가 발생했습니다.");
+        }
     }
 }

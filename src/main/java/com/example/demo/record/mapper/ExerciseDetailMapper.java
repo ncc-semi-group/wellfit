@@ -13,5 +13,5 @@ public interface ExerciseDetailMapper {
     
     void deleteExerciseRecord(int exerciseId);
     
-    void updateStatisticsKcalAndTime(Map<String, Object> params);
+    void updateStatisticsKcalAndTime(ExerciseRecordDto exerciseRecord);
 }

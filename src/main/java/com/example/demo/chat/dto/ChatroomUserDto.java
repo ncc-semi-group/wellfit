@@ -11,6 +11,7 @@ public class ChatroomUserDto {
     private Long userId;
     private Long roomId;
     private String nickname;
-    private String latestReadTime;
+    private Timestamp latestReadTime;
     private Timestamp createdAt;
+    private String profileImage;
 }

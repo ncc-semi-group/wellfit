@@ -15,6 +15,7 @@
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
+	justify-self: center;
 	background-color: #fff;
 }
 
@@ -140,13 +141,18 @@
 	margin: 0 0.5rem;
 	width: 4rem;
 	height: 4rem;
-	color: #fff;
+	color: #000;
 	background-color: #D7E1E4;
 	border-radius: 4rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	font-weight: bold;
+}
+
+.value-select:hover {
+	background-color:#F1F9F5;
 }
 
 .value-select-radio:checked+.value-select {

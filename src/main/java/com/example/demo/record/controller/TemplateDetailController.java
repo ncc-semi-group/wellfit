@@ -1,6 +1,7 @@
 package com.example.demo.record.controller;
 
 import com.example.demo.dto.record.FoodNutritionDto;
+import com.example.demo.record.service.RecordService;
 import com.example.demo.record.service.TemplateDetailService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.List;
 public class TemplateDetailController {
     
     private final TemplateDetailService templateDetailService;
+    private final RecordService recordService;
     
     @GetMapping("/record/template_detail")
     public String templateDetail(Model model, HttpSession session,
@@ -29,7 +31,11 @@ public class TemplateDetailController {
         model.addAttribute("showFooter",false);
         
         // 세션에서 날짜 가져오기
-        java.sql.Date sqlDate = (java.sql.Date) session.getAttribute("sqlDate");
+        Object sqlDateObj = session.getAttribute("sqlDate");
+        if (sqlDateObj == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        }
+        java.sql.Date sqlDate = (java.sql.Date) sqlDateObj;
         
         // 템플릿 목록 가져오기
         List<FoodNutritionDto> templateItems = templateDetailService.getTemplateItems(templateId);
@@ -46,14 +52,25 @@ public class TemplateDetailController {
     public ResponseEntity<?> addTemplateFood(HttpSession session,
                                              @RequestParam int templateId,
                                              @RequestParam int kcal) {
+        // 유저 ID 설정 및 검증
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+        }
+        int userId = Integer.parseInt(userIdObj.toString());
+        
         // 세션에서 식단 기록 ID 가져오기
         int foodRecordsId = (int) session.getAttribute("foodRecordsId");
         
-        // 유저 ID 설정 (예시로 1 사용)
-        int userId = 1; // 실제 사용자 ID로 변경해야 함
         
         // 세션에서 날짜 가져오기
         java.sql.Date sqlDate = (java.sql.Date) session.getAttribute("sqlDate");
+        
+        // 치팅 여부 확인
+        boolean isCheating = recordService.cheatingCheck(userId, sqlDate);
+        if (isCheating) {
+            return ResponseEntity.status(403).body("치팅데이로 설정한 날짜에 대해선 음식 추가/삭제가 불가능합니다.");
+        }
         
         // 템플릿 음식 추가
         templateDetailService.addFoodRecordItems(templateId, foodRecordsId, kcal, userId, sqlDate);
@@ -65,8 +82,7 @@ public class TemplateDetailController {
     
     @PostMapping("/api/record/delete_template")
     @ResponseBody
-    public ResponseEntity<?> deleteTemplate(HttpSession session,
-                                            @RequestParam int templateId) {
+    public ResponseEntity<?> deleteTemplate(@RequestParam int templateId) {
         // 템플릿 삭제
         templateDetailService.deleteFoodTemplate(templateId);
         
