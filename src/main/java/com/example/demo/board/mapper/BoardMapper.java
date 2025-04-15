@@ -3,7 +3,8 @@ package com.example.demo.board.mapper;
 
 import com.example.demo.dto.board.BoardDto;
 import com.example.demo.dto.board.CommentDto;
-
+import com.example.demo.dto.hashtag.HashtagDto;
+import com.example.demo.dto.user.UserDto;
 
 import org.apache.ibatis.annotations.*;
 
@@ -16,7 +17,7 @@ public interface BoardMapper {
 
 	
 	
-	public List<BoardDto> selectAllBoardsWithDetails();
+	public List<BoardDto> selectAllBoardsWithDetails(@Param("userId")int userId);
 	
 	public List<BoardDto> getSelectUserId(@Param("userId") int userId);
 
@@ -39,7 +40,35 @@ public interface BoardMapper {
 
     int countLikes(@Param("postId") int boardId);
 
+ // 특정 사용자와 타겟 사용자가 팔로우 관계인지 확인
+    int isFollowed(@Param("userId") int userId, @Param("targetUserId") int targetUserId);
+
+    // 팔로우 추가
+    void insertFollow(@Param("userId") int userId, @Param("targetUserId") int targetUserId);
+
+    // 팔로우 삭제
+    void deleteFollow(@Param("userId") int userId, @Param("targetUserId") int targetUserId);
+
+    // 팔로워 수 카운트
+    int countFollowers(@Param("targetUserId") int targetUserId);
 	
-	
-	
+    public List<Long> selectFollowingUserIds(@Param("userId") Long userId);
+    
+    public List<UserDto> getRecommendedUsersByFollowers(int userId);
+    
+	//
+    public List<BoardDto> selectTopLikedBoardsWithImages();
+  
+    
+    
+    
+    public void insertBoard(BoardDto boardDto);
+
+    public void insertBoardImage(@Param("boardId") int boardId, @Param("fileName") String fileName);
+
+
+    public void insertBoardHashtag(@Param("boardId") int boardId, @Param("tagId") int tagId);
+    
+    
+    
 }
