@@ -37,4 +37,18 @@
         DELETE FROM friendship WHERE id = #{id}
     </delete>
 
+    <!-- 친구 관계 확인 -->
+    <select id="isFriend" resultType="int">
+        SELECT COUNT(*) FROM friendship
+        WHERE (user1_id = #{userId1} AND user2_id = #{userId2})
+        OR (user1_id = #{userId2} AND user2_id = #{userId1})
+    </select>
+
+    <!-- 친구 삭제 -->
+    <delete id="deleteFriendshipByUserIds">
+        DELETE FROM friendship
+        WHERE (user1_id = #{userId1} AND user2_id = #{userId2})
+        OR (user1_id = #{userId2} AND user2_id = #{userId1})
+    </delete>
+
 </mapper>

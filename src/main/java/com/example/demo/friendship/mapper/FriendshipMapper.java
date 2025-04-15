@@ -16,4 +16,10 @@ public interface FriendshipMapper {
     void insertFriendship(FriendshipDto friendship);
     void deleteFriendship(@Param("id") int id);
     List<UserDto> searchFriendsByUserId(@Param("userId") int userId, @Param("query") String query);
+    
+    // 친구 관계 확인
+    int isFriend(@Param("userId1") int userId1, @Param("userId2") int userId2);
+    
+    // 친구 삭제
+    void deleteFriendshipByUserIds(@Param("userId1") int userId1, @Param("userId2") int userId2);
 }

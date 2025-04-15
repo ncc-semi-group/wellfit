@@ -27,4 +27,10 @@ public interface FollowMapper {
 
     // 팔로우 삭제
     void deleteFollowing(@Param("userId1") int userId1, @Param("userId2") int userId2);
+
+    //팔로우 관계 확인
+    int isFollow(@Param("userId1") int userId1, @Param("userId2") int userId2);
+    
+    //팔로우 삭제
+    void deleteFollowByUserIds(@Param("userId1") int userId1, @Param("userId2") int userId2);
 }

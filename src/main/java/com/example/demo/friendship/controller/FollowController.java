@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -82,5 +83,37 @@ public class FollowController {
         model.addAttribute("user", userProfile);
         return "views/friendpage/followerpage";
     }
+    
+    // 팔로우 상태 확인
+    @GetMapping("/api/follow/check/{targetId}")
+    public ResponseEntity<?> checkFollowStatus(@PathVariable("targetId") int targetId, HttpSession session) {
+        try {
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            }
 
+            boolean isFollowing = followService.isFollowing(currentUserId.intValue(), targetId);
+            return ResponseEntity.ok().body(isFollowing);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("팔로우 상태 확인 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 팔로우/언팔로우 토글
+    @PostMapping("/api/follow/toggle/{targetId}")
+    public ResponseEntity<String> toggleFollow(@PathVariable("targetId") int targetId, HttpSession session) {
+        try {
+            Integer currentUserId = (Integer) session.getAttribute("userId");
+            if (currentUserId == null) {
+                return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            }
+
+            boolean isNowFollowing = followService.toggleFollow(currentUserId.intValue(), targetId);
+            String message = isNowFollowing ? "팔로우했습니다." : "팔로우를 취소했습니다.";
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("팔로우 처리 중 오류가 발생했습니다.");
+        }
+    }
 }

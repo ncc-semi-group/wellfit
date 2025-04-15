@@ -52,4 +52,15 @@ public class FriendshipService {
             throw new IllegalStateException("해당 친구 요청이 존재하지 않거나 이미 처리되었습니다.");
         }
     }
+
+    // 친구 관계 확인
+    public boolean isFriend(int userId1, int userId2) {
+        return friendshipMapper.isFriend(userId1, userId2) > 0;
+    }
+
+    // 친구 삭제
+    @Transactional
+    public void deleteFriend(int userId1, int userId2) {
+        friendshipMapper.deleteFriendshipByUserIds(userId1, userId2);
+    }
 }
