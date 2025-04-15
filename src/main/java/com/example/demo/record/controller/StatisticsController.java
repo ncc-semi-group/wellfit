@@ -2,7 +2,6 @@ package com.example.demo.record.controller;
 
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.record.mapper.RecordMapper;
-import com.example.demo.record.service.RecordService;
 import com.example.demo.record.service.StatisticsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate;
 import java.util.Map;
 
 @Controller
@@ -40,6 +38,10 @@ public class StatisticsController {
         // 유저 정보 조회
         UserDto user = recordMapper.getUserById(userId);
         model.addAttribute("user", user);
+        
+        // 유저 프사 조회
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
         
         return "views/record/statistics";
     }

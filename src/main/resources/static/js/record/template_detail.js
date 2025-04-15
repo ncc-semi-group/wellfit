@@ -49,11 +49,13 @@ $(document).ready(function () {
         const proteinEnd = carbsEnd + proteinRatio;
         const fatEnd = proteinEnd + fatRatio;
 
+
+
         // CSS conic-gradient 생성
         const gradient = `conic-gradient(
-                    white 0% ${carbsEnd}%, 
-                    #739072 ${carbsEnd}% ${proteinEnd}%, 
-                    #FBE086 ${proteinEnd}% ${fatEnd}%
+                    #f4eded 0% ${carbsEnd}%, 
+                    #36827f ${carbsEnd}% ${proteinEnd}%, 
+                    #f9db6b ${proteinEnd}% ${fatEnd}%
                 )`;
 
         // 파이 차트에 적용

@@ -6,6 +6,13 @@
 	padding: 0;
 	gap: 0;
 	margin: 0;
+	box-sizing: border-box;
+}
+
+.container {
+	max-width: 700px;
+	margin: 0 auto;
+	background-color: white;
 }
 
 .content-container {
@@ -18,7 +25,8 @@
 	justify-self: center;
 	overflow-y: auto;
 	scrollbar-width: none;
-	gap: 1rem
+	gap: 1rem;
+	overflow-x: hidden;
 }
 
 .user-info-container {
@@ -181,10 +189,26 @@
 	box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.2);
 }
 
+.board-preview-header {
+	display: flex;
+	justify-content: flex-start; /* 왼쪽부터 배치 시작 */
+	align-items: center; /* 세로 중앙 정렬 */
+	width: 100%; /* 전체 너비 사용 */
+	/* 좌우 여백 추가 */
+	padding: 1rem 1rem 0;
+}
+
 .board-preview-title {
 	font-size: 1.5rem;
 	font-weight: bold;
-	margin: 0.5rem;
+	margin: 0; /* 기존 마진 제거 */
+}
+
+.board-preview-more {
+	font-size: 0.9rem; /* 더 보기 텍스트 사이즈 조정 */
+	color: #666; /* 텍스트 색상 */
+	cursor: pointer; /* 클릭 가능함을 나타내는 커서 */
+	margin-left : auto; /* 오른쪽으로 밀기 */
 }
 
 .board-preview-wrapper {
@@ -223,67 +247,3 @@
 	text-overflow: ellipsis;
 }
 
-.histroy-graph {
-	width: 24rem;
-	height: 15rem;
-	background-color: #008080;
-	border-radius: 1rem;
-}
-
-.graph-container {
-	position: relative;
-	width: 24rem;
-	height: 18rem;
-	border-radius: 1rem;
-	box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.2);
-}
-
-.graph-describe-wrappers {
-	height: 2.1rem;
-	display: flex;
-	flex-direction: column;
-	justify-content: end;
-	align-items: center;
-	margin-bottom: 1rem;
-	position: absolute;
-	top: 0;
-	right: 0;
-	transform: translate(-0.5rem, 1.5rem);
-}
-
-.graph-describe-wrapper {
-	width: 6rem;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.graph-describe-point {
-	width: 0.5rem;
-	height: 0.5rem;
-	border-radius: 0.25rem;
-}
-
-.graph-describe-baseline {
-	width: 0.5rem;
-	height: 2px;
-	background-color: #008080;
-}
-
-.graph-describe-category {
-	font-size: 0.7rem;
-}
-
-.graph {
-	position: relative;
-	width: 100%;
-	height: 18rem;
-	border-radius: 1rem;
-	margin-top: 1rem;
-}
-
-.graph img {
-	width: 24rem;
-	height: 16rem;
-}
