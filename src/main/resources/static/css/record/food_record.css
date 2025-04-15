@@ -23,7 +23,7 @@ body {
 }
 
 .top-layout {
-    background-color: #4682B4;
+    background-color: #0a4f5c;
 }
 
 /* 헤더 스타일 */
@@ -137,15 +137,15 @@ body {
 }
 
 .carb-dot {
-    background-color: white;
+    background-color: #f4eded;
 }
 
 .protein-dot {
-    background-color: #739072;
+    background-color: #36827f;
 }
 
 .fat-dot {
-    background-color: #F9D949;
+    background-color: #f9db6b;
 }
 
 .nutrient-label {
@@ -192,7 +192,7 @@ body {
     color: white;
     font-size: 14px;
     padding: 5px 12px;
-    background-color: #7f9ca7;
+    background-color: #8AA7AF;
     border-radius: 15px;
 }
 
@@ -255,7 +255,7 @@ body {
 
 .food-portion {
     font-size: 14px;
-    color: #7f8c8d;
+    color: #555;
 }
 
 .food-right {
@@ -270,7 +270,7 @@ body {
 }
 
 .remove-button {
-    color: #7f8c8d;
+    color: #555;
     font-size: 22px;
     cursor: pointer;
 }
@@ -292,7 +292,7 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #95a5a6;
+    background-color: #8AA7AF;
     color: white;
     display: flex;
     justify-content: center;
@@ -308,7 +308,7 @@ body {
     margin-left: 15px;
     height: 50px;
     border-radius: 25px;
-    background-color: #2c3e50;
+    background-color: #0a4f5c;
     color: white;
     display: flex;
     justify-content: center;
@@ -470,7 +470,7 @@ body {
     margin-right: 10px;
     height: 50px;
     border-radius: 25px;
-    background-color: #2c3e50;
+    background-color: #0a4f5c;
     color: white;
     display: flex;
     justify-content: center;

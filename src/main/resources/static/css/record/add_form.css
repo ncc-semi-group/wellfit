@@ -50,7 +50,7 @@ label {
     padding: 15px;
     border: none;
     border-radius: 5px;
-    background-color: #f5f5f5;
+    background-color: #f7f7f7;
     font-size: 16px;
 }
 
@@ -66,7 +66,7 @@ input[type="number"] {
 }
 
 .nutrition-section {
-    background-color: #f5f5f5;
+    background-color: #f7f7f7;
     border-radius: 10px;
     padding: 15px;
     margin-bottom: 20px;
@@ -98,7 +98,7 @@ input[type="number"] {
 }
 
 .unit-button.selected {
-    background-color: #000;
+    background-color: #333;
 }
 
 #g-unit {
@@ -163,7 +163,7 @@ input[type="number"] {
     padding: 15px 0;
     border: none;
     border-radius: 30px;
-    background-color: #ff3b30;
+    background-color: #bc3657;
     color: white;
     font-weight: bold;
     margin-right: 10px;
@@ -196,7 +196,7 @@ input[type="number"] {
     padding: 15px 0;
     border: none;
     border-radius: 30px;
-    background-color: #1a4e59;
+    background-color: #005666;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -208,7 +208,7 @@ input[type="number"] {
     padding: 15px 0;
     border: none;
     border-radius: 30px;
-    background-color: #1a4e59;
+    background-color: #005666;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -256,5 +256,10 @@ input[type="number"] {
 }
 
 #serving-detail {
-    color: #648b96;
+    color: #3c707e;
+}
+
+.accent {
+    color: #005666;
+    font-weight: bold;
 }

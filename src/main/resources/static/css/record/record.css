@@ -75,6 +75,10 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.exercise-sub {
+    margin-bottom: 0;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -171,15 +175,15 @@ body {
 }
 
 .fill-carb {
-    background-color: #ddd;
+    background-color: #f4eded;
 }
 
 .fill-protein {
-    background-color: #567d46;
+    background-color: #36827f;
 }
 
 .fill-fat {
-    background-color: #f3e37c;
+    background-color: #f9db6b;
 }
 
 .distinctive-line {
@@ -230,17 +234,17 @@ body {
 
 
 .carb-fill, .cholesterol-fill, .sodium-fill, .sugar-fill, .saturated-fill, .trans-fill {
-    background-color: #ddd;
+    background-color: #f4eded;
     width: 0%; /* Will be set by JavaScript */
 }
 
 .protein-fill {
-    background-color: #567d46;
+    background-color: #36827f;
     width: 0%; /* Will be set by JavaScript */
 }
 
 .fat-fill {
-    background-color: #f3e37c;
+    background-color: #f9db6b;
     width: 0%; /* Will be set by JavaScript */
 }
 
@@ -275,7 +279,7 @@ body {
 
 /* 식사 카드 컨테이너 */
 .meal-card {
-    background-color: #f0f0f0;
+    background-color: #f7f7f7;
     border-radius: 15px;
     padding: 15px;
     margin-bottom: 10px;
@@ -344,7 +348,7 @@ body {
     height: 12px;
     width: 100%;
     background: linear-gradient(to right,
-    #74c0fc 0%, #74c0fc 15.6%,    /* 저체중 (16~18.5) */
+    #0aa3a6 0%, #0aa3a6 15.6%,    /* 저체중 (16~18.5) */
     #82c91e 15.6%, #82c91e 43.8%, /* 정상 (18.5~23) */
     #fd7e14 43.8%, #fd7e14 56.3%, /* 과체중 (23~25) */
     #e03131 56.3%, #e03131 87.5%, /* 비만 (25~30) */
@@ -424,7 +428,7 @@ body {
 
 .weight-change {
     font-size: 15px;
-    color: #495057;
+    color: #555;
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
@@ -437,7 +441,7 @@ body {
 
 /* 등록 버튼 */
 .record-button {
-    background-color: #1E8478;
+    background-color: #005666;
     color: white;
     border: none;
     border-radius: 25px;
@@ -619,7 +623,7 @@ body {
 }
 
 #cheatDetail {
-    color: #648b96;
+    color: #3c707e;
     font-weight: normal;
     margin-left: 5px;
     cursor: pointer;
@@ -691,24 +695,25 @@ body {
     padding: 12px 0;
     font-size: 16px;
     font-weight: bold;
+    height: 50px;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     cursor: pointer;
     text-align: center;
 }
 
 .cancel-button {
-    background-color: #f1f3f5;
+    background-color: #D7E1E4;
     color: #495057;
+    height: 50px;
+    border-radius: 25px;
     margin-right: 10px;
 }
 
 .submit-button {
-    background-color: #0b6e99;
+    background-color: #005666;
     color: white;
 }
-
-
 
 /* 치팅데이 설정 모달 */
 .points-info {
@@ -730,11 +735,12 @@ body {
 
 /* 사용 버튼 */
 .use-button {
-    background-color: #0b6e99;
+    background-color: #005666;
     color: white;
     border: none;
-    border-radius: 30px;
+    border-radius: 25px;
     padding: 12px 0;
+    height: 50px;
     width: 100%;
     font-size: 16px;
     font-weight: bold;
@@ -791,5 +797,5 @@ body {
 /* 툴팁 내용 강조 */
 .accent {
     font-weight: bold;
-    color: palevioletred;
+    color: #005666;
 }

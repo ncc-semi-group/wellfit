@@ -43,7 +43,7 @@ body {
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: #f2f2f2;
+    background-color: #f0f0f0;
     border-radius: 24px;
     padding: 10px 20px;
     width: 100%;
@@ -62,7 +62,7 @@ body {
     margin-right: 10px;
     opacity: 0.4;
     font-size: 15px;
-    color: #666;
+    color: #555;
 }
 
 /* 탭 네비게이션 */
@@ -77,7 +77,7 @@ body {
 .tab {
     padding: 6px 0;
     font-size: 14px;
-    color: #888;
+    color: #555;
     cursor: pointer;
     text-align: center;
     flex: 1;
@@ -93,7 +93,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    color: #666;
+    color: #555;
     font-size: 14px;
 }
 
@@ -126,19 +126,18 @@ body {
 
 .food-name {
     font-size: 16px;
-    margin-bottom: 4px;
     font-weight: 500;
 }
 
 .food-brand {
     font-size: 14px;
-    color: #888;
+    color: #555;
     margin-left: 4px;
 }
 
 .food-serving {
     font-size: 14px;
-    color: #888;
+    color: #555;
 }
 
 .food-actions {
@@ -147,14 +146,14 @@ body {
 }
 
 .food-calories {
-    font-size: 14px;
-    color: #888;
+    font-size: 16px;
+    color: #555;
     margin-right: 10px;
 }
 
 .food-item-list {
     font-size: 14px;
-    color: #888;
+    color: #555;
     margin-top: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -166,7 +165,7 @@ body {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background-color: #648b96;
+    background-color: #3c707e;
     border: 1px solid #ddd;
     display: flex;
     align-items: center;
@@ -185,7 +184,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #2C5F70;
+    background-color: #005666;
     color: white;
     display: flex;
     align-items: center;
@@ -198,7 +197,7 @@ body {
 /* 등록하기 버튼 */
 .register-button {
     text-align: right;
-    color: #666;
+    color: #555;
     font-size: 14px;
     cursor: pointer;
 }
@@ -280,14 +279,14 @@ body {
 
 .brand-name {
     font-size: 14px;
-    color: #888;
+    color: #555;
     font-weight: normal;
     margin-left: 4px;
 }
 
 .modal-title .brand-name {
     font-size: 16px;
-    color: #888;
+    color: #555;
     font-weight: normal;
     margin-left: 6px;
     align-self: flex-end;
@@ -298,7 +297,7 @@ body {
 }
 
 .nutrition-info {
-    background-color: #f5f5f5;
+    background-color: #f7f7f7;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
@@ -333,7 +332,7 @@ body {
 }
 
 .nutrition-label.protein {
-    background-color: #2C5F70;
+    background-color: #005666;
     color: white;
 }
 
@@ -373,12 +372,12 @@ body {
     flex: 1;
     cursor: pointer;
     font-size: 16px;
-    color: #333;
+    color: #495057;
     transition: background-color 0.3s;
 }
 
 .serving-option.active {
-    background-color: #8baab4;
+    background-color: #648b96;
     color: white;
 }
 
@@ -394,7 +393,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #e8eef0;
+    background-color: #D7E1E4;
     border-radius: 50px;
     height: 50px;
     margin-bottom: 20px;
@@ -408,7 +407,7 @@ body {
     border: none;
     background: none;
     font-size: 24px;
-    color: #555;
+    color: #495057;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -418,7 +417,7 @@ body {
 .quantity-value {
     flex: 1;
     font-size: 24px;
-    color: #333;
+    color: #495057;
     text-align: center;
     background: transparent;
     -moz-appearance: textfield;
@@ -437,20 +436,20 @@ body {
     flex: 1;
     border: none;
     padding: 15px 0;
-    border-radius: 50px;
+    border-radius: 25px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    height: 55px;
+    height: 50px;
 }
 
 .detail-button {
-    background-color: #e8eef0;
-    color: #333;
+    background-color: #D7E1E4;
+    color: #495057;
 }
 
 .add-button-large {
-    background-color: #2C5F70;
+    background-color: #005666;
     color: white;
 }
 
@@ -518,7 +517,7 @@ body {
     align-items: center;
     font-size: 24px;
     margin-right: 10px;
-    color: #666;
+    color: #555;
 }
 
 .bi-star {
@@ -527,7 +526,7 @@ body {
 
 .bi-star-fill {
     margin-right: 10px;
-    color: #FFD700;
+    color: #f9db6b;
 }
 
 .plus-icon {
@@ -537,7 +536,7 @@ body {
     padding-top: 3px;
     font-size: 30px;
     color: white;
-    background-color: #2C5F70;
+    background-color: #005666;
     width: 50px;
     height: 50px;
     border-radius: 50%;
