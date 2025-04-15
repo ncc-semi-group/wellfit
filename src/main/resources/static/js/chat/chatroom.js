@@ -251,7 +251,6 @@ function appendUser(message) {
         userCount++;
     });
 }
-
 function getUserDetail(userId, callback){
     $.ajax({
         type: "GET",
@@ -525,6 +524,12 @@ $(document).ready(function () {
     $(document).on("click", ".image", function(){
         const imageUrl = this.src;
         window.open(imageUrl, "_blank");
+    });
+    $(document).on("click", ".participant", function(){
+        // .participant 요소의 .user 자식 요소를 선택
+        const userId = $(this).children(".user").attr("id");
+        // userId를 이용해 페이지 이동
+        window.location.href = "/userpage/" + userId;
     });
     document.querySelector(".chat button").addEventListener("click", async function () {
         const message = document.getElementById("text").value;
