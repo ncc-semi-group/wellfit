@@ -57,12 +57,10 @@ public class ChatService {
     }
     public void onChatroom(ChatEnterDto enterDto){
         simpMessagingTemplate.convertAndSend("/sub/chatroom/" + enterDto.getRoomId(), enterDto);
-        chatroomUserMapper.updateActive(enterDto.getUserId(), enterDto.getRoomId());
         chatroomUserMapper.updateLatestReadTime(enterDto.getRoomId(), enterDto.getUserId());
     }
     public void offChatroom(ChatExitDto exitDto){
         simpMessagingTemplate.convertAndSend("/sub/chatroom/" + exitDto.getRoomId(), exitDto);
-        chatroomUserMapper.updateActive(exitDto.getUserId(), exitDto.getRoomId());
         chatroomUserMapper.updateLatestReadTime(exitDto.getRoomId(), exitDto.getUserId());
     }
     public void exitChatRoom(ChatRequestDto chatDto){
@@ -96,9 +94,6 @@ public class ChatService {
         return chatroomUserMapper.findChatroomUserByChatroomId(roomId);
     }
 
-    public void updateActive(Long userId, Long roomId){
-        chatroomUserMapper.updateActive(userId, roomId);
-    }
     // Chatroom CRUD
     public void deleteChatRoom(Long roomId){
         chatroomMapper.deleteChatroom(roomId);

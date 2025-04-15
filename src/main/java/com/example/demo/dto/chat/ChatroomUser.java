@@ -11,12 +11,10 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 public class ChatroomUser {
-    private Long chatroomUserId;
     private Long chatroomId;
     private Long userId;
     private String nickname;
     private String chatroomName;
     private Timestamp create_at;
     private Timestamp latest_read_time;
-    private boolean active;
 }

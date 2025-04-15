@@ -3,7 +3,9 @@ package com.example.demo.chat.controller;
 import com.example.demo.chat.dto.*;
 import com.example.demo.chat.service.ChatRedisService;
 import com.example.demo.chat.service.ChatService;
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.ncp.storage.NcpObjectStorageService;
+import com.example.demo.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,21 +24,18 @@ import java.util.Map;
 @Controller
 @Slf4j
 public class ChatController {
+    private final UserService userService;
     private final ChatService chatService;
     private final ChatRedisService redis;
     private final NcpObjectStorageService ncpObjectStorageService;
     private String bucketName = "wellfit";
-    public ChatController(ChatService chatService, ChatRedisService redis, NcpObjectStorageService ncpObjectStorageService) {
+    public ChatController(UserService userService, ChatService chatService, ChatRedisService redis, NcpObjectStorageService ncpObjectStorageService) {
+        this.userService = userService;
         this.chatService = chatService;
         this.redis = redis;
         this.ncpObjectStorageService = ncpObjectStorageService;
     }
 
-    // Test
-    @GetMapping("/chat/test")
-    public String test(){
-        return "chat/test";
-    }
     // Template
     @GetMapping("/chat")
     public String chatroomList(HttpSession session, Model model) {
@@ -48,6 +47,7 @@ public class ChatController {
         chatService.findChatroomList(userId);
         model.addAttribute("userId", userId);
         model.addAttribute("showHeader", false);
+        model.addAttribute("currentPage", "chat");
         return "chat/chatroomList";
     }
     @GetMapping("/chat/list/all")
@@ -134,6 +134,7 @@ public class ChatController {
         // Redis에 최신 읽기 시간 업데이트
         redis.updateLatestReadTime(chatDto.getRoomId(), chatDto.getUserId(), chatDto.getCreatedAt());
     }
+
     @PostMapping("/chat/upload/image")
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
@@ -183,13 +184,34 @@ public class ChatController {
             return "redirect:/chatroom/form";
         }
     }
+    @PostMapping("/chatroom/create/1vs1")
+    public ResponseEntity<?> create1vs1Chatroom(HttpSession session ,@RequestBody DuoChatroomCreateDto dto){
+        try{
+            int myId = session.getAttribute("userId") == null ? 0 : (int)session.getAttribute("userId");
+            UserDto me = userService.getSelectUser(myId);
+            UserDto friend = userService.getSelectUser(dto.getUserId().intValue());
+            if(me == null || friend == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
+            }
+            Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+            Long roomId = chatService.createChatroom(new ChatroomCreateDto(null, me.getNickname()+" / "+friend.getNickname(), 2, null, null));
+            chatService.createChatroomUser(ChatRequestDto.builder().roomId(roomId).userId((long) myId).createdAt(createdAt).build());
+            chatService.createChatroomUser(ChatRequestDto.builder().roomId(roomId).userId((long) friend.getId()).createdAt(createdAt).build());
+            Map<String, Long> response = new HashMap<>();
+            response.put("roomId", roomId);
+            return ResponseEntity.ok(response);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
+        }
+    }
     @GetMapping("/chatroom/{chatRoomId}/chats")
     @ResponseBody
     public ResponseEntity<?> getChatting(@PathVariable(value = "chatRoomId") Long chatRoomId, @RequestParam(value = "userId") Long userId) {
         try {
             // 전체
             // return ResponseEntity.ok(chatService.findChatByRoomId(chatRoomId));
-            // 유저별 채팅
+            // 유저별 채팅`
             return ResponseEntity.ok(chatService.findChatByRoomIdAndUserId(chatRoomId, userId));
         } catch (RuntimeException e) {
             e.printStackTrace();

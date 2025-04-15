@@ -14,5 +14,4 @@ public class ChatroomUserDto {
     private Timestamp latestReadTime;
     private Timestamp createdAt;
     private String profileImage;
-    private boolean active;
 }

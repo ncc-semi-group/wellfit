@@ -68,9 +68,6 @@
                  chatroom.reading_count, chatroom.max_user;
 
     </select>
-    <update id="clearAllActiveUsers">
-        update chatroom set reading_count = 0;
-    </update>
     <select id="findAllRoomIds" resultType="java.lang.Long">
         select id from chatroom;
     </select>

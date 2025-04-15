@@ -17,5 +17,4 @@ public interface ChatroomMapper {
     List<ChatroomDto> findChatroomList(Long userId);
     boolean isFull(Long roomId);
     List<Long> findAllRoomIds();
-    void clearAllActiveUsers();
 }

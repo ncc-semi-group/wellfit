@@ -17,7 +17,7 @@ $(document).ready(function () {
                              data-roomimage="${chatroom.roomImage}"
                              data-latestmessage="${chatroom.latestMessage || ''}"
                              ${isMyChatroom ? 'onclick="enterChatroom(this)"' : 'data-bs-toggle="modal" data-bs-target="#chatroomModal"'}>
-                            <img class="roomImage" src="${chatroom.roomImage}" alt="채팅방 이미지">
+                            <img class="roomImage" src="${chatroom.roomImage}" alt="채팅방 이미지" onerror="this.style.display='none'";>
                             <div class="chatroom-details">
                                 <div>
                                     <div class="chatroom-name"><strong>${chatroom.roomName}</strong></div>
@@ -112,7 +112,7 @@ $(document).on('click', '.btn-enter-chat', function () {
             console.log("✅ 입장 처리 성공:", res);
 
             // 2. DB 등록 성공 시, 채팅방으로 이동
-            window.location.href = '/chatroom/enter/' + roomId + '?userId=' + userId;
+            window.location.href = '/chatroom/enter/' + roomId;
         },
         error: function (xhr) {
             console.error("❌ 입장 실패:", xhr.responseText);

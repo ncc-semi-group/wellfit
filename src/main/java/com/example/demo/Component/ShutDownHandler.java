@@ -18,7 +18,6 @@ public class ShutDownHandler {
     @PreDestroy
     public void onShutDown(){
         log.info("🛑 서버 종료 - 모든 채팅방 유저 제거");
-        chatroomMapper.clearAllActiveUsers();
         log.info("🛑 서버 종료 - Redis에 저장된 모든 최신 읽기 시간 DB로 마이그레이션");
         chatRedisService.migrateAllLatestReadTimesToDb();
     }
