@@ -195,3 +195,62 @@ body * {
 .progress-bar {
 	background-color: #005666;
 }
+
+.box1 {
+	display : flex;
+}
+
+.addfriend {
+    cursor: pointer;
+    width : 4.5rem;
+	height : 2rem;
+	margin-left : auto;
+	margin-right : 1rem;
+	background-color : #BC3657;
+	border-radius : 0.5rem;
+	display : flex;
+	align-items: center;
+	justify-content: center;
+	color : #fff;
+}
+
+.addfriend.is-friend {
+    background-color: #EFEFEF;
+    color : #000;
+}
+
+.addfriend:hover {
+    opacity: 0.8;
+}
+
+.box2 {
+	display : flex;
+}
+
+.follow {
+    cursor: pointer;
+    width : 4.5rem;
+	height : 2rem;
+	margin-left : auto;
+	margin-right : 1rem;
+	background-color : #005667;
+	border-radius : 0.5rem;
+	display : flex;
+	align-items: center;
+	justify-content: center;
+	color : #fff;
+}
+
+.follow.is-following {
+    background-color: #EFEFEF;
+    color : #000;
+}
+
+.follow:hover {
+    opacity: 0.8;
+}
+
+.chat {
+	width : 2rem;
+	margin-left : 0.5rem;
+}

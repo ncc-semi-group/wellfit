@@ -325,3 +325,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// 1대1 채팅 버튼 클릭 이벤트
+$('.chat').click(function() {
+    const targetUserId = $('.friend-link').data('user-id');
+    const currentUserId = $('.box-title2').data('user-id');
+    
+    if (!targetUserId || !currentUserId) {
+        alert('사용자 정보를 찾을 수 없습니다.');
+        return;
+    }
+
+    // 1대1 채팅방 생성 또는 입장
+	$.ajax({
+	    url: '/chatroom/create/1vs1',
+	    type: 'POST',
+	    contentType: 'application/json',
+	    data: JSON.stringify({
+	        userId: targetUserId,
+	    }),
+	    success: function (res) {
+	        console.log("✅ 입장 처리 성공:", res);
+	
+	        // 2. DB 등록 성공 시, 채팅방으로 이동
+	        window.location.href = '/chatroom/enter/ + res.roomId'
+	    },
+	    error: function (xhr) {
+	        console.error("❌ 입장 실패:", xhr.responseText);
+	        alert('채팅방 입장 실패: ' + xhr.responseText);
+	    }
+	});
+});

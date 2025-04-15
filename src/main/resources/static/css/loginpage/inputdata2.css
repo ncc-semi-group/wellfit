@@ -147,9 +147,10 @@
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	font-weight: bold;
 }
 
-.value-select-radio:hover {
+.value-select:hover {
 	background-color:#F1F9F5;
 }
 
