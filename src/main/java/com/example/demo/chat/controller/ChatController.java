@@ -194,7 +194,7 @@ public class ChatController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
             }
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-            Long roomId = chatService.createChatroom(new ChatroomCreateDto(null, me.getNickname()+" / "+friend.getNickname(), 2, null, null));
+            Long roomId = chatService.createChatroom(new ChatroomCreateDto(null, me.getNickname()+" | "+friend.getNickname(), 2, "1대1 채팅방", null));
             chatService.createChatroomUser(ChatRequestDto.builder().roomId(roomId).userId((long) myId).createdAt(createdAt).build());
             chatService.createChatroomUser(ChatRequestDto.builder().roomId(roomId).userId((long) friend.getId()).createdAt(createdAt).build());
             Map<String, Long> response = new HashMap<>();
