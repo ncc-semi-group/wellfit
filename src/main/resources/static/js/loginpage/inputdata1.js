@@ -36,3 +36,26 @@ document.querySelectorAll('.weight-input').forEach(input => {
         }
     });
 });
+
+document.querySelector('form').addEventListener('submit', function (e) {
+    const gender = document.querySelector('input[name="gender"]:checked');
+    const age = document.querySelector('input[name="age"]');
+    const height = document.querySelector('input[name="height"]');
+    const currentWeight = document.querySelector('input[name="currentWeight"]');
+    const goalWeight = document.querySelector('input[name="goalWeight"]');
+    const activity = document.querySelector('input[name="activityLevel"]:checked');
+
+    // 유효성 검사
+    if (!gender || !age.value || !height.value || !currentWeight.value || !goalWeight.value || !activity) {
+        e.preventDefault(); // 폼 전송 막기
+        window.showToast("모든 필드를 입력해주세요.");
+        return;
+    }
+
+    // 숫자 유효성 검사 (예: 음수 불가, 나이 정수, 체중 실수 등)
+    if (parseInt(age.value) <= 0 || parseFloat(height.value) <= 0 || parseFloat(currentWeight.value) <= 0 || parseFloat(goalWeight.value) <= 0) {
+        e.preventDefault();
+        window.showToast("입력값은 0보다 커야 합니다.");
+        return;
+    }
+});
