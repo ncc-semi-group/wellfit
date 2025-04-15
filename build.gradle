@@ -33,11 +33,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.apache.commons:commons-pool2' // 커넥션 풀dependencies {
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
 	//add gradle-naver storage
-	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4' 
+	implementation group: 'io.awspring.cloud', name: 'spring-cloud-starter-aws', version: '2.4.4'
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.416'
-	
+
 	// MySQL Connector
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -49,6 +52,10 @@ dependencies {
 
 	// websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// JFreeChart 의존성
+	implementation 'org.jfree:jfreechart:1.5.3'
+	implementation 'org.jfree:jcommon:1.0.24'
 
 }
 

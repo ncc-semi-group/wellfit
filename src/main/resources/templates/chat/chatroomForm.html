@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout/layoutMain}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,16 @@
     <link rel="stylesheet" th:href="@{/css/chat/chatroomForm.css}">
     <script th:src="@{/js/chat/chatroomForm.js}"></script>
 </head>
+<script>
+    const userId = [[${userId}]];
+</script>
 <body>
-<div layout:fragment="content">
+<div >
+    <div class="preview-container">
+        <img class="preview" src="https://kr.object.ncloudstorage.com/wellfit/image/noimage.jpeg">
+    </div>
     <form action="./create" method="post" enctype="multipart/form-data">
         <table class="table table-bordered">
-            <tr>
-                <td>유저 아이디</td>
-                <td><input type="text" required name="userId" class="form-control"></td>
-            </tr>
             <tr>
                 <td width="100">채팅방 이름</td>
                 <td><input type="text" required name="roomName" class="form-control"></td>
@@ -29,19 +31,21 @@
                 <td><input type="text" required name="description" class="form-control"></td>
             </tr>
             <tr>
-                <th width="100">사진</th>
-                <td><input type="file" name="img" class="form-control"></td>
-            </tr>
-            <tr>
                 <th width="100">최대인원</th>
                 <td>
                     <select name="maxUser" class="form-select">
+                        <option>5</option>
                         <option>10</option>
+                        <option>15</option>
                         <option>20</option>
+                        <option>25</option>
                         <option>30</option>
+                        <option>35</option>
                         <option>40</option>
+                        <option>45</option>
                         <option>50</option>
                     </select>
+
                 </td>
             </tr>
             <tr>
@@ -51,6 +55,7 @@
                 </td>
             </tr>
         </table>
+        <input type="file" id="imgInput" accept="image/*" name="chatroomImage" class="form-control">
     </form>
 </div>
 </body>

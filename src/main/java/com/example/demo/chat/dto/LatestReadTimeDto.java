@@ -1,17 +1,17 @@
 package com.example.demo.chat.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ChatroomUserDto {
-    private Long userId;
+@AllArgsConstructor
+public class LatestReadTimeDto {
     private Long roomId;
-    private String nickname;
+    private Long userId;
     private Timestamp latestReadTime;
-    private Timestamp createdAt;
-    private String profileImage;
 }

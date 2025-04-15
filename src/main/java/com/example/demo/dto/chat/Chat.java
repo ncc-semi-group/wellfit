@@ -21,6 +21,7 @@ public class Chat {
     private String message;
     private Timestamp createdAt;
     private int readCount;
+    private String imageUrl;
 
     public ChatResponseDto toResponseDto() {
         return ChatResponseDto.builder()
@@ -31,5 +32,18 @@ public class Chat {
                 .createdAt(StringTimestampConverter.timestampToString(createdAt))
                 .messageType(messageType.toString())
                 .build();
+    }
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chatId=" + chatId +
+                ", chatroomId=" + chatroomId +
+                ", userId=" + userId +
+                ", messageType=" + messageType +
+                ", message='" + message + '\'' +
+                ", createdAt=" + createdAt +
+                ", readCount=" + readCount +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }
