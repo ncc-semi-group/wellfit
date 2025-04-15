@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.board.service.BoardService;
 import com.example.demo.dto.board.BoardDto;
-import com.example.demo.naver.storage.NcpObjectStorageService;
+import com.example.demo.ncp.storage.NcpObjectStorageService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -6,7 +6,7 @@ import com.example.demo.dto.board.BoardHashtagDto;
 import com.example.demo.dto.board.CommentDto;
 import com.example.demo.dto.hashtag.HashtagDto;
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.naver.storage.NcpObjectStorageService;
+import com.example.demo.ncp.storage.NcpObjectStorageService;
 
 import lombok.AllArgsConstructor;
 
