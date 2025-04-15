@@ -107,6 +107,7 @@ $(document).ready(function () {
             url: '/api/record/delete_item',
             type: 'POST',
             data: {recordId: recordId, kcal: kcal},
+            async: false,
             success: function (response) {
                 window.showToast(response);
             },
@@ -127,6 +128,9 @@ $(document).ready(function () {
 
     // 삭제 버튼 클릭 이벤트 처리
     $('.remove-button').click(function () {
+        // 버튼 비활성화
+        $(this).prop('disabled', true);
+
         const foodItem = $(this).closest('.food-item');
         const foodInfo = foodItem.find('.food-info');
         const recordId = foodInfo.attr('data-id');
@@ -157,9 +161,11 @@ $(document).ready(function () {
 
         // 음식 항목 삭제
         foodItem.fadeOut(300, function () {
-            $(this).remove();
+
             // 삭제 요청
             deleteFoodRecord(recordId, foodKcal);
+
+            $(this).remove();
 
             // food-item이 없을 경우
             if ($('.food-item').length === 0) {

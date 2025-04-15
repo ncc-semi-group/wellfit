@@ -27,7 +27,8 @@
                cheating_day as cheatingDay,
                carbohydrate,
                protein,
-               fat
+               fat,
+               profile_image as profileImage
         FROM user
         WHERE id = #{id}
     </select>

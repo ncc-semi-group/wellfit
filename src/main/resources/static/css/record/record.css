@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #d7e1e4;
+    background-color: #3c707e;
 }
 
 .container {
@@ -62,7 +62,7 @@ body {
 
 .main-content {
     margin-top: 60px; /* 헤더 높이만큼 여백 추가 */
-    background-color: #d7e1e4;
+    background-color: #3c707e;
     padding: 20px;
 }
 
@@ -83,6 +83,10 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+}
+
+.header.main-header {
+    color: white;
 }
 
 .header h1 {
@@ -131,7 +135,7 @@ body {
 
 .cheat-kcal {
     font-size: 20px;
-    color: deepskyblue;
+    color: #555;
 }
 
 .calories-count .total {
@@ -484,11 +488,12 @@ body {
     position: absolute;
     width: 130px;
     height: 130px;
-    background-color: #FEF08A;
+    background-color: #f9db6b;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* 덤벨 아이콘 스타일 */

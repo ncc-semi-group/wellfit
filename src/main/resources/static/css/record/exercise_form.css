@@ -80,7 +80,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    background-color: #eee;
+    background-color: #f7f7f7;
     border-radius: 8px;
     margin-bottom: 10px;
     cursor: pointer;
@@ -121,7 +121,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #2C5F70;
+    background-color: #008080;
     color: white;
     display: flex;
     align-items: center;
@@ -326,7 +326,7 @@ body {
 }
 
 .intensity-button.active {
-    background-color: #000;
+    background-color: #333;
     color: white;
 }
 
@@ -367,11 +367,12 @@ input[type=number] {
 
 .add-button {
     width: 100%;
-    background-color: #92a987;
+    background-color: #008080;
     color: white;
     border: none;
     padding: 15px;
-    border-radius: 10px;
+    height: 50px;
+    border-radius: 25px;
     font-size: 16px;
     font-weight: bold;
     margin-top: 20px;

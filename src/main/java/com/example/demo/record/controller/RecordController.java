@@ -91,6 +91,10 @@ public class RecordController {
         model.addAttribute("pastMonthWeight", pastMonthWeight);
         model.addAttribute("pastWeekWeight", pastWeekWeight);
         
+        // 유저 프로필 사진
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
+        
         return "views/record/record";
     }
     

@@ -314,7 +314,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: bold;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -476,7 +476,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: bold;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }

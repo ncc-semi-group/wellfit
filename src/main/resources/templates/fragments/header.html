@@ -14,9 +14,11 @@
         <h1 th:unless="${showLogo}" class="page-title" th:text="${pageTitle}"></h1>
         
         <div class="user-profile">
+            <a th:href="@{/mypage}">
             <!-- 프로필 이미지 표시 (프사 미설정시 기본 프사) -->
             <img th:if="${userProfileImage}" th:src="${userProfileImage}" alt="프로필 이미지" class="profile-image">
             <img th:unless="${userProfileImage}" th:src="@{/images/default-profile.jpg}" alt="기본 프로필 이미지" class="profile-image">
+            </a>
         </div>
     </div>
 </header>
