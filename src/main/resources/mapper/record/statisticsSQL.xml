@@ -3,10 +3,21 @@
 <mapper namespace="com.example.demo.record.mapper.StatisticsMapper">
 
     <select id="getDailyStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">
-        select total_kcal, total_burned_kcal, weight, date
-        from daily_statistics
-        where user_id = #{userId}
-          and date between DATE_SUB(#{date}, INTERVAL 6 DAY) and #{date}
+        WITH date_range AS (
+            SELECT DATE_SUB(#{date}, INTERVAL n DAY) as gen_date
+            FROM (
+                     SELECT 0 as n UNION SELECT 1 UNION SELECT 2 UNION SELECT 3
+                     UNION SELECT 4 UNION SELECT 5 UNION SELECT 6
+                 ) numbers
+        )
+        SELECT
+            COALESCE(ds.total_kcal, 0) as total_kcal,
+            COALESCE(ds.total_burned_kcal, 0) as total_burned_kcal,
+            ds.weight,
+            dr.gen_date as date
+        FROM date_range dr
+                 LEFT JOIN daily_statistics ds ON ds.date = dr.gen_date AND ds.user_id = #{userId}
+        ORDER BY dr.gen_date ASC
     </select>
 
     <select id="getWeeklyAverageStatistics" parameterType="DailyStatisticsDto" resultType="DailyStatisticsDto">

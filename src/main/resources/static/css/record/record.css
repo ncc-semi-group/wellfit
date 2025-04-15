@@ -24,6 +24,7 @@ body {
     border-bottom: 1px solid #eee;
     position: fixed; /* 헤더를 화면에 고정 */
     width: 100%; /* 화면 너비에 맞춤 */
+    max-width: 700px;
     background-color: white; /* 배경색 설정 */
     top: 70px; /* 화면 상단에 배치 */
     transition: transform 0.3s ease; /* 부드러운 애니메이션 효과 추가 */
