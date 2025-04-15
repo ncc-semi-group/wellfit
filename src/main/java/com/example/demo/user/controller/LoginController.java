@@ -63,23 +63,22 @@ public class LoginController {
 		return "views/loginpage/signuppage";
 	}
 
-	@PostMapping("/signup")
-	public String signup(@RequestParam("email") String email,
+	@PostMapping("/api/loginpage/signup")
+	@ResponseBody
+	public ResponseEntity<String> signup(@RequestParam("nickname") String nickname,
+			@RequestParam("email") String email,
 			@RequestParam("password") String password,
-			@RequestParam("nickname") String nickname,
-			HttpSession session,
-			Model model) {
-		boolean result = userService.signup(email, password, nickname);
+			HttpSession session) {
 
-		if (result) {
-			UserDto user = userService.getUserByEmail(email);
-			session.setAttribute("userId", user.getId());
-			return "redirect:/welcome";
-		} else {
-			model.addAttribute("showHeader", false);
-			model.addAttribute("showFooter", false);
-			return "views/loginpage/signuppage";
-		}
+	    boolean result = userService.signup(email, password, nickname);
+
+	    if (result) {
+	        UserDto user = userService.getUserByEmail(email);
+	        session.setAttribute("userId", user.getId());
+	        return ResponseEntity.ok("회원가입이 완료되었습니다.");
+	    } else {
+	        return ResponseEntity.status(400).body("이미 존재하는 이메일입니다.");
+	    }
 	}
 
 	@GetMapping("/welcome")
