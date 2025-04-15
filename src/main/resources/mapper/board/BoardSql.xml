@@ -222,4 +222,20 @@
 		SELECT COUNT(*) FROM board_like
 		WHERE board_id = #{postId}
 	</select>
+	
+	<!-- 최근 게시글 조회 -->
+	<select id="selectBoardPreview" parameterType="int" resultMap="BoardDetailResultMap">
+	    SELECT
+	        b.id AS id,
+	        b.content AS content,
+	        u.nickname AS userNickname,
+	        bi.id AS imageId
+	    FROM 
+	        board b
+	    JOIN user u ON b.user_id = u.id
+	    LEFT JOIN board_image bi ON b.id = bi.board_id
+	    ORDER BY 
+	        b.created_at DESC
+	    LIMIT 10
+	</select>
 </mapper>

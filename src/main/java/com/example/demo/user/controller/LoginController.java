@@ -146,7 +146,7 @@ public class LoginController {
 			  preset[2] == userDto.getFat())) {
 			userDto.setType("custom");
 		}
-		System.out.println(userId);
+		
 		userMapper.updateUserInitInfo2(userDto);
 		return "redirect:/friendpage";
 	}

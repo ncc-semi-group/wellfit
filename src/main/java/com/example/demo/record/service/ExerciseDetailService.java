@@ -46,4 +46,15 @@ public class ExerciseDetailService {
         // 성취 여부 검증
         recordService.achievedCheck(userId, sqlDate);
     }
+    
+    public int getTotalBurned(int userId, Date sqlDate) {
+    	List<ExerciseRecordDto> exerciseRecord = getExerciseRecords(userId, sqlDate);
+        int totalKcal = 0;
+        for (ExerciseRecordDto record : exerciseRecord) {
+        	totalKcal += record.getBurnedKcal();
+        }
+
+        return totalKcal;
+    }
+    
 }

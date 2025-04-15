@@ -49,6 +49,11 @@ dependencies {
 
 	// websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	
+	// JFreeChart 의존성
+	implementation 'org.jfree:jfreechart:1.5.3'
+	implementation 'org.jfree:jcommon:1.0.24'
+
 }
 
 tasks.named('test') {
