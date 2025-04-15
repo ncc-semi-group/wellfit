@@ -34,14 +34,14 @@ public class MainController {
     @GetMapping("/mainpage")
     public String searchFollower(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("userId");
-        
+
         if (userId == null) {
             System.out.println("세션에서 userId가 없습니다. 로그인 페이지로 리다이렉트");
             return "redirect:/loginpage";
         }
+
         UserDto user = userService.getUserById(userId);
         
-        // targetCalories를 model에 추가
         int targetCalories = CalorieCalculator.calculateTargetCalories(user);
 
         model.addAttribute("targetCalories", targetCalories);
@@ -57,31 +57,12 @@ public class MainController {
         int burnedKcalByExercise = exerciseDetailService.getTotalBurned(userId, date);
         model.addAttribute("burnedKcalByExercise", burnedKcalByExercise);
         model.addAttribute("leftKcal", targetCalories - Integer.parseInt(todayFoodRecord.get("total").replace("Kcal", "")) + burnedKcalByExercise);
-        
+
         List<BoardDto> posts = boardService.getBoardPreview();
-        Map<BoardDto, String> postsMap = new LinkedHashMap<>();
+        System.out.println(posts);
 
-        for (BoardDto post : posts) {
-        	String imageUrl;
-        	System.out.println(post.getId());
-        	try {
-        		List<BoardImageDto> boardImage = boardImageService.getImagesByBoardId(11);
-        		if (boardImage != null && !boardImage.isEmpty()) {
-                    imageUrl = boardImage.get(0).getFileName();
-                } else {
-                    imageUrl = null;
-                }
-        	} catch (Exception e) {
-        		imageUrl = null;
-			}
-        	System.out.println(imageUrl);
+        model.addAttribute("posts", posts);
 
-            postsMap.put(post, imageUrl);
-        }
-
-        model.addAttribute("postsMap", postsMap);
-
-        
         return "views/mainpage/mainpage";
     }
 }

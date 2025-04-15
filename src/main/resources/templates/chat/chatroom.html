@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html layout:decorate="~{layout/layoutMain}" xmlns:layout="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +15,8 @@
 </head>
 <script th:inline="javascript">
     // chatroom_user
-    let roomId = [[${roomId}]];
-    let userId = [[${userId}]];
+    const userId = [[${userId}]];
+    const roomId = [[${roomId}]];
 </script>
 <body>
 
@@ -28,7 +27,7 @@
     <div class="icon" onclick="openModal()">&#9776;</div>
 </div>
 
-<div layout:fragment="content">
+<div>
     <div class="container chat-container">
     </div>
 
@@ -49,29 +48,30 @@
 <!-- 모달 -->
 <div id="modal" class="modal-overlay">
     <div class="modal-header">
-        <h5 class="modal-title">채팅방 정보</h5>
+        <h5 class="room-name">채팅방 정보</h5>
         <div class="close-btn" onclick="closeModal()">×</div>
     </div>
+    <div class="modal-content room-detail">
+    </div>
     <div class="modal-content">
-        <span><i class="bi bi-card-image"></i>사진</span>
+        <span><i class="bi bi-card-image"></i>&nbsp;&nbsp;사진</span>
         <!-- pictures -->
         <div class="pictures">
             <div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div>
             <div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div>
             <div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div>
-            <div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div><div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div><div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div>
-            <div class="picture"><img src="https://blog.kakaocdn.net/dn/7OA5g/btrwgEseovM/xRQm33OkBH1cOoEwWiwbR1/img.jpg" alt="Profile"></div>
         </div>
     </div>
     <div class="modal-content">
-        <span><i class="bi bi-person-lines-fill"></i>참여자</span>
+        <span><i class="bi bi-person-lines-fill">&nbsp;&nbsp;</i>참여자</span>
         <!-- participants -->
         <ul class="participants">
         </ul>
     </div>
-    <ul>
-        <li><a>퇴장</a></li>
-    </ul>
+    <!-- 모달 내부 제일 마지막에 추가 -->
+    <div class="modal-footer">
+        <button class="exit-btn" onclick="exitChatroom()">퇴장</button>
+    </div>
 </div>
 
 </body>

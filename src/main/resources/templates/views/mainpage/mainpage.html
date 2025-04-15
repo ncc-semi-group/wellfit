@@ -20,7 +20,9 @@
 	<div class="content-container">
 		<div class="user-info-container">
 			<div class="profile">
-				<img src="/images/도라에몽.jpg">
+				<img th:src="${user.profileImage != null && user.profileImage != '' ? user.profileImage : '/images/default-profile.jpg'}"
+					 th:alt="${user.nickname}"
+					 onerror="this.src='/images/default-profile.jpg'">
 				<div th:text="${user.nickname}" class="name"></div>
 			</div>
 			<div class="user-info-wrappers">
@@ -119,11 +121,12 @@
 		<div class="board-preview-wrappers">
 			<div class="board-preview-title">최근 게시물</div>
 			<div class="board-preview-wrapper">
-				<th:block th:each="board : ${boardList}" class="board-preview-wrapper">
+				<th:block th:each="post : ${posts}" class="board-preview-wrapper">
 					<div class="board-preview">
-						<img src="/images/도라에몽.jpg">
-						<!-- <img th:src="@{'/images/' + ${board.content}"/> -->
-						<div th:text="${board.content}" class="name"></div>
+						<img th:src="${post.imageUrls != null and !post.imageUrls.isEmpty() ? post.imageUrls[0] : '/images/default-image.jpg'}"
+				             th:alt="${post.nickname}"
+				             onerror="this.src='/images/default-profile.jpg'">
+						<div th:text="${post.content}" class="name"></div>
 					</div>
 				</th:block>
 			</div>

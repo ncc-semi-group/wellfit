@@ -7,7 +7,7 @@
 
 .content-container {
 	width: 25.75rem;
-	height: 57rem;
+	height: 60rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -25,15 +25,21 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding-bottom : 1rem;
 }
 
 .notice {
 	font-size: 1.7rem;
 	font-weight: bold;
-	margin-bottom: 2rem;
-	margin-top: 4rem;
+	margin-top : 4rem;
 }
 
+.notice1 {
+	font-size: 1.7rem;
+	font-weight: bold;
+	margin-top : 0.5rem;
+	margin-bottom : 1rem;
+}
 .notice2 {
 	font-size: 1.2rem;
 	color: #8C8C8C;
@@ -42,8 +48,8 @@
 .btn-next {
 	display: inline-block;
 	width: 18rem;
-	height: 4rem;
-	line-height: 4rem;
+	height: 2.5rem;
+	line-height: 2.5rem;
 	font-size: 1.25rem;
 	text-align: center;
 	text-decoration: none;
