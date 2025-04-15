@@ -1,9 +1,11 @@
 package com.example.demo.user.controller;
 
+import java.awt.Window;
 import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,21 +33,22 @@ public class LoginController {
 		return "views/loginpage/loginpage";
 	}
 
-	@PostMapping("/logincheck")
-	public String loginCheck(@RequestParam("email") String email,
-			@RequestParam("password") String password,
-			HttpSession session,
-			Model model) {
+	@PostMapping("/api/loginpage/logincheck")
+	@ResponseBody
+	public ResponseEntity<String> loginCheck(@RequestParam("email") String email,
+	                                         @RequestParam("password") String password,
+	                                         HttpSession session) {
 
-		UserDto user = userService.login(email, password);
+	    UserDto user = userService.login(email, password);
 
-		if (user == null) {
-			return "redirect:/loginpage";
-		}
+	    if (user == null) {
+	        return ResponseEntity.status(401).body("아이디 또는 비밀번호가 일치하지 않습니다.");
+	    }
 
-		session.setAttribute("userId", user.getId());
-		return "redirect:/mainpage";
+	    session.setAttribute("userId", user.getId());
+	    return ResponseEntity.ok("로그인 성공");
 	}
+
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
@@ -73,7 +76,6 @@ public class LoginController {
 			session.setAttribute("userId", user.getId());
 			return "redirect:/welcome";
 		} else {
-			model.addAttribute("signupError", true);
 			model.addAttribute("showHeader", false);
 			model.addAttribute("showFooter", false);
 			return "views/loginpage/signuppage";
@@ -101,7 +103,7 @@ public class LoginController {
 		if (userId == null) {
 			return "redirect:/login";
 		}
-		System.out.println(userId);
+		
 		userMapper.updateUserInitInfo1(userDto);
 
 		return "redirect:/inputdata2";
