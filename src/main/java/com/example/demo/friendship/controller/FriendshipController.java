@@ -35,6 +35,7 @@ public class FriendshipController {
     // 친구 페이지
     @GetMapping("/friendpage")
     public String friendList(HttpSession session, Model model) {
+    	model.addAttribute("currentPage", "friendpage");
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
             System.out.println("세션에서 userId가 없습니다. 로그인 페이지로 리다이렉트");
