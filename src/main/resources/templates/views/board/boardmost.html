@@ -1,10 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+<th:block layout:fragment="css">
+	<style>
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+	font-size: 1rem;
+}
+
+
+
+.container {
+	width: 100%;
+	background-color: white;
+	min-height: 90vh;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Top search bar styles - using your original code */
+.search-bar {
+	display: flex;
+	align-items: center;
+	padding: 10px 15px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.search-options {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-grow: 1;
+}
+
+.search-option {
+	font-size: 14px;
+	font-weight: bold;
+	color: #000;
+	cursor: pointer;
+}
+
+.search-option.inactive {
+	color: #888;
+}
+
+.plus-button {
+	width: 1.5625rem;
+	height: 1.5625rem;
+	background-color: transparent;
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.feed-grid {
+	display: grid;
+	width: 100%; /* or fixed like 300px */
+	aspect-ratio: 1/1;
+	grid-template-columns: repeat(9, 1fr);
+	grid-template-rows: repeat(9, 1fr);
+	gap: 4px;
+}
+
+.feed-item {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 1/1;
+}
+
+.feed-item img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	border-radius: 7%;
+}
+
+.feed-item.large {
+	grid-column: span 6;
+	grid-row: span 6;
+}
+
+.feed-item.small {
+	grid-column: span 3;
+	grid-row: span 3;
+}
+</style>
+</th:block>
 </head>
 <body>
+	<div layout:fragment="content">
+		<div class="container">
+			<!-- Search Bar -->
+			<div class="search-bar">
+				<div class="search-options">
+					<span id="allFeed" class="search-option inactive">전체</span> <span
+						id="followingFeed" class="search-option inactive">팔로잉</span> <span
+						id="popularFeed" class="search-option active">인기</span>
+				</div>
+				<button class="plus-button">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+						viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+   						<line x1="12" y1="5" x2="12" y2="19"></line>
+    					<line x1="5" y1="12" x2="19" y2="12"></line>
+ 					 </svg>
+				</button>
+			</div>
+			<div class="feed-grid" id="feedGrid"></div>
 
+
+
+			<th:block layout:fragment="script">
+				<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+				<script>
+			let page = 0;
+			let loading = false;
+			const pageSize = 18;
+
+			function loadBoards() {
+			  if (loading) return;
+			  loading = true;
+
+			  $.ajax({
+			    url: `/api/boards/top-liked?page=${page}&size=${pageSize}`,
+			    method: "GET",
+			    success: function (boards) {
+			      const $grid = $("#feedGrid");
+
+			      if (!boards || boards.length === 0) {
+			        $(window).off("scroll", handleScroll);
+			        return;
+			      }
+
+			      let globalImgIndex = page * pageSize;
+			      let imageCounter = 0;
+
+			      boards.forEach((board) => {
+			        if (board.images && board.images.length > 0) {
+			          board.images.forEach((img) => {
+			            const imgUrl = ""+ img.fileName;
+
+			            const groupIndex = Math.floor(imageCounter / 6); // 6개 단위 묶음
+			            const positionInGroup = imageCounter % 6;
+			            let largeIndex;
+
+			            switch (groupIndex % 3) {
+			              case 0:
+			                largeIndex = 0;
+			                break;
+			              case 1:
+			                largeIndex = 1;
+			                break;
+			              case 2:
+			                largeIndex = 3;
+			                break;
+			            }
+
+			            const itemClass = (positionInGroup === largeIndex) ? "large" : "small";
+
+			            const itemHtml = `
+			            	  <div class="feed-item ${itemClass}">
+			            	    <a href="/board/detail/${board.id}">
+			            	      <img src="${imgUrl}" alt="게시물 이미지">
+			            	    </a>
+			            	  </div>
+			            	`;
+			            $grid.append(itemHtml);
+
+			            imageCounter++;
+			            globalImgIndex++;
+			          });
+			        }
+			      });
+
+			      page++;
+			      loading = false;
+			    },
+			    error: function () {
+			      alert("이미지를 불러오는 중 오류가 발생했습니다.");
+			      loading = false;
+			    }
+			  });
+			}
+
+			  function handleScroll() {
+			    const scrollTop = $(window).scrollTop();
+			    const windowHeight = $(window).height();
+			    const docHeight = $(document).height();
+
+			    if (scrollTop + windowHeight + 100 >= docHeight) {
+			      loadBoards();
+			    }
+			  }
+
+			  $(document).ready(function () {
+			    loadBoards();
+			    $(window).on("scroll", handleScroll);
+			  });
+
+		
+			    $('#allFeed').on('click', function () {
+			        window.location.href = '/feed/all';
+			    });
+			    $('#followingFeed').on('click', function () {
+			        window.location.href = '/feed/following';
+			    });
+			 
+			    $('#popularFeed').on('click', function () {
+			        window.location.href = '/feed/popular';
+			    });
+			    $(document).on('click', '.plus-button', function () {
+			        window.location.href = '/feed/posting';
+			    });
+
+			  </script>
+			</th:block>
 </body>
 </html>

@@ -110,7 +110,9 @@ public class ChatService {
                     return c;
                 }).toList();
     }
-
+    public ChatroomDto findDuoChatroom(int userId1, int userId2) {
+        return chatroomMapper.findDuoChatroom(userId1, userId2);
+    }
     public void read(ChatRequestDto chatDto) {
         log.info("read : {}", chatDto);
         Chat chat = chatDto.toEntity(MessageType.READ);

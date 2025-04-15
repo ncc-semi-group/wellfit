@@ -280,7 +280,12 @@ function addTalkMessageWith(message, mode) {
         const users = document.getElementsByClassName("user");
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
-            const latestReadTime = new Date();
+            let latestReadTime;
+            if(user.id == userId){
+                latestReadTime = new Date();
+            }else{
+                latestReadTime = new Date(user.getAttribute("latest_read_time"));
+            }
             const createdAt = new Date(message.createdAt);
             if (latestReadTime>= createdAt) {
                 count++;
@@ -289,7 +294,7 @@ function addTalkMessageWith(message, mode) {
     }
     const messageElement = createTalkMessageElement(message, (userCount - count == 0 ? "" : userCount - count ));
     console.log("userCount : "+userCount);
-
+    console.log("count : "+count);
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }

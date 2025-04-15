@@ -11,7 +11,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.demo.util.ImageUrlParser;
-import org.springframework.stereotype.Service;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-@Service("ncpObjectStorageComponent")
+
 public class NcpObjectStorageService implements ObjectStorageService{
     AmazonS3 s3;
     ImageUrlParser imageUrlParser;
@@ -106,4 +106,5 @@ public class NcpObjectStorageService implements ObjectStorageService{
             s3.deleteObject(bucketName, path);
         }
     }
+    
 }

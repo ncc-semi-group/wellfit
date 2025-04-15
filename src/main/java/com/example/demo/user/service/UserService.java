@@ -138,8 +138,7 @@ public class UserService {
     }
     
     // ==========================
-
-    // 사용자 추가
+	 // 사용자 추가
     public void addUser(UserDto userDto) {
         userMapper.insertUser(userDto);
     }
@@ -151,7 +150,7 @@ public class UserService {
 
     // 이메일로 사용자 조회
     public UserDto getUserByEmail(String email) {
-        return userMapper.getUserByEmail(email);
+        return userMapper.selectUserByEmail(email);
     }
 
     // 사용자 정보 업데이트
