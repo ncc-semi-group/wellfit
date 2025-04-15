@@ -284,6 +284,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+.meal-bottom {
+    margin-bottom: 0;
+}
+
 /* 아이콘 스타일 */
 .meal-icon {
     width: 30px;
