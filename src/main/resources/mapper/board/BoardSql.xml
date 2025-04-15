@@ -224,12 +224,22 @@
 	</select>
 	
 	<!-- 최근 게시글 조회 -->
-	<select id="selectBoardPreview" parameterType="int" resultMap="BoardDetailResultMap">
+	<resultMap id="boardPreviewMap" type="BoardDto">
+	    <id property="id" column="id"/>
+	    <result property="content" column="content"/>
+	    <result property="nickname" column="userNickname"/>
+	    
+	    <collection property="imageUrls" ofType="string">
+	        <result column="imageUrls"/>
+	    </collection>
+	</resultMap>
+	
+	<select id="selectBoardPreview" parameterType="map" resultMap="boardPreviewMap">
 	    SELECT
 	        b.id AS id,
 	        b.content AS content,
 	        u.nickname AS userNickname,
-	        bi.id AS imageId
+	        bi.file_name AS imageUrls
 	    FROM 
 	        board b
 	    JOIN user u ON b.user_id = u.id
@@ -238,4 +248,6 @@
 	        b.created_at DESC
 	    LIMIT 10
 	</select>
+
+
 </mapper>

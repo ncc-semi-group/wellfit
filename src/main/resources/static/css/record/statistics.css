@@ -19,18 +19,16 @@ body {
     background-color: #fff;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    margin: 60px auto 70px;
+    margin: 70px auto 70px;
     border-radius: 15px;
 }
 
 /* 정보 표시줄 스타일 */
 .info-bar {
     padding: 0 5px 15px 5px;
-    margin-bottom: 20px;
     font-size: 20px;  /* 글자 크기 키움 */
     line-height: 1.6;
     color: #333;
-    border-bottom: 1px solid #eee;
 }
 
 .info-bar .left {
@@ -63,9 +61,9 @@ body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-    border-radius: 8px;
+    border-radius: 22px;
     background-color: #f3f4f6;
-    padding: 20px;
+    padding: 5px;
 }
 
 .tab-button {
@@ -74,7 +72,7 @@ body {
     text-align: center;
     border: none;
     background-color: transparent;
-    border-radius: 6px;
+    border-radius: 20px;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
