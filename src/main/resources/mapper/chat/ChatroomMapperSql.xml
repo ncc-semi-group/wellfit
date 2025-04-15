@@ -71,4 +71,32 @@
     <select id="findAllRoomIds" resultType="java.lang.Long">
         select id from chatroom;
     </select>
+    <select id="findDuoChatroom" resultMap="ChatroomDto" parameterType="java.util.Map">
+        SELECT c.id,
+        c.room_name,
+        c.room_image,
+        c.description,
+        c.created_at,
+        c.reading_count,
+        c.max_user,
+        2 AS user_count
+        FROM chatroom c
+        WHERE c.id IN (
+        SELECT cu.chatroom_id
+        FROM chatroom_user cu
+        JOIN chatroom c2 ON cu.chatroom_id = c2.id
+        WHERE cu.chatroom_id IN (
+        SELECT cu1.chatroom_id
+        FROM chatroom_user cu1
+        JOIN chatroom_user cu2 ON cu1.chatroom_id = cu2.chatroom_id
+        WHERE cu1.user_id = #{userId1}  <!-- 파라미터화된 쿼리 사용 -->
+        AND cu2.user_id = #{userId2}  <!-- 파라미터화된 쿼리 사용 -->
+        )
+        AND c2.max_user = 2
+        GROUP BY cu.chatroom_id
+        HAVING COUNT(cu.chatroom_id) = 2
+        );
+    </select>
+
+
 </mapper>

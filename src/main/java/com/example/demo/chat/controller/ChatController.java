@@ -189,9 +189,13 @@ public class ChatController {
         try{
             int myId = session.getAttribute("userId") == null ? 0 : (int)session.getAttribute("userId");
             UserDto me = userService.getSelectUser(myId);
-            UserDto friend = userService.getSelectUser(dto.getUserId().intValue());
+            UserDto friend = userService.getSelectUser(dto.getUserId());
             if(me == null || friend == null){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user");
+            }
+            ChatroomDto existingChatroom = chatService.findDuoChatroom(myId, dto.getUserId());
+            if( existingChatroom != null){
+                return ResponseEntity.ok(existingChatroom);
             }
             Timestamp createdAt = new Timestamp(System.currentTimeMillis());
             Long roomId = chatService.createChatroom(new ChatroomCreateDto(null, me.getNickname()+" | "+friend.getNickname(), 2, "1대1 채팅방", null));
