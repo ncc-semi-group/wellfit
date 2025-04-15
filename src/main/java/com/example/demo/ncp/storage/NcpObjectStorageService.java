@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-@Service
+@Service("ncpObjectStorageComponent")
 public class NcpObjectStorageService implements ObjectStorageService{
     AmazonS3 s3;
     ImageUrlParser imageUrlParser;
@@ -71,7 +71,33 @@ public class NcpObjectStorageService implements ObjectStorageService{
             throw new RuntimeException("파일 업로드 오류", e);
         }
     }
+    public String uploadImage(MultipartFile file) {
+        if (file.isEmpty()) {
+            return null;
+        }
 
+        try (InputStream fileIn = file.getInputStream()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_");
+            String filename = "profile_" + sdf.format(new Date()) + UUID.randomUUID().toString().substring(0,10)
+                    + "." + file.getOriginalFilename().split("\\.")[1];
+
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(file.getContentType());
+
+            PutObjectRequest objectRequest = new PutObjectRequest(
+                    "bitcamp-bucket-122",
+                    "wellfit/" + filename,
+                    fileIn,
+                    objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead);
+
+            s3.putObject(objectRequest);
+
+            return "https://kr.object.ncloudstorage.com/bitcamp-bucket-122/wellfit/" + filename;
+
+        } catch (Exception e) {
+            throw new RuntimeException("파일 업로드 오류", e);
+        }
+    }
     @Override
     public void deleteFile(String bucketName, String directoryPath, String fileName) {
         String path = directoryPath+"/"+fileName;
