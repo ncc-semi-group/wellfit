@@ -16,6 +16,7 @@ import java.util.Map;
 public class ExerciseDetailService {
     
     private final ExerciseDetailMapper exerciseDetailMapper;
+    private final RecordService recordService;
     
     // 운동 기록 가져오기
     @Transactional
@@ -35,12 +36,14 @@ public class ExerciseDetailService {
         exerciseDetailMapper.deleteExerciseRecord(exerciseId);
         
         // 통계 정보 업데이트
-        Map<String, Object> params = new HashMap<>();
-        params.put("burnedKcal", burnedKcal);
-        params.put("exerciseTime", exerciseTime);
-        params.put("userId", userId);
-        params.put("date", sqlDate);
-        System.out.println("params = " + params);
-        exerciseDetailMapper.updateStatisticsKcalAndTime(params);
+        ExerciseRecordDto exerciseRecord = new ExerciseRecordDto();
+        exerciseRecord.setBurnedKcal(burnedKcal);
+        exerciseRecord.setExerciseTime(exerciseTime);
+        exerciseRecord.setUserId(userId);
+        exerciseRecord.setDate(sqlDate);
+        exerciseDetailMapper.updateStatisticsKcalAndTime(exerciseRecord);
+        
+        // 성취 여부 검증
+        recordService.achievedCheck(userId, sqlDate);
     }
 }

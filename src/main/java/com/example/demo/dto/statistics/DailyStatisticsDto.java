@@ -14,6 +14,7 @@ public class DailyStatisticsDto {
     private float totalProtein;
     private float totalFat;
     private float totalCarbohydrate;
+    private float totalSugar;
     private int totalNatrium;
     private float totalCholesterol;
     private float totalSaturatedFat;
@@ -21,6 +22,9 @@ public class DailyStatisticsDto {
     private float weight;
     private int totalBurnedKcal;  // 소비 칼로리
     private int totalExerciseTime;
-    private int recommendedKcal;
+    private int recommendKcal;
     private boolean isAchieved;   // 달성 여부
+    private int cheatingKcal; // 치팅 칼로리
+    private float goalWeight; // 목표 체중
+    private String target; // 목표
 } 

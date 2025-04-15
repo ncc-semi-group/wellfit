@@ -15,7 +15,7 @@
         where id = #{exerciseId}
     </delete>
 
-    <update id="updateStatisticsKcalAndTime" parameterType="map">
+    <update id="updateStatisticsKcalAndTime" parameterType="ExerciseRecord">
         update daily_statistics
         set total_burned_kcal = #{burnedKcal},
             total_exercise_time = #{exerciseTime}

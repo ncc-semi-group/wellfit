@@ -4,14 +4,22 @@ $(document).ready(function () {
     const month = $('.title').data('month');
     const day = $('.title').data('day');
 
-    // food-item이 없을 경우
-    if ($('.food-item').length === 0) {
-        location.href = `/record?year=${year}&month=${month}&day=${day}`;
-    }
-
     // url에서 파라미터 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     const mealType = urlParams.get('meal_type');
+
+    // food-item이 없을 경우
+    if ($('.food-item').length === 0) {
+        // 이전 페이지 url 가져오기
+        const previousUrl = document.referrer;
+        // 이전 페이지가 검색 페이지인 경우
+        if (previousUrl.includes('/search')) {
+            location.href = `/record?year=${year}&month=${month}&day=${day}`;
+        } else {
+            // 검색 페이지로 이동
+            location.href = `/record/search?meal_type=${mealType}`;
+        }
+    }
 
     // 영양소 합계 변수
     let totalKcal = 0;
@@ -28,15 +36,15 @@ $(document).ready(function () {
     $.each($('.food-item'), function () {
         // food-item의 자식 요소
         const foodInfo = $(this).find('.food-info');
-        totalKcal += parseInt(foodInfo.data('kcal'));
-        totalCarbohydrate += parseFloat(foodInfo.data('carbohydrate'));
-        totalSugar += parseFloat(foodInfo.data('sugar'));
-        totalProtein += parseFloat(foodInfo.data('protein'));
-        totalFat += parseFloat(foodInfo.data('fat'));
-        totalSaturatedFat += parseFloat(foodInfo.data('saturated_fat'));
-        totalTransFat += parseFloat(foodInfo.data('trans_fat'));
-        totalNatrium += parseInt(foodInfo.data('natrium'));
-        totalCholesterol += parseFloat(foodInfo.data('cholesterol'));
+        totalKcal += parseInt(foodInfo.attr('data-kcal'));
+        totalCarbohydrate += parseFloat(foodInfo.attr('data-carbohydrate'));
+        totalSugar += parseFloat(foodInfo.attr('data-sugar'));
+        totalProtein += parseFloat(foodInfo.attr('data-protein'));
+        totalFat += parseFloat(foodInfo.attr('data-fat'));
+        totalSaturatedFat += parseFloat(foodInfo.attr('data-saturated_fat'));
+        totalTransFat += parseFloat(foodInfo.attr('data-trans_fat'));
+        totalNatrium += parseInt(foodInfo.attr('data-natrium'));
+        totalCholesterol += parseFloat(foodInfo.attr('data-cholesterol'));
     });
 
     // 영양소 비율
@@ -103,6 +111,14 @@ $(document).ready(function () {
                 window.showToast(response);
             },
             error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                } else if (error.status === 403) {
+                    window.showToast(error.responseText);
+                    return;
+                }
                 window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
             }
@@ -113,19 +129,19 @@ $(document).ready(function () {
     $('.remove-button').click(function () {
         const foodItem = $(this).closest('.food-item');
         const foodInfo = foodItem.find('.food-info');
-        const recordId = foodInfo.data('id');
-        const foodKcal = parseInt(foodInfo.data('kcal'));
+        const recordId = foodInfo.attr('data-id');
+        const foodKcal = parseInt(foodInfo.attr('data-kcal'));
 
         // 데이터 변경
-        totalKcal -= parseInt(foodInfo.data('kcal'));
-        totalCarbohydrate -= parseFloat(foodInfo.data('carbohydrate'));
-        totalSugar -= parseFloat(foodInfo.data('sugar'));
-        totalProtein -= parseFloat(foodInfo.data('protein'));
-        totalFat -= parseFloat(foodInfo.data('fat'));
-        totalSaturatedFat -= parseFloat(foodInfo.data('saturated_fat'));
-        totalTransFat -= parseFloat(foodInfo.data('trans_fat'));
-        totalNatrium -= parseInt(foodInfo.data('natrium'));
-        totalCholesterol -= parseFloat(foodInfo.data('cholesterol'));
+        totalKcal -= parseInt(foodInfo.attr('data-kcal'));
+        totalCarbohydrate -= parseFloat(foodInfo.attr('data-carbohydrate'));
+        totalSugar -= parseFloat(foodInfo.attr('data-sugar'));
+        totalProtein -= parseFloat(foodInfo.attr('data-protein'));
+        totalFat -= parseFloat(foodInfo.attr('data-fat'));
+        totalSaturatedFat -= parseFloat(foodInfo.attr('data-saturated_fat'));
+        totalTransFat -= parseFloat(foodInfo.attr('data-trans_fat'));
+        totalNatrium -= parseInt(foodInfo.attr('data-natrium'));
+        totalCholesterol -= parseFloat(foodInfo.attr('data-cholesterol'));
 
         totalNutrition = totalCarbohydrate * 4 + totalProtein * 4 + totalFat * 9;
         // 데어터 없을 시
@@ -196,6 +212,11 @@ $(document).ready(function () {
                 closeModal();
             },
             error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                }
                 window.showToast('템플릿 저장에 실패했습니다. 다시 시도해주세요.');
                 console.error('Error:', error);
             }

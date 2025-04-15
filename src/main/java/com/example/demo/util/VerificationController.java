@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class verificationController {
+public class VerificationController {
     
     @PostMapping("/api/verification")
     public ResponseEntity<?> verify(HttpSession session) {

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+    <title>식품 검색</title>
+    
+    <!-- 페이지별 css -->
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/record/exercise_form.css}">
+    </th:block>
+
+</head>
+<body>
+<!-- 페이지 내용 -->
+<div layout:fragment="content">
+    
+    <div class="header">
+        <div class="header-container">
+            <span class="back-arrow"><i class="bi bi-arrow-left"></i></span>
+            <div class="header-bar">
+                <span class="header-text">수행한 운동을 선택해주세요</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 템플릿 탭 콘텐츠 -->
+    <div id="templates-content" class="content">
+        <div class="info-bar">
+            <span>🔥 운동 강도 (METs)&nbsp;
+                <i class="bi bi-question-circle-fill" id="metDetail"></i></span>
+            
+        </div>
+        
+        <div class="exercise-list" th:data-weight="${userWeight}">
+            <th:block th:each="e : ${exerciseList}">
+                <th:block th:if="${e != null}">
+                    <div class="exercise-item">
+                        <div class="exercise-info">
+                            <div class="exercise-name" th:text="${e.name}"></div>
+                        </div>
+                        <div class="exercise-met">🔥 <span class="met-text" th:text="${e.METs == 0 ? '?' : e.METs}"></span></div>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    
+    <!-- 운동 추가 모달 -->
+    <div class="modal-overlay" id="exerciseAddModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title"><span id="exerciseName">걷기</span>  <span class="fire-icon">🔥</span>
+                    <div class="intensity-input-container">
+                        <button class="intensity-control decrease">-</button>
+                        <input type="number" class="intensity-input" value="3.0" step="0.1" min="0.1" max="10.0">
+                        <button class="intensity-control increase">+</button>
+                    </div>
+                    <div class="intensity-unit-container">
+                        <span class="intensity-unit"></span>
+                    </div>
+                </div>
+                <button class="close-button">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="exercise-info">
+                    <div class="info-row">
+                        <div class="info-label">운동 시간</div>
+                        <div class="info-value">
+                            <input type="number" class="time-input" placeholder="0" max="600">
+                            <span>분</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-row">
+                        <div class="info-label">운동 강도</div>
+                        <div class="intensity-buttons">
+                            <button class="intensity-button" data-activity="0.8">가볍게</button>
+                            <button class="intensity-button active" id="defaultActive" data-activity="1.0">적당히</button>
+                            <button class="intensity-button" data-activity="1.2">격하게</button>
+                        </div>
+                    </div>
+                    
+                    <div class="calories-info">
+                        <div class="calories-label">예상 소모 칼로리</div>
+                        <div class="calories-value"><span id="kcalValue"></span> kcal</div>
+                    </div>
+                    
+                    <button class="add-button">추가하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="bottom-button">5</div>
+    
+    <div id="metTooltip" class="popover-tooltip">
+        <span class="accent">METs</span>는 특정 활동이 안정 상태(1 MET)보다 얼마나 많은 에너지를 소비하는지 나타내는 <span class="accent">운동 강도 측정 단위</span>입니다.
+        <br>숫자가 높을수록 활동 강도가 높고 에너지 소모량이 많음을 의미합니다.
+    </div>
+</div>
+
+<!-- 페이지별 JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/record/exercise_form.js}"></script>
+</th:block>
+</body>
+
+</html>

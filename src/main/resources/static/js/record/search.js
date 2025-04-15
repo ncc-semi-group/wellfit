@@ -32,16 +32,16 @@ $(document).ready(function () {
     $('#search-results, .food-list').off('click', '.add-button').on('click', '.add-button', function () {
         // 음식 정보 가져오기
         let foodItem = $(this).parent().parent();
-        let productName = foodItem.data('name');
-        let brandName = foodItem.data('manufacturer_name');
-        let kcal = foodItem.data('kcal');
-        let servingSize = foodItem.data('serving_size');
-        let serving = foodItem.data('serving');
-        let standard = foodItem.data('standard');
-        let defaultKcal = foodItem.data('default_kcal');
-        let carbohydrate = foodItem.data('carbohydrate');
-        let protein = foodItem.data('protein');
-        let fat = foodItem.data('fat');
+        let productName = foodItem.attr('data-name');
+        let brandName = foodItem.attr('data-manufacturer_name');
+        let kcal = foodItem.attr('data-kcal');
+        let servingSize = foodItem.attr('data-serving_size');
+        let serving = foodItem.attr('data-serving');
+        let standard = foodItem.attr('data-standard');
+        let defaultKcal = foodItem.attr('data-default_kcal');
+        let carbohydrate = foodItem.attr('data-carbohydrate');
+        let protein = foodItem.attr('data-protein');
+        let fat = foodItem.attr('data-fat');
         let defaultCarbohydrate = Number(carbohydrate * (defaultKcal / kcal)).toFixed(1).replace(/\.0$/, '');
         let defaultProtein = Number(protein * (defaultKcal / kcal)).toFixed(1).replace(/\.0$/, '');
         let defaultFat = Number(fat * (defaultKcal / kcal)).toFixed(1).replace(/\.0$/, '');
@@ -73,8 +73,8 @@ $(document).ready(function () {
         servingInfo.attr('data-carbohydrate', carbohydrate);
         servingInfo.attr('data-protein', protein);
         servingInfo.attr('data-fat', fat);
-        servingInfo.attr('data-id', foodItem.data('id'));
-        servingInfo.attr('data-food_type', foodItem.data('food_type'));
+        servingInfo.attr('data-id', foodItem.attr('data-id'));
+        servingInfo.attr('data-food_type', foodItem.attr('data-food_type'));
 
 
         // 음식 상세 모달 내부의 플러스 아이콘 클릭 이벤트를 위해 별도 변수에 foodItem 저장
@@ -103,9 +103,9 @@ $(document).ready(function () {
             $(this).prop('disabled', true);
 
             let servingInfo = $('.serving-info');
-            let foodId = servingInfo.data('id');
-            let servingSize = servingInfo.data('serving_size');
-            let foodType = servingInfo.data('food_type') === 'user' ? 'user' : 'system';
+            let foodId = servingInfo.attr('data-id');
+            let servingSize = servingInfo.attr('data-serving_size');
+            let foodType = servingInfo.attr('data-food_type') === 'user' ? 'user' : 'system';
             let amount = 0;
             let serving = 0;
             let kcal = parseInt($('.total-calories').text().replace('kcal', '').trim());
@@ -136,7 +136,17 @@ $(document).ready(function () {
                     updateFoodCount();
                 },
                 error: function (xhr, status, error) {
-                    alert('음식 추가 중 오류가 발생했습니다. 다시 시도해주세요.');
+                    if (error.status === 401) {
+                        alert(error.responseText);
+                        window.location.href = '/loginpage';
+                        return;
+                    } else if (error.status === 403) {
+                        window.showToast(error.responseText);
+                        // 모달 닫기
+                        closeModal();
+                        return;
+                    }
+                    window.showToast('음식 추가 중 오류가 발생했습니다. 다시 시도해주세요.');
                     console.error('음식 추가 API 오류:', status, error);
                     console.log('응답 상태:', xhr.status);
                 },
@@ -177,11 +187,11 @@ $(document).ready(function () {
     $('.quantity-value').on('change input', function () {
         let servingInfo = $('.serving-info');
 
-        let kcal = parseInt(servingInfo.data('kcal'));
-        let defaultKcal = parseInt(servingInfo.data('default_kcal'));
-        let carbohydrate = parseInt(servingInfo.data('carbohydrate'));
-        let protein = parseInt(servingInfo.data('protein'));
-        let fat = parseInt(servingInfo.data('fat'));
+        let kcal = parseInt(servingInfo.attr('data-kcal'));
+        let defaultKcal = parseInt(servingInfo.attr('data-default_kcal'));
+        let carbohydrate = parseInt(servingInfo.attr('data-carbohydrate'));
+        let protein = parseInt(servingInfo.attr('data-protein'));
+        let fat = parseInt(servingInfo.attr('data-fat'));
         let quantityValue = $(this).val() === '' ? 0 : parseInt($(this).val());
 
         let totalKcal;
@@ -207,7 +217,7 @@ $(document).ready(function () {
         if ($('#serving-size').hasClass('active')) {
             $('.quantity-value').val(1).trigger('change');
         } else {
-            let servingSize = $(this).parent().data('serving_size');
+            let servingSize = $(this).parent().attr('data-serving_size');
             $('.quantity-value').val(servingSize).trigger('change');
         }
     });
@@ -235,8 +245,8 @@ $(document).ready(function () {
     // 음식 상세 모달 열기
     $('#search-results, .food-list').off('click', '.food-info').on('click', '.food-info', function () {
         let foodItem = $(this).closest('.food-item');
-        let productName = foodItem.data('name');
-        let brandName = foodItem.data('manufacturer_name');
+        let productName = foodItem.attr('data-name');
+        let brandName = foodItem.attr('data-manufacturer_name');
 
         // 모달 정보 업데이트 - 제품명만 modal-title에 넣고 브랜드는 별도 span으로
         $('#foodDetailModal .modal-title').html(productName);
@@ -244,23 +254,23 @@ $(document).ready(function () {
             $('#foodDetailModal .modal-title').append(' <span class="brand-name">' + brandName + '</span>');
         }
 
-        let servingSize = foodItem.data('serving_size');
-        let serving = foodItem.data('serving');
-        let detailKcal = Math.round(foodItem.data('kcal') * (servingSize / 100));
-        let detailFat = Number(foodItem.data('fat') * (servingSize / 100))
+        let servingSize = foodItem.attr('data-serving_size');
+        let serving = foodItem.attr('data-serving');
+        let detailKcal = Math.round(foodItem.attr('data-kcal') * (servingSize / 100));
+        let detailFat = Number(foodItem.attr('data-fat') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailSaturatedFat = Number(foodItem.data('saturated_fat') * (servingSize / 100))
+        let detailSaturatedFat = Number(foodItem.attr('data-saturated_fat') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailTransFat = Number(foodItem.data('trans_fat') * (servingSize / 100))
+        let detailTransFat = Number(foodItem.attr('data-trans_fat') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailCholesterol = Number(foodItem.data('cholesterol') * (servingSize / 100))
+        let detailCholesterol = Number(foodItem.attr('data-cholesterol') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailNatrium = Math.round(foodItem.data('natrium') * (servingSize / 100));
-        let detailCarbohydrate = Number(foodItem.data('carbohydrate') * (servingSize / 100))
+        let detailNatrium = Math.round(foodItem.attr('data-natrium') * (servingSize / 100));
+        let detailCarbohydrate = Number(foodItem.attr('data-carbohydrate') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailSugar = Number(foodItem.data('sugar') * (servingSize / 100))
+        let detailSugar = Number(foodItem.attr('data-sugar') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
-        let detailProtein = Number(foodItem.data('protein') * (servingSize / 100))
+        let detailProtein = Number(foodItem.attr('data-protein') * (servingSize / 100))
             .toFixed(1).replace(/\.0$/, '');
 
         let detailFatP = Math.round(detailFat / 54 * 100);
@@ -290,8 +300,8 @@ $(document).ready(function () {
         $('#foodDetailModal .detail-protein-p').text(detailProteinP);
 
 
-        let foodId = foodItem.data('id');
-        let foodType = foodItem.data('food_type') === 'user' ? 'user' : 'system';
+        let foodId = foodItem.attr('data-id');
+        let foodType = foodItem.attr('data-food_type') === 'user' ? 'user' : 'system';
 
         $('#foodDetailModal .header-icons .bi-pencil-square').show();
         // 직접 등록 음식 아닐 경우 수정 버튼 숨기기
@@ -313,6 +323,14 @@ $(document).ready(function () {
                 } else {
                     $('#foodDetailModal .favorite-icon').html('<i class="bi bi-star"></i>');
                 }
+            }, error: function (xhr, status, error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                }
+                console.error('즐겨찾기 상태 조회 API 오류:', status, error);
+                console.log('응답 상태:', xhr.status);
             }
         });
 
@@ -348,6 +366,11 @@ $(document).ready(function () {
                     }
                 },
                 error: function (xhr, status, error) {
+                    if (error.status === 401) {
+                        alert(error.responseText);
+                        window.location.href = '/loginpage';
+                        return;
+                    }
                     // 콘솔에 자세한 오류 정보 기록
                     console.error('즐겨찾기 추가 API 오류:', status, error);
                     console.log('응답 상태:', xhr.status);
@@ -410,7 +433,7 @@ $(document).ready(function () {
 
     // 템플릿 아이템 클릭 시
     $('.template-item').click(function () {
-        let templateId = $(this).data('id');
+        let templateId = $(this).attr('data-id');
         let name = $(this).find('.food-name').text();
         location.href = `/record/template_detail?template_id=${templateId}&name=${name}`;
     });
@@ -424,8 +447,13 @@ $(document).ready(function () {
             success: function (data) {
                 $('.bottom-button').text(data);
             },
-            error: function () {
-                console.error('음식 개수 조회 중 오류 발생');
+            error: function (error) {
+                if (error.status === 401) {
+                    alert(error.responseText);
+                    window.location.href = '/loginpage';
+                    return;
+                }
+                console.error('음식 개수 조회 API 오류:', error);
             }
         });
     }
@@ -572,5 +600,5 @@ $(document).ready(function () {
         }
 
     });
-    
+
 });
