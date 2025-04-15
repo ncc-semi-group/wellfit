@@ -280,11 +280,11 @@ function addTalkMessageWith(message, mode) {
         const users = document.getElementsByClassName("user");
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
-            const latestReadTime = new Date().toISOString();
-            if (latestReadTime>= message.createdAt) {
+            const latestReadTime = new Date(user.getAttribute("latest_read_time"));
+            const createdAt = new Date(message.createdAt);
+            if (latestReadTime>= createdAt) {
                 count++;
             }
-            console.log("count : "+count);
         }
     }
     const messageElement = createTalkMessageElement(message, (userCount - count == 0 ? "" : userCount - count ));
@@ -305,10 +305,12 @@ function readMessages(time1, time2){
 
         // console.log("⏳ Checking isoText:", isoText, "→", new Date(isoText));
         if (!isoText) continue;
-
+        console.log("isoText : "+isoText);
+        console.log("from : "+from);
+        console.log("to : "+to);
         const isoTime = new Date(isoText);
 
-        if (!flag && isoTime >= from) {
+        if (!flag && isoTime > from) {
             flag = true;
         }
 
@@ -504,7 +506,10 @@ $(document).ready(function () {
             createdAt: new Date().toISOString()
         };
         // 이미지 업로드
-        await uploadImage();
+        if(file!=null){
+            await uploadImage();
+            file = null; // 전송 후 파일 초기화
+        }
         try {
             if (stompClient && stompClient.connected) {
                 stompClient.send("/pub/chat/talk", {}, JSON.stringify(chatMessage));

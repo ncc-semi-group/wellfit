@@ -28,7 +28,7 @@ public class ChatController {
     private final ChatService chatService;
     private final ChatRedisService redis;
     private final NcpObjectStorageService ncpObjectStorageService;
-    private String bucketName = "wellfit";
+    private String bucketName = "bitcamp-bucket-122";
     public ChatController(UserService userService, ChatService chatService, ChatRedisService redis, NcpObjectStorageService ncpObjectStorageService) {
         this.userService = userService;
         this.chatService = chatService;
