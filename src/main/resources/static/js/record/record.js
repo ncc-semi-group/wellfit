@@ -470,9 +470,9 @@ $(document).ready(function () {
                 // 모달 닫기
                 closeModal();
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }
@@ -533,7 +533,7 @@ $(document).ready(function () {
 
         let cheatPoint = parseInt($('#cheatPoint').text()); // 치팅포인트
         let usingCheatPoint = -leftoverKcal;
-        let leftoverCheatPoint = cheatPoint - leftoverKcal;
+        let leftoverCheatPoint = cheatPoint + leftoverKcal;
 
         $.ajax({
             url: '/api/record/use_cheat_point',
@@ -548,9 +548,9 @@ $(document).ready(function () {
                     location.reload();
                 }, 2000); // 2초 후 페이지 리로드
 
-            }, error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            }, error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }
