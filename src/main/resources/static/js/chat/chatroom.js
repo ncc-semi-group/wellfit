@@ -342,7 +342,7 @@ function createTalkMessageElement(message, unreadCount) {
     } else {
         messageElement.classList.add("incoming");
     }
-    document.create
+    
     const time = getHourMinuteFromISO(message.createdAt);
     const userElement = document.getElementById(message.userId);
     let nickname = userElement
