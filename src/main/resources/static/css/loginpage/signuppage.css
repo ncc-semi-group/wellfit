@@ -25,22 +25,23 @@
 
 .input-field {
 	width: 18rem;
-	height: 4rem;
+	height: 3rem;
 	padding: 0.5rem 1rem;
 	font-size: 1rem;
-	border-radius: 2rem;
+	color: #767676;
+	border-radius: 1rem;
 	border: 1px solid #ddd;
 	outline: none;
-	margin-bottom: 1rem;
+	margin-top: 1rem;
 	background-color: #EDEDED;
 }
 
 .btn-signup {
-	display: inline-block;
+	display: block;
 	width: 18rem;
-	height: 4rem;
-	line-height: 4rem;
-	font-size: 1.25rem;
+	height: 2.5rem;
+	line-height: 2.5rem;
+	font-size: 1.3rem;
 	text-align: center;
 	text-decoration: none;
 	border: none;
@@ -49,6 +50,7 @@
 	color: white;
 	cursor: pointer;
 	margin-bottom: 1rem;
+	margin-top : 1.5rem;
 }
 
 .btn-back {

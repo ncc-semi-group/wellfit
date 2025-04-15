@@ -140,13 +140,17 @@
 	margin: 0 0.5rem;
 	width: 4rem;
 	height: 4rem;
-	color: #fff;
+	color: #000;
 	background-color: #D7E1E4;
 	border-radius: 4rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+}
+
+.value-select-radio:hover {
+	background-color:#F1F9F5;
 }
 
 .value-select-radio:checked+.value-select {

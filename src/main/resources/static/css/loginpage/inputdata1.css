@@ -140,13 +140,17 @@
 	margin: auto;
 	width: 6rem;
 	height: 6rem;
-	color: #fff;
+	color: #000;
 	border-radius: 4rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
 	font-weight: bold;
+}
+
+.value-select2:hover, .value-select1:hover {
+	background-color : #F1F9F5;	
 }
 
 .value-select2 {
