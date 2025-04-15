@@ -37,8 +37,15 @@
                 </div>
             </div>
         </div>
-        <div class="profile-name" th:text="${user.nickname}"></div>
-        <h5 class="info" th:text="${user.gender == 'male' ? '남성' : '여성'} + ' / ' + ${user.height} + ' / ' + ${user.currentWeight}"></h5>
+		<div class="box1">
+        	<div class="profile-name" th:text="${user.nickname}"></div>
+        	<div class="icon-chat"><img src="/static/images/1대1.png" class="chat"></div>
+        	<div class="addfriend">친구추가</div>
+        </div>
+        <div class="box2">
+        	<h5 class="info" th:text="${user.gender == 'male' ? '남성' : '여성'} + ' / ' + ${user.height} + ' / ' + ${user.currentWeight}"></h5>
+        	<div class="follow">팔로우</div>
+        </div>
         <div class="user_intro">
             <h6>소개</h6>
             <h6 th:text="${user.myIntro != null and !user.myIntro.isEmpty() ? user.myIntro : '안녕하세요'}"></h6>

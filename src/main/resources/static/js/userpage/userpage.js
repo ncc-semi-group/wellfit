@@ -285,103 +285,74 @@ $(document).ready(function() {
             alert(error.message);
         });
     });
+});
 
-    // 1대1 채팅 버튼 클릭 이벤트
-	$('.chat').click(function() {
-	        const targetUserId = $('.friend-link').data('user-id');
-	        const currentUserId = $('.box-title2').data('user-id');
-	        
-	        if (!targetUserId || !currentUserId) {
-	            alert('사용자 정보를 찾을 수 없습니다.');
-	            return;
-	        }
+document.addEventListener('DOMContentLoaded', function() {
+    // 친구 목록 클릭 이벤트
+    const friendLink = document.querySelector('.friend-link');
+    if (friendLink) {
+        friendLink.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = '/userpage/friends/' + userId;
+            }
+        });
+    }
 
-	        // 1대1 채팅방 생성 또는 입장
-	        $.ajax({
-	            url: '/chatroom/create/1vs1',
-	            type: 'POST',
-	            contentType: 'application/json',
-	            data: JSON.stringify({
-	                userId: targetUserId
-	            }),
-	            success: function (res) {
-	                console.log("✅ 입장 처리 성공:", res);
-	                window.location.href = '/chatroom/enter/' + res.roomId + '?userId=' + currentUserId;
-	            },
-	            error: function (xhr) {
-	                console.error("❌ 입장 실패:", xhr.responseText);
-	                alert('채팅방 입장 실패: ' + xhr.responseText);
-	            }
-	        });
-	    });
-	}); // $(document).ready 종료
+    // 팔로워 클릭 이벤트
+    const followerBtn = document.getElementById('follower');
+    if (followerBtn) {
+        followerBtn.addEventListener('click', function() {
+            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
+            window.location.href = `/userpage/follower/${userId}`;
+        });
+    }
 
-	// DOMContentLoaded 이벤트 리스너를 밖으로 이동
-	document.addEventListener('DOMContentLoaded', function() {
-	    // 친구 목록 클릭 이벤트
-	    const friendLink = document.querySelector('.friend-link');
-	    if (friendLink) {
-	        friendLink.addEventListener('click', function() {
-	            const userId = this.getAttribute('data-user-id');
-	            if (userId) {
-	                window.location.href = '/userpage/friends/' + userId;
-	            }
-	        });
+    // 팔로잉 클릭 이벤트
+    const followingBtn = document.getElementById('following');
+    if (followingBtn) {
+        followingBtn.addEventListener('click', function() {
+            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
+            window.location.href = `/userpage/following/${userId}`;
+        });
+    }
+    
+    // 뒤로가기 버튼 클릭 이벤트
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            window.history.back();
+        });
+    }
+});
+
+// 1대1 채팅 버튼 클릭 이벤트
+$('.chat').click(function() {
+    const targetUserId = $('.friend-link').data('user-id');
+    const currentUserId = $('.box-title2').data('user-id');
+    
+    if (!targetUserId || !currentUserId) {
+        alert('사용자 정보를 찾을 수 없습니다.');
+        return;
+    }
+
+    // 1대1 채팅방 생성 또는 입장
+	$.ajax({
+	    url: '/chatroom/create/1vs1',
+	    type: 'POST',
+	    contentType: 'application/json',
+	    data: JSON.stringify({
+	        userId: targetUserId,
+	    }),
+	    success: function (res) {
+	        console.log("✅ 입장 처리 성공:", res);
+	
+	        // 2. DB 등록 성공 시, 채팅방으로 이동
+	        window.location.href = '/chatroom/enter/ + res.roomId'
+	    },
+	    error: function (xhr) {
+	        console.error("❌ 입장 실패:", xhr.responseText);
+	        alert('채팅방 입장 실패: ' + xhr.responseText);
 	    }
-
-	    // 팔로워 클릭 이벤트
-	    const followerBtn = document.getElementById('follower');
-	    if (followerBtn) {
-	        followerBtn.addEventListener('click', function() {
-	            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
-	            window.location.href = `/userpage/follower/${userId}`;
-	        });
-	    }
-
-	    // 팔로잉 클릭 이벤트
-	    const followingBtn = document.getElementById('following');
-	    if (followingBtn) {
-	        followingBtn.addEventListener('click', function() {
-	            const userId = document.querySelector('.friend-link').getAttribute('data-user-id');
-	            window.location.href = `/userpage/following/${userId}`;
-	        });
-	    }
-	    
-	    // 뒤로가기 버튼 클릭 이벤트
-	    const backBtn = document.querySelector('.back-btn');
-	    if (backBtn) {
-	        backBtn.addEventListener('click', function() {
-	            window.history.back();
-	        });
-	    }
-		
-		// 1대1 채팅 버튼 클릭 이벤트
-		    $('.chat').click(function() {
-		        const targetUserId = $('.friend-link').data('user-id');
-		        const currentUserId = $('.box-title2').data('user-id');
-		        
-		        if (!targetUserId || !currentUserId) {
-		            alert('사용자 정보를 찾을 수 없습니다.');
-		            return;
-		        }
-
-				$.ajax({
-				    url: '/chatroom/create/1vs1',
-				    type: 'POST',
-				    contentType: 'application/json',
-				    data: JSON.stringify({
-				        userId: targetUserId,
-				    }),
-				    success: function (res) {
-				        console.log("✅ 입장 처리 성공:", res);
-
-				        // 2. DB 등록 성공 시, 채팅방으로 이동
-				        window.location.href = '/chatroom/enter/ + res.roomId'
-				    },
-				    error: function (xhr) {
-				        console.error("❌ 입장 실패:", xhr.responseText);
-				        alert('채팅방 입장 실패: ' + xhr.responseText);
-				    }
-				});
-			});
-		});
+	});
+});
