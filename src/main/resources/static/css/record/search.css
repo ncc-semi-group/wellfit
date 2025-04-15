@@ -97,6 +97,10 @@ body {
     font-size: 14px;
 }
 
+.content {
+    padding-bottom: 20px;
+}
+
 /* 음식 항목 - 템플릿 탭 */
 .food-list {
     padding: 0 16px;

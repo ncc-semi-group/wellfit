@@ -49,7 +49,7 @@ public class StatisticsService {
         if ("daily".equals(period)) {
             return date.format(DateTimeFormatter.ofPattern("MM.dd"));
         } else if ("weekly".equals(period)) {
-            return "~" + date.format(DateTimeFormatter.ofPattern("MM.dd"));
+            return date.format(DateTimeFormatter.ofPattern("MM.dd")) + "~";
         } else if ("monthly".equals(period)) {
             return date.format(DateTimeFormatter.ofPattern("yy.MM"));
         }

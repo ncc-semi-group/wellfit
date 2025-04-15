@@ -179,20 +179,23 @@ public class RecordService {
 		FoodRecordsDto foodRecords = new FoodRecordsDto();
 		foodRecords.setUserId(userId);
 		foodRecords.setDate(sqlDate);
+		Integer totalKcal = recordMapper.getTotalKcalByRecords(foodRecords);
+		if (totalKcal == null) {
+			totalKcal = 0;
+		}
 
 		// 통계에서 섭취 가능 칼로리, 목표, 달성 여부, 칼로리 합 가져오기
 		DailyStatisticsDto dailyStatistics = recordMapper.getArchivedDataByStatistics(foodRecords);
 		int recommendKcal = dailyStatistics.getRecommendKcal();
 		String target = dailyStatistics.getTarget();
 		boolean isAchieved = dailyStatistics.isAchieved();
-		int totalKcal = dailyStatistics.getTotalKcal();
 
 		boolean achieved = false;
 		// 목표 달성 여부 확인
 		if (target.equals("gain")) {
 			if (totalKcal >= recommendKcal * 0.9) achieved = true;
 		} else {
-			if (totalKcal <= recommendKcal * 1.1) achieved = true;
+			if (totalKcal != 0 && totalKcal <= recommendKcal * 1.1 ) achieved = true;
 		}
 
 		if (totalKcal == 0) {

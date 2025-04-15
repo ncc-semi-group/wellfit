@@ -7,6 +7,12 @@
         where user_id = #{userId} and date = #{date}
     </select>
 
+    <select id="getTotalKcalByRecords" parameterType="FoodRecords" resultType="int">
+        select sum(kcal) as totalKcal
+        from food_records
+        where user_id = #{userId} and date = #{date}
+    </select>
+
     <update id="updateDailyStatistics" parameterType="DailyStatisticsDto">
         update daily_statistics
         set recommend_kcal = #{recommendKcal},

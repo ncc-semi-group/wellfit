@@ -120,9 +120,9 @@ $(document).ready(function () {
     const userTarget = $('.nutrition-section').data('user_target');
     const userType = $('.nutrition-section').data('user_type');
 
-    // 경고 클래스 부여
-    if (userType === 'quito') $('#alertCarb').addClass('alert-value');
-    else $('#alertFat').addClass('alert-value');
+    // 경고무시 클래스 부여
+    if (userType !== 'quito') $('#alertCarb').addClass('non-alert-value');
+    else $('#alertFat').addClass('non-alert-value');
 
 
     // 상세보기 버튼과 상세 섹션 가져오기
@@ -161,7 +161,11 @@ $(document).ready(function () {
 
             // 초과 경고
             if ($(this).hasClass('alert-test') && current > target) {
-                $(this).parent().siblings().find('span:first').css('color', '#bc3657');
+                if ($(this).parent().siblings().find('span:first').hasClass('non-alert-value')) {
+                } else {
+                    $(this).parent().siblings().find('span:first').css('color', '#bc3657');
+                }
+
             }
 
         });
