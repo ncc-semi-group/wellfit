@@ -22,12 +22,6 @@ $(document).ready(function() {
     // 차트 객체 저장 변수
     let weightChart, intakeChart, burnedChart;
 
-    // 모든 차트 생성 함수
-    function createAllCharts() {
-        createChart('weightChart', '체중', '#4a7aff');
-        createChart('intakeChart', '섭취 칼로리', '#ff6b6b');
-        createChart('burnedChart', '소모 칼로리', '#51cf66');
-    }
 
     // 차트 생성 함수
     function createChart(chartId, label, color, chartType = 'line') {
@@ -224,8 +218,8 @@ $(document).ready(function() {
 
         // 체중 차트인 경우, y축 범위를 조정하여 변화를 더 뚜렷하게 표시
         if (chart === weightChart) {
-            // 체중 데이터의 최소/최대값 계산
-            const weightData = chart.data.datasets[0].data;
+            // 체중 데이터에서 null이 아닌 값만 필터링하여 최소/최대값 계산
+            const weightData = chart.data.datasets[0].data.filter(value => value !== null);
             const min = Math.min(...weightData);
             const max = Math.max(...weightData);
             const range = max - min;
