@@ -95,9 +95,9 @@ public class FriendshipController {
     
     // 친구 검색
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchFriends(@RequestParam("nickname") String nickname) {
-        System.out.println("검색 요청 nickname: " + nickname);
-        List<UserDto> userList = userService.searchUsersByNickname(nickname);
+    public ResponseEntity<List<UserDto>> searchFriends(@RequestParam("nickname") String nickname, HttpSession session) {
+    	Integer userId = (Integer) session.getAttribute("userId");
+        List<UserDto> userList = userService.searchUsersByNickname(nickname, userId);
         System.out.println("검색 결과: " + userList);
         return ResponseEntity.ok(userList);
     }
