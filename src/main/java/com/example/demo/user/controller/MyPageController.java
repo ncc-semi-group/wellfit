@@ -11,7 +11,7 @@ import com.example.demo.dto.board.CommentDto;
 import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.user.UserBadgeDto;
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.naver.storage.NcpObjectStorageService;
+import com.example.demo.ncp.storage.NcpObjectStorageService;
 import com.example.demo.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
