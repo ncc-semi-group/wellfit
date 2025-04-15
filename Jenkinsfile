@@ -34,14 +34,20 @@ spec:
         IMAGE_NAME = 'wellfit-hub.kr.ncr.ntruss.com/wellfit'
         TAG = "${env.BUILD_NUMBER}"
         APPLICATION_PROPERTIES = credentials('wellfit_application_properties')
+<<<<<<< HEAD
         NAVER_PROPERTIES = credentials('wellfit_naver_properties')
+=======
+>>>>>>> 0d0fafefea95fde7f369726eff09358588830fe4
     }
 
     stages {
         stage('Copy Properties') {
             steps {
                 sh 'cp -f ${APPLICATION_PROPERTIES} ./src/main/resources/application.properties'
+<<<<<<< HEAD
                 sh 'cp -f ${NAVER_PROPERTIES} ./src/main/resources/naver.properties'
+=======
+>>>>>>> 0d0fafefea95fde7f369726eff09358588830fe4
             }
         }
 

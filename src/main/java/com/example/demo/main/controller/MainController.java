@@ -33,6 +33,9 @@ public class MainController {
     
     @GetMapping("/mainpage")
     public String searchFollower(HttpSession session, Model model) {
+        model.addAttribute("showLogo", true);
+        model.addAttribute("currentPage", "home");
+        
         Integer userId = (Integer) session.getAttribute("userId");
 
         if (userId == null) {
@@ -41,6 +44,9 @@ public class MainController {
         }
 
         UserDto user = userService.getUserById(userId);
+        
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
         
         int targetCalories = CalorieCalculator.calculateTargetCalories(user);
 

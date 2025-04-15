@@ -29,9 +29,9 @@
 
     
     <div class="main-content">
-        <div class="header">
+        <div class="header main-header">
             <h1>오늘의 기록</h1>
-            <div class="statistics-button"><i class="bi bi-bar-chart-line"></i></div>
+            <div class="statistics-button"><i class="bi bi-bar-chart-fill"></i></div>
         </div>
         <div class="sub-container" th:with="ableKcal = ${dailyStatistics.getRecommendKcal() + dailyStatistics.getTotalBurnedKcal()}">
             <div class="stats">
@@ -271,7 +271,7 @@
         
         
         <!-- 운동 정보 섹션 -->
-        <div class="sub-container">
+        <div class="sub-container exercise-sub">
             <div class="header">
                 <h1>운동</h1>
             </div>

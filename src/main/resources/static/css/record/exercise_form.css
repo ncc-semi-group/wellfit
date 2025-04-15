@@ -20,7 +20,7 @@ body {
 
 /* 헤더 스타일 */
 .header {
-    padding: 16px 16px 0 16px;
+    padding: 20px 20px 0 20px;
     background-color: white;
     position: sticky;
     top: 0;
@@ -60,19 +60,20 @@ body {
 .info-bar {
     display: flex;
     justify-content: space-between;
-    padding: 16px;
+    padding: 20px;
     color: #666;
     font-size: 20px;
 }
 
 #metDetail {
-    color: #aaa;
+    color: #008080;
 }
 
 /* 운동 항목 */
 .exercise-list {
-    padding: 0 16px;
+    padding: 0 20px;
     display: block;
+    padding-bottom: 20px;
 }
 
 .exercise-item {
@@ -80,7 +81,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    background-color: #eee;
+    background-color: #f7f7f7;
     border-radius: 8px;
     margin-bottom: 10px;
     cursor: pointer;
@@ -121,7 +122,7 @@ body {
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background-color: #2C5F70;
+    background-color: #008080;
     color: white;
     display: flex;
     align-items: center;
@@ -326,7 +327,7 @@ body {
 }
 
 .intensity-button.active {
-    background-color: #000;
+    background-color: #333;
     color: white;
 }
 
@@ -367,11 +368,12 @@ input[type=number] {
 
 .add-button {
     width: 100%;
-    background-color: #92a987;
+    background-color: #008080;
     color: white;
     border: none;
     padding: 15px;
-    border-radius: 10px;
+    height: 50px;
+    border-radius: 25px;
     font-size: 16px;
     font-weight: bold;
     margin-top: 20px;
@@ -419,5 +421,5 @@ input[type=number] {
 /* 툴팁 내용 강조 */
 .accent {
     font-weight: bold;
-    color: palevioletred;
+    color: #008080;
 }

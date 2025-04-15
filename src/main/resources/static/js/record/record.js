@@ -161,7 +161,7 @@ $(document).ready(function () {
 
             // 초과 경고
             if ($(this).hasClass('alert-test') && current > target) {
-                $(this).parent().siblings().find('span:first').css('color', 'palevioletred');
+                $(this).parent().siblings().find('span:first').css('color', '#bc3657');
             }
 
         });
@@ -208,14 +208,14 @@ $(document).ready(function () {
     if (userTarget === 'gain') {
         // 체중 증가 목표일 경우
         if (leftoverKcal > ableKcal * 0.1) {
-            $('#currentKcal').css('color', 'palevioletred');
+            $('#currentKcal').css('color', '#bc3657');
         }
         $('#targetText').text('증량');
         $('.use-button').text('증량 목표시 비활성화');
     } else {
         // 체중 감소, 유지 목표일 경우
         if (leftoverKcal < ableKcal * -0.1 || currentKcal === 0) {
-            $('#currentKcal').css('color', 'palevioletred');
+            $('#currentKcal').css('color', '#bc3657');
             if (currentKcal !== 0) {
                 let cheatPoint = parseInt($('#cheatPoint').text()); // 치팅포인트
                 if (cheatPoint >= -leftoverKcal) {

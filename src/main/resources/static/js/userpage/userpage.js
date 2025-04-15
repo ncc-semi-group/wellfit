@@ -348,7 +348,7 @@ $('.chat').click(function() {
 	        console.log("✅ 입장 처리 성공:", res);
 	
 	        // 2. DB 등록 성공 시, 채팅방으로 이동
-	        window.location.href = '/chatroom/enter/ + res.roomId'
+	        window.location.href = '/chatroom/enter/'+res.roomId;
 	    },
 	    error: function (xhr) {
 	        console.error("❌ 입장 실패:", xhr.responseText);

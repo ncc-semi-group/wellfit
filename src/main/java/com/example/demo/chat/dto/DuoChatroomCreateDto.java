@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class DuoChatroomCreateDto {
-    private Long userId;
+    private int userId;
 }

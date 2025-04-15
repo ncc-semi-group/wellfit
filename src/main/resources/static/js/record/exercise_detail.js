@@ -99,6 +99,10 @@ $(document).ready(function () {
                     return;
                 } else if (error.status === 403) {
                     window.showToast(error.responseText);
+                    // 2초 후 새로고침
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
                     return;
                 }
                 window.showToast('운동 기록 삭제를 실패했습니다. 다시 시도해주세요.');
