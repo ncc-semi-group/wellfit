@@ -330,7 +330,6 @@ function readMessages(time1, time2){
                 console.log("✅ unread reduced →", unreadEl.textContent);
             }
         }
-
     }
 }
 
