@@ -110,14 +110,13 @@ $(document).ready(function () {
             success: function (response) {
                 window.showToast(response);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
-                } else if (error.status === 403) {
-                    window.showToast(error.responseText);
-
+                } else if (xhr.status === 403) {
+                    window.showToast(xhr.responseText);
                     // 2초 후 새로고침
                     setTimeout(() => {
                         location.reload();
@@ -219,9 +218,9 @@ $(document).ready(function () {
                 // 모달 닫기
                 closeModal();
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }

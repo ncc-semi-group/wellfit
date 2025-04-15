@@ -213,12 +213,12 @@ $(document).ready(function () {
                     // 갯수 업데이트
                     updateExerciseCount();
                 },
-                error: function (error) {
-                    if (error.status === 401) {
-                        alert(error.responseText);
+                error: function (xhr, status, error) {
+                    if (xhr.status === 401) {
+                        alert(xhr.responseText);
                         window.location.href = '/loginpage';
-                    } else if (error.status === 403) {
-                        window.showToast(error.responseText);
+                    } else if (xhr.status === 403) {
+                        window.showToast(xhr.responseText);
                     }
                     console.log(error);
                 },
@@ -255,9 +255,9 @@ $(document).ready(function () {
             success: function (response) {
                 $('.bottom-button').text(response);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                 }
                 console.log(error);
