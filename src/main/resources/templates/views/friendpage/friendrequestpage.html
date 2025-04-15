@@ -41,11 +41,9 @@
 
 				</div>
 
-
 				<div class="list-container" id="friendList">
 					<div style="padding: 1rem;">검색 결과가 없습니다.</div>
 				</div>
-
 
 				<div class="recommand-friend-container">
 					<div class="comment">추천 친구</div>
@@ -56,10 +54,8 @@
 								<img th:src="${friend.profileImage != null ? friend.profileImage : '/static/images/default-profile.jpg'}"
 									th:alt="${friend.nickname}"
 									onerror="this.src='/static/images/default-profile.jpg'">
-								<img th:src="@{'/images/' + ${friend.profileImage}}"/>
 								<div th:text="${friend.nickname}" class="name"></div>
 								<div th:text="${friend.myIntro}" class="intro"></div>
-
 							</div>
 						</th:block>
 					</div>
@@ -75,7 +71,6 @@
 							<img th:src="${senderMap[req.senderId] != null ? senderMap[req.senderId].profileImage : '/static/images/default-profile.jpg'}"
 								th:alt="${senderMap[req.senderId] != null ? senderMap[req.senderId].nickname : '알 수 없는 사용자'}"
 								onerror="this.src='/static/images/default-profile.jpg'">
-							<img th:src="@{ '/images/' + ${senderMap[req.senderId].profileImage} }"/>
 							<div class="profile">
 								<div th:text="${senderMap[req.senderId].nickname}" class="name"></div>
 								<div th:text="${req.requestMessage}" class="intro"></div>
