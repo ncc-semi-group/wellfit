@@ -1,38 +1,33 @@
 package com.example.demo.user.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.demo.badge.service.BadgeService;
 import com.example.demo.badge.service.UserBadgeService;
 import com.example.demo.board.service.BoardLikeService;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.CommentService;
-import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.board.BoardDto;
 import com.example.demo.dto.board.BoardLikeDto;
 import com.example.demo.dto.board.CommentDto;
+import com.example.demo.dto.user.BadgeDto;
 import com.example.demo.dto.user.UserBadgeDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.naver.storage.NcpObjectStorageService;
 import com.example.demo.user.service.UserService;
-
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -197,6 +192,14 @@ public class MyPageController {
         
         return "views/mypage/mypageLike";
     }
+	@GetMapping("/user/detail/{userId}")
+	public ResponseEntity<?> getUserDetail(@PathVariable("userId") int userId) {
+		UserDto userDto = userService.getSelectUser(userId);
+		if (userDto == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(userDto);
+	}
 
     @GetMapping("/follower/{userId}")
     public String followerList(@PathVariable int userId, Model model) {
@@ -215,4 +218,5 @@ public class MyPageController {
         model.addAttribute("following", following);
         return "views/mypage/followingpage";
     }
+
 }

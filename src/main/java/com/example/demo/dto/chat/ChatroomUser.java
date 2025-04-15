@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @Setter
 @Getter
 public class ChatroomUser {
-    private Long chatroomUserId;
     private Long chatroomId;
     private Long userId;
     private String nickname;

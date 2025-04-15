@@ -7,6 +7,7 @@
         <result property="createdAt" column="created_at"/>
         <result property="latestReadTime" column="latest_read_time"/>
         <result property="nickname" column="nickname"/>
+        <result property="profileImage" column="profile_image"/>
     </resultMap>
     <insert id="insertChatroomUser">
         insert into chatroom_user (chatroom_id, user_id) values (#{roomId}, #{userId});
@@ -24,7 +25,7 @@
         select count(*) from chatroom_user where chatroom_id=#{roomId};
     </select>
     <select id="findChatroomUserByChatroomId" parameterType="java.lang.Long" resultMap="ChatroomUserDto">
-        select user_id, chatroom_id, created_at, latest_read_time, user.nickname from chatroom_user, user where chatroom_user.user_id=user.id and chatroom_id=#{roomId};
+        select user_id, chatroom_id, chatroom_user.created_at, latest_read_time, user.nickname, user.profile_image from chatroom_user, user where chatroom_user.user_id=user.id and chatroom_id=#{roomId};
     </select>
     <select id="countChatroomUsers" resultType="int">
         select count(*) from chatroom_user where chatroom_id=#{roomId};

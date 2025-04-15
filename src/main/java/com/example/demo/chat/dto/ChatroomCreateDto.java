@@ -11,17 +11,20 @@ public class ChatroomCreateDto {
     private String roomName;
     private int maxUser = 10;
     private String description;
-    public ChatroomCreateDto(Long userId, String roomName,int maxUser, String description) {
+    private String imageUrl;
+    public ChatroomCreateDto(Long userId, String roomName,int maxUser, String description, String imageUrl) {
         this.userId = userId;
         this.roomName = roomName;
         this.maxUser = maxUser;
         this.description = description;
+        this.imageUrl = imageUrl;
     }
     public Chatroom toChatroom() {
         return Chatroom.builder()
                 .chatroomName(roomName)
                 .maxUser(maxUser)
                 .description(description)
+                .roomImage(imageUrl)
                 .build();
     }
 }

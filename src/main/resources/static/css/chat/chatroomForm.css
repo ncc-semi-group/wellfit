@@ -1,3 +1,36 @@
 body * {
     font-family: 'Jua';
 }
+
+body {
+    padding-top: 30px;
+    background-color: #f1f3f5; /* 연한 회색 */
+}
+
+.preview-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 30%;
+    cursor: pointer;
+    border: 2px dashed #ccc;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.table {
+    border-radius: 10%;
+    margin: 5% auto;
+    width: 80%;
+    background-color: #f8f9fa;
+    overflow: hidden; /* border-radius 유지 */
+    padding: 5px;
+}
