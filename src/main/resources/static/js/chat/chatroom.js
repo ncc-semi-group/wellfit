@@ -280,7 +280,7 @@ function addTalkMessageWith(message, mode) {
         const users = document.getElementsByClassName("user");
         for (let i = 0; i < users.length; i++) {
             const user = users[i];
-            const latestReadTime = new Date(user.getAttribute("latest_read_time"));
+            const latestReadTime = new Date();
             const createdAt = new Date(message.createdAt);
             if (latestReadTime>= createdAt) {
                 count++;
@@ -293,44 +293,35 @@ function addTalkMessageWith(message, mode) {
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
-function readMessages(time1, time2){
+function readMessages(time1, time2) {
     const chatList = document.querySelectorAll(".message .meta");
-    const from = new Date(time1);
-    const to = new Date(time2);
-    let flag = false;
+    const from = new Date(time1); // 이전 latest_read_time
+    const to = new Date(time2);   // 갱신된 latest_read_time
 
     for (let i = chatList.length - 1; i >= 0; i--) {
-        const item = chatList[i];
-        const isoText = item.querySelector(".isotime")?.textContent;
-
-        // console.log("⏳ Checking isoText:", isoText, "→", new Date(isoText));
+        const meta = chatList[i];
+        const isoText = meta.querySelector(".isotime")?.textContent;
         if (!isoText) continue;
-        console.log("from : "+from);
-        console.log("to : "+to);
-        const isoTime = new Date(isoText);
-        console.log("isoTime : "+isoTime);
-        if (!flag && isoTime > from) {
-            flag = true;
-        }
 
-        if (flag) {
-            if (isoTime >= to) break;
+        const messageTime = new Date(isoText);
 
-            const unreadEl = item.querySelector(".unread-count");
-            if (!unreadEl) {
-                console.warn("⚠️ No .unread-count found in message meta:", item);
-                continue;
-            }
+        // 메시지의 createdAt이 from와 to 사이에 있는 경우만 읽음 처리
+        if (messageTime > from && messageTime <= to) {
+            const unreadEl = meta.querySelector(".unread-count");
+            if (!unreadEl) continue;
 
             let count = parseInt(unreadEl.textContent);
             if (!isNaN(count) && count > 0) {
-                console.log("count: "+count);
-                unreadEl.textContent = count - 1 == 0 ? "" : count - 1;
-                console.log("✅ unread reduced →", unreadEl.textContent);
+                unreadEl.textContent = count - 1 === 0 ? "" : count - 1;
+                console.log(`📥 [READ] updated → ${unreadEl.textContent}`);
             }
         }
+
+        // 더 오래된 메시지는 탐색 중지 (정렬이 최신순이라면)
+        if (messageTime < from) break;
     }
 }
+
 
 
 function createTalkMessageElement(message, unreadCount) {
@@ -342,7 +333,7 @@ function createTalkMessageElement(message, unreadCount) {
     } else {
         messageElement.classList.add("incoming");
     }
-    
+
     const time = getHourMinuteFromISO(message.createdAt);
     const userElement = document.getElementById(message.userId);
     let nickname = userElement
