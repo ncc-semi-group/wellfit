@@ -26,8 +26,8 @@ public class BoardService {
 		return boardMapper.selectBoardDetail(id);
 	}
 
-	public List<BoardDto> getBoardPreview(){
-		return boardMapper.selectBoardPreview();
+	public List<BoardDto> getBoardPreview() {
+	    return boardMapper.selectBoardPreview();
 	}
 
 
