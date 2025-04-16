@@ -48,10 +48,9 @@ $(document).ready(function () {
                                 .data('maxuser', parseInt(maxUser));
                             $('#chatroomModalLabel').text(roomName);
                             $('#chatroomModal .modal-body').html(`
-            <div><strong>채팅방 이름:</strong> <span>${roomName}</span></div>
+            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
             <div><strong>인원:</strong> <span>${userCount}</span></div>
             <div><strong>상세설명:</strong> <span>${description}</span></div>
-            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
         `);
                         }
                     });
@@ -72,6 +71,14 @@ $(document).ready(function () {
     loadChatRooms('http://localhost:8080/chat/list/all', false);
     $('.btn-openchat').addClass('active');
 
+    // 👉 5초마다 자동 갱신
+    setInterval(() => {
+        const isMyChatroom = $('.btn-mychat').hasClass('active');
+        const url = isMyChatroom
+            ? 'http://localhost:8080/chat/list/my'
+            : 'http://localhost:8080/chat/list/all';
+        loadChatRooms(url, isMyChatroom);
+    }, 5000);
     // 오픈채팅 버튼 클릭 이벤트
     $('.btn-openchat').click(function () {
         loadChatRooms('http://localhost:8080/chat/list/all', false);

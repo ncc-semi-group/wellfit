@@ -22,11 +22,11 @@ async function getUserList(initial) {
             dataType: "json",
             success: function (response) {
                 const list = document.querySelector(".participants");
-
                 // ✅ 기존 유저 목록 비우기
                 list.innerHTML = "";
 
                 response.forEach(user => {
+
                     const li = document.createElement("li");
                     li.className = "participant";
 
@@ -38,8 +38,9 @@ async function getUserList(initial) {
                     const img = document.createElement("img");
                     img.src = user.profileImage;
 
+
                     const span = document.createElement("span");
-                    span.textContent = user.nickname;
+                    span.innerHTML = (userId == user.userId) ? '<i class="bi bi-person-circle"></i>&nbsp;' + user.nickname : user.nickname;
 
                     li.appendChild(img);
                     li.appendChild(span);
@@ -48,7 +49,7 @@ async function getUserList(initial) {
                 });
 
                 userCount = response.length;
-                console.log("userCount : " + userCount);
+                //console.log("userCount : " + userCount);
 
                 resolve();  // AJAX 완료 후 resolve 호출
             },
@@ -80,9 +81,9 @@ async function getChats(){
         data:{"userId":userId},
         dataType: "json",
         success: function (response) {
-            console.log("roomId:", roomId);
-            console.log("userId:", userId);
-            console.log("Chat List:", response);
+            //console.log("roomId:", roomId);
+            //console.log("userId:", userId);
+            //console.log("Chat List:", response);
             const list = document.querySelector(".chat-container");
             response.forEach(chat => {
                 if(chat.messageType=="TALK"){
@@ -96,7 +97,7 @@ async function getChats(){
                     addDeleteMessage(chat);
                 }else if(chat.messageType=="IMAGE") {
                     changeDate(chat.createdAt);
-                    addImageMessage(chat);
+                    addImageMessage(chat, calculateUnreadCount(chat));
                     appendImage(chat.message);
                 }
             });
@@ -139,7 +140,7 @@ function updateLatestReadTime(userId, time) {
         const userElement = document.getElementById(userId);
         if (userElement) {
             userElement.setAttribute("latest_read_time", time);
-            console.log("User " + userId + " latest read time updated to " + time);
+            //console.log("User " + userId + " latest read time updated to " + time);
             resolve();  // 처리가 완료되었음을 알려줍니다.
         } else {
             console.error("User element not found for ID: " + userId);
@@ -150,7 +151,7 @@ function updateLatestReadTime(userId, time) {
 
 function changeDate(date) {
     const currentDateStr = extractDateOnly(date);  // "2025-04-07"
-    console.log("currentDateStr : "+currentDateStr);
+    //console.log("currentDateStr : "+currentDateStr);
     if (latestDateStr === null || latestDateStr !== currentDateStr) {
         latestDateStr = currentDateStr;
 
@@ -186,14 +187,14 @@ async function onMessageReceived(payload) {
         addTalkMessageWith(message, "socket");
         sendReadMessage(message);
     } else if (message.messageType === "CREATE") {
-        console.log("message.userId : "+message.userId);
+        //console.log("message.userId : "+message.userId);
         appendUser(message);
         changeDate(message.createdAt);
         addCreateMessage(message);
     }else if(message.messageType === "READ"){
-        console.log("userId : "+message.userId);
+        //console.log("userId : "+message.userId);
         const date = document.getElementById(message.userId).getAttribute("latest_read_time");
-        console.log("latest_read_time : "+date);
+        //console.log("latest_read_time : "+date);
         readMessages(date, message.createdAt);
         await updateLatestReadTime(message.userId, message.createdAt);
 
@@ -211,7 +212,7 @@ async function onMessageReceived(payload) {
         sendReadMessage(message);
     } else if (message.messageType === "IMAGE") {
         changeDate(message.createdAt);
-        addImageMessage(message);
+        addImageMessage(message, (userCount - message.readCount == 0 ? "" : userCount - message.readCount ));
         appendImage(message.message);
     }
 }
@@ -221,7 +222,7 @@ function deleteUser(message) {
     const userElement = document.getElementById(userId);
     if (userElement) {
         list.removeChild(userElement.parentElement);
-        console.log("User " + userId + " removed from the list.");
+        //console.log("User " + userId + " removed from the list.");
     } else {
         console.warn("User element not found for ID: " + userId);
     }
@@ -262,7 +263,7 @@ function getUserDetail(userId, callback){
                 nickname: response.nickname,
                 profileImage: response.profileImage
             };
-            console.log("User Details:", user);
+            //console.log("User Details:", user);
             callback(user);
         },
         error: function (error) {
@@ -282,6 +283,7 @@ function addTalkMessageWith(message, mode) {
             let latestReadTime;
             if(user.id == userId){
                 latestReadTime = new Date();
+                //console.log("me : " + user.id);
             }else{
                 latestReadTime = new Date(user.getAttribute("latest_read_time"));
             }
@@ -292,8 +294,8 @@ function addTalkMessageWith(message, mode) {
         }
     }
     const messageElement = createTalkMessageElement(message, (userCount - count == 0 ? "" : userCount - count ));
-    console.log("userCount : "+userCount);
-    console.log("count : "+count);
+    //console.log("userCount : "+userCount);
+    //console.log("count : "+count);
     messageContainer.appendChild(messageElement);
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
@@ -317,7 +319,7 @@ function readMessages(time1, time2) {
             let count = parseInt(unreadEl.textContent);
             if (!isNaN(count) && count > 0) {
                 unreadEl.textContent = count - 1 === 0 ? "" : count - 1;
-                console.log(`📥 [READ] updated → ${unreadEl.textContent}`);
+                //console.log(`📥 [READ] updated → ${unreadEl.textContent}`);
             }
         }
 
@@ -331,7 +333,7 @@ function readMessages(time1, time2) {
 function createTalkMessageElement(message, unreadCount) {
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
-    //console.log("unreadCount : "+unreadCount);
+    ////console.log("unreadCount : "+unreadCount);
     if (message.userId == userId) {
         messageElement.classList.add("outgoing");
     } else {
@@ -462,24 +464,96 @@ function addExitMessage(message){
     const newReadTime = message.createdAt;
     user.setAttribute("latest_read_time", new Date(newReadTime).toISOString());
 }
-function addImageMessage(message){
+function addImageMessage(message, unreadCount = 0) {
     const messageContainer = document.querySelector(".chat-container");
+
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
-    if(message.userId == userId){
+    if (message.userId == userId) {
         messageElement.classList.add("outgoing");
-    }else{
+    } else {
         messageElement.classList.add("incoming");
     }
-    messageElement.innerHTML = `
-            <div class="bubble">
-                <img src="${message.message}" class="image" alt="Image">
-            </div>
-        `;
+
+    const time = getHourMinuteFromISO(message.createdAt);
+
+    // bubble
+    const bubbleDiv = document.createElement("div");
+    bubbleDiv.classList.add("bubble");
+
+    const img = document.createElement("img");
+    img.src = message.message;
+    img.classList.add("image");
+    img.alt = "Image";
+
+    bubbleDiv.appendChild(img);
+
+    // meta
+    const metaDiv = document.createElement("div");
+    metaDiv.classList.add("meta");
+
+    const unreadSpan = document.createElement("span");
+    unreadSpan.classList.add("unread-count");
+    unreadSpan.textContent = unreadCount === 0 ? "" : unreadCount;
+
+    const timeSpan = document.createElement("span");
+    timeSpan.classList.add("time");
+    timeSpan.textContent = time;
+
+    const isoTimeSpan = document.createElement("span");
+    isoTimeSpan.classList.add("isotime");
+    isoTimeSpan.textContent = message.createdAt;
+
+    metaDiv.appendChild(unreadSpan);
+    metaDiv.appendChild(timeSpan);
+    metaDiv.appendChild(isoTimeSpan);
+
+    const detailDiv = document.createElement("div");
+    detailDiv.classList.add("detail");
+    detailDiv.appendChild(bubbleDiv);
+    detailDiv.appendChild(metaDiv);
+
+    const messageContent = document.createElement("div");
+    messageContent.classList.add("content");
+
+    // 사용자 닉네임
+    const userElement = document.getElementById(message.userId);
+    let nickname = userElement
+        ? userElement.parentElement.getElementsByTagName("span").item(0).textContent
+        : "익명";
+
+    const nicknameDiv = document.createElement("div");
+    nicknameDiv.classList.add("nickname");
+    nicknameDiv.textContent = nickname || "익명";
+
+    messageContent.appendChild(nicknameDiv);
+    messageContent.appendChild(detailDiv);
+    messageElement.appendChild(messageContent);
+
     messageContainer.appendChild(messageElement);
+
     // 스크롤 맨 아래로
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
+function calculateUnreadCount(message) {
+    let count = 0;
+    const users = document.getElementsByClassName("user");
+    for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        let latestReadTime;
+        if (user.id == userId) {
+            latestReadTime = new Date(); // 자기 자신은 지금 읽었다고 처리
+        } else {
+            latestReadTime = new Date(user.getAttribute("latest_read_time"));
+        }
+        const createdAt = new Date(message.createdAt);
+        if (latestReadTime >= createdAt) {
+            count++;
+        }
+    }
+    return userCount - count == 0 ? "" : userCount - count;
+}
+
 function appendImage(imageUrl){
     const messageContainer = document.querySelector(".pictures");
     const messageElement = document.createElement("div");
@@ -508,7 +582,7 @@ function stompConnect(){
     });
     // ✅ WebSocket 연결 종료 시 /pub/chat/off 에 메시지 전송
     socket.onclose = function () {
-        console.log("⚠️ WebSocket Disconnected. Sending disconnect signal...");
+        //console.log("⚠️ WebSocket Disconnected. Sending disconnect signal...");
         sendDisconnectSignal();
         setTimeout(stompConnect, reconnectInterval); // 5초 후 재연결 시도
     };
@@ -564,7 +638,7 @@ $(document).ready(function () {
     async function uploadImage(){
         // 이미지 파일이 있는 경우
         if (file) {
-            console.log("Image Exists");
+            //console.log("Image Exists");
             const formData = new FormData();
             formData.append("file", file);
 
@@ -632,6 +706,8 @@ $(document).ready(function () {
         const walk = (x - startX) * 2; // 스크롤 속도 조절
         pictureContainer.scrollLeft = scrollLeft - walk;
     });
+
+    document.getElementById("modalBackdrop").addEventListener("click", closeModal);
 });
 
 //  창을 닫거나 이동할 때 서버에 알림
@@ -662,7 +738,7 @@ function exitChatroom(){
             contentType: 'application/json',
             data: JSON.stringify(exitData),
             success: function (res) {
-                console.log("✅ 퇴장 처리 성공:", res);
+                //console.log("✅ 퇴장 처리 성공:", res);
                 // 퇴장 후 리스트 페이지로 이동
                 window.location.href = '/chat';
             },
@@ -686,9 +762,11 @@ function goToList() {
 }
 
 function openModal() {
-    document.getElementById("modal").classList.add("active");
+    document.getElementById('modal').classList.add('active');
+    document.getElementById('modalBackdrop').classList.add('active');
 }
 
 function closeModal() {
-    document.getElementById("modal").classList.remove("active");
+    document.getElementById('modal').classList.remove('active');
+    document.getElementById('modalBackdrop').classList.remove('active');
 }
