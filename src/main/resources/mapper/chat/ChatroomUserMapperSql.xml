@@ -33,4 +33,7 @@
     <update id="updateLatestReadTime" parameterType="java.lang.Long">
         update chatroom_user set latest_read_time = now() where chatroom_id=#{roomId} and user_id=#{userId};
     </update>
+    <select id="findLatestReadTime" parameterType="map" resultType="java.sql.Timestamp">
+        select latest_read_time from chatroom_user where chatroom_id=#{roomId} and user_id=#{userId};
+    </select>
 </mapper>

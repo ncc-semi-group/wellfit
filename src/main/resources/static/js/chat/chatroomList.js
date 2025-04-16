@@ -24,6 +24,9 @@ $(document).ready(function () {
                                     ${chatroom.latestMessage ? `
                                     <div class="latest-message" style="color: gray; font-size: 0.9em;">${chatroom.latestMessage}</div>` : ''}
                                 </div>
+                                ${chatroom.unreadChatCount > 0
+                        ? `<div class="unread-count">${chatroom.unreadChatCount}</div>`
+                        : ''}
                             </div>
                             <div class="user-count" style="margin-left:auto;">${chatroom.userCount} / ${chatroom.maxUser}</div>
                         </div>

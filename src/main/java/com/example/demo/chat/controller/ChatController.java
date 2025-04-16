@@ -55,7 +55,8 @@ public class ChatController {
     public ResponseEntity<?> chatroomList(HttpSession session) {
         try {
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
-            return ResponseEntity.ok(chatService.findChatroomList(userId));
+            List<ChatroomDto> dto = chatService.findChatroomList(userId);
+            return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
@@ -66,7 +67,22 @@ public class ChatController {
     public ResponseEntity<?> userChatroomList(HttpSession session) {
         try {
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
-            return ResponseEntity.ok(chatService.findChatroomByUserId(userId));
+            List<ChatroomDto> dto = chatService.findChatroomByUserId(userId);
+            // Redis 에서 latestReadTime 가져오기
+            dto.forEach(chatroomDto ->{
+                Timestamp latestReadTime = redis.getLatestReadTime(chatroomDto.getRoomId(), userId);
+                if (latestReadTime == null) {
+                    // Redis에 없으면 DB에서 조회
+                    latestReadTime = chatService.findLatestReadTime(chatroomDto.getRoomId(), userId);
+                    // DB에서 가져온 값은 Redis에 저장하여 추후 빠르게 접근 가능하도록 함
+                    if (latestReadTime != null) {
+                        redis.updateLatestReadTime(chatroomDto.getRoomId(), userId, latestReadTime);
+                    }
+                }
+                // 읽지 않은 메시지 수 삽입
+                chatroomDto.setUnreadChatCount(chatService.findUnreadChatCountByRoomIdAndUserId(chatroomDto.getRoomId(), userId, latestReadTime));
+            });
+            return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());

@@ -24,10 +24,17 @@ body * {
 .chatroom-details {
     flex-grow: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
-
+.unread-count {
+    background-color: #ff4400;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-left: 10px;
+}
 .chatroom-name {
     font-weight: bold;
 }
