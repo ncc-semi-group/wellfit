@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,23 +40,18 @@ public class ChatController {
     // Template
     @GetMapping("/chat")
     public String chatroomList(HttpSession session, Model model) {
-        try{
-            Object userIdSession = session.getAttribute("userId");
-            if(userIdSession == null) {
-                return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
-            }
-            Long userId = ((Integer)userIdSession).longValue();
-
-            // 채팅방 목록을 가져와서 모델에 추가
-            chatService.findChatroomList(userId);
-            model.addAttribute("userId", userId);
-            model.addAttribute("showHeader", false);
-            model.addAttribute("currentPage", "chat");
-            return "chat/chatroomList";
-        }catch (RuntimeException e){
-            e.printStackTrace();
+        Object userIdSession = session.getAttribute("userId");
+        if(userIdSession == null) {
             return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
         }
+        Long userId = ((Integer)userIdSession).longValue();
+
+        // 채팅방 목록을 가져와서 모델에 추가
+        chatService.findChatroomList(userId);
+        model.addAttribute("userId", userId);
+        model.addAttribute("showHeader", false);
+        model.addAttribute("currentPage", "chat");
+        return "chat/chatroomList";
     }
     @GetMapping("/chat/list/all")
     @ResponseBody
@@ -129,21 +125,16 @@ public class ChatController {
     public String chatroom(Model model,
                            @PathVariable Long roomId,
                            HttpSession session) {
-        try{
-            Object userIdSession = session.getAttribute("userId");
-            if(userIdSession == null) {
-                return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
-            }
-            Long userId = ((Integer)userIdSession).longValue();
-
-            model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
-            model.addAttribute("userId", userId);
-            model.addAttribute("roomId", roomId);
-            return "chat/chatroom"; // Thymeleaf 템플릿
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return "redirect:/chat";
+        Object userIdSession = session.getAttribute("userId");
+        if(userIdSession == null) {
+            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
         }
+        Long userId = ((Integer)userIdSession).longValue();
+
+        model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
+        model.addAttribute("userId", userId);
+        model.addAttribute("roomId", roomId);
+        return "chat/chatroom"; // Thymeleaf 템플릿
     }
 
     @MessageMapping("/chat/off")
@@ -206,7 +197,7 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
         }
     }
-    @GetMapping("/chatroom/create")
+    @PostMapping("/chatroom/create")
     public String createChatroom(HttpSession session ,@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
         try{
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
@@ -298,11 +289,12 @@ public class ChatController {
     @ResponseBody
     public ResponseEntity<?> enterChatRoom(@RequestBody ChatRequestDto chatDto) {
         try {
+            log.info("enterChatRoom: {}", chatDto);
             chatService.createChatroomUser(chatDto);
             return ResponseEntity.ok("success");
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.toString(e.getStackTrace()));
         }
     }
 
