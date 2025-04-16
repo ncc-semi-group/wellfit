@@ -127,6 +127,13 @@ public class BoardService {
 	            boardMapper.insertBoardHashtag(board.getId(), tagId); // 게시글과 태그 연결
 	        }
 	    }
+	    
+	    
+	    public boolean hasUserLikedPost(int boardId, int userId) {
+	        return boardMapper.hasUserLikedPost(boardId, userId);
+	    }
+
+	    
 }
 	
 
