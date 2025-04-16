@@ -54,5 +54,6 @@
         WHERE c.created_at > #{latestReadTime}
           AND cu.user_id = #{userId}
           AND c.chatroom_id = #{roomId}
+        and c.message_type='TALK'
     </select>
 </mapper>
