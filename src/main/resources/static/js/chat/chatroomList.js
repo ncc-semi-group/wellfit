@@ -48,7 +48,7 @@ $(document).ready(function () {
                                 .data('maxuser', parseInt(maxUser));
                             $('#chatroomModalLabel').text(roomName);
                             $('#chatroomModal .modal-body').html(`
-            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
+            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"onerror="this.style.display='none'";></div>
             <div><strong>인원:</strong> <span>${userCount}</span></div>
             <div><strong>상세설명:</strong> <span>${description}</span></div>
         `);
