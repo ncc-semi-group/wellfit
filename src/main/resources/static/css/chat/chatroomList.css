@@ -24,10 +24,17 @@ body * {
 .chatroom-details {
     flex-grow: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
-
+.unread-count {
+    background-color: #ff4400;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-left: 10px;
+}
 .chatroom-name {
     font-weight: bold;
 }
@@ -51,9 +58,21 @@ body * {
     text-align: center;
     padding: 10px;
     border: 1px solid #198754;
-    color: white;
-    background-color: #198754;
+    transition: background-color 0.3s, color 0.3s;
 }
+
+.toggle-buttons a.active {
+    background-color: white;
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+.toggle-buttons a:not(.active) {
+    background-color: #198754;
+    color: white;
+    border: 1px solid #198754;
+}
+
 
 .toggle-buttons a:first-child {
     border-radius: 10px 0 0 10px;
@@ -68,4 +87,13 @@ body * {
     height: 80%;
     background-color: white;
     position: relative;
+}
+
+#chatroomModal .modal-body img {
+    width: 200px !important;
+    height: 200px !important;
+    object-fit: cover;
+    display: block;
+    margin: 10px auto; /* 가로 가운데 정렬 + 위쪽 여백 */
+    border-radius: 10px;
 }

@@ -86,6 +86,11 @@ public class ChatService {
     public List<ChatResponseDto> findChatByRoomIdAndUserId(Long roomId, Long userId){
         return chatMapper.findChatByChatroomIdAndUserId(roomId, userId).stream().map(c -> c.toResponseDto()).toList();
     }
+    public int findUnreadChatCountByRoomIdAndUserId(Long roomId, Long userId, Timestamp latestReadTime){
+        int unreadChatCount = chatMapper.findUnreadChatCountByRoomIdAndUserId(roomId, userId, latestReadTime);
+        log.info("unreadChatCount : {}", unreadChatCount);
+        return unreadChatCount;
+    }
     // ChatroomUser CRUD
     public ChatroomUser findChatroomUserIds(Long roomId, Long userId){
         return chatroomUserMapper.findChatroomUserByIds(roomId, userId);
@@ -93,7 +98,9 @@ public class ChatService {
     public List<ChatroomUserDto> findChatroomUserByChatroomId(Long roomId){
         return chatroomUserMapper.findChatroomUserByChatroomId(roomId);
     }
-
+    public Timestamp findLatestReadTime(Long roomId, Long userId){
+        return chatroomUserMapper.findLatestReadTime(roomId, userId);
+    }
     // Chatroom CRUD
     public void deleteChatRoom(Long roomId){
         chatroomMapper.deleteChatroom(roomId);

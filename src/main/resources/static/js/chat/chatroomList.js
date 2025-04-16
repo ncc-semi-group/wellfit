@@ -24,6 +24,9 @@ $(document).ready(function () {
                                     ${chatroom.latestMessage ? `
                                     <div class="latest-message" style="color: gray; font-size: 0.9em;">${chatroom.latestMessage}</div>` : ''}
                                 </div>
+                                ${chatroom.unreadChatCount > 0
+                        ? `<div class="unread-count">${chatroom.unreadChatCount}</div>`
+                        : ''}
                             </div>
                             <div class="user-count" style="margin-left:auto;">${chatroom.userCount} / ${chatroom.maxUser}</div>
                         </div>
@@ -48,10 +51,9 @@ $(document).ready(function () {
                                 .data('maxuser', parseInt(maxUser));
                             $('#chatroomModalLabel').text(roomName);
                             $('#chatroomModal .modal-body').html(`
-            <div><strong>채팅방 이름:</strong> <span>${roomName}</span></div>
+            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"onerror="this.style.display='none'";></div>
             <div><strong>인원:</strong> <span>${userCount}</span></div>
             <div><strong>상세설명:</strong> <span>${description}</span></div>
-            <div><img src="${roomImage}" alt="채팅방 이미지" style="width:100%; border-radius:10px; margin-top:10px;"></div>
         `);
                         }
                     });
@@ -69,19 +71,27 @@ $(document).ready(function () {
     };
 
     // 페이지 로드 시 기본적으로 "오픈채팅" 실행
-    loadChatRooms('http://localhost:8080/chat/list/all', false);
+    loadChatRooms('./chat/list/all', false);
     $('.btn-openchat').addClass('active');
 
+    // 👉 5초마다 자동 갱신
+    setInterval(() => {
+        const isMyChatroom = $('.btn-mychat').hasClass('active');
+        const url = isMyChatroom
+            ? './chat/list/my'
+            : './chat/list/all';
+        loadChatRooms(url, isMyChatroom);
+    }, 5000);
     // 오픈채팅 버튼 클릭 이벤트
     $('.btn-openchat').click(function () {
-        loadChatRooms('http://localhost:8080/chat/list/all', false);
+        loadChatRooms('./chat/list/all', false);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });
 
     // 나의 채팅방 버튼 클릭 이벤트
     $('.btn-mychat').click(function () {
-        loadChatRooms('http://localhost:8080/chat/list/my', true);
+        loadChatRooms('./chat/list/my', true);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });

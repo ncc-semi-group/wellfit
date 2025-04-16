@@ -47,4 +47,12 @@
     <select id="findLatestMessageByChatroomId" parameterType="java.lang.Long" resultType="String">
         select message from chat where chatroom_id=#{roomId}  and message_type='TALK' order by created_at desc limit 1;
     </select>
+    <select id="findUnreadChatCountByRoomIdAndUserId" resultType="int">
+        SELECT COUNT(*)
+        FROM chat c
+        JOIN chatroom_user cu ON c.chatroom_id = cu.chatroom_id
+        WHERE c.created_at > #{latestReadTime}
+          AND cu.user_id = #{userId}
+          AND c.chatroom_id = #{roomId}
+    </select>
 </mapper>
