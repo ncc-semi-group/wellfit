@@ -137,14 +137,14 @@ function updateFriendList(data, listContainer) {
 }
 
 function acceptFriendRequest(id, userId, senderId) {
-    handleFriendRequest('/accept', { id, userId, senderId });
+    handleFriendRequest('/accept', { id, userId, senderId }, senderId);
 }
 
 function rejectFriendRequest(id) {
-    handleFriendRequest('/reject', { id });
+    handleFriendRequest('/reject', { id }, null);
 }
 
-function handleFriendRequest(url, bodyData) {
+function handleFriendRequest(url, bodyData, senderId) {
     fetch(url, {
         method: 'POST',
         headers: {
@@ -152,12 +152,19 @@ function handleFriendRequest(url, bodyData) {
         },
         body: JSON.stringify(bodyData)
     })
-        .then(response => response.text())
-        .then(data => {
-            window.showToast(data);
-            fetchFriendRequests();
-        })
-        .catch(error => console.error('에러:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('네트워크 응답에 문제가 있습니다.');
+        }
+        return response.text();
+    })
+    .then(data => {
+        console.log(data);  // 성공 메시지 알림
+    })
+    .catch(error => {
+        console.error('에러 발생:', error);
+        window.showToast("요청 처리 중 문제가 발생했습니다.");
+    });
 }
 
 function fetchFriendRequests() {
@@ -211,3 +218,19 @@ function fetchFriendRequests() {
             console.error('친구 요청 리스트 가져오기 오류:', err);
         });
 }
+
+$('.btn-refuse').click(function () {
+    const friendItem = $(this).closest('.friend-accept-wrapper');
+    
+    friendItem.fadeOut(300, function () {
+        $(this).remove();
+    });
+});
+
+$('.btn-accept').click(function () {
+    const friendItem = $(this).closest('.friend-accept-wrapper');
+    
+    friendItem.fadeOut(300, function () {
+        $(this).remove();
+    });
+});

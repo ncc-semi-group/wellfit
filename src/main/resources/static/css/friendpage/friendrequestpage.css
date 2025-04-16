@@ -322,3 +322,8 @@
 .button-container .btn-refuse {
 	background-color: #FB7861;
 }
+
+.friend-accept-wrapper.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
