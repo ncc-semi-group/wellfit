@@ -114,7 +114,7 @@ public class ChatController {
             }
             Long userId = ((Integer)userIdSession).longValue();
             model.addAttribute("userId", userId);
-            return "/chat/chatroomForm";
+            return "chat/chatroomForm";
         }catch (RuntimeException e){
             e.printStackTrace();
             return "redirect:/chat";
