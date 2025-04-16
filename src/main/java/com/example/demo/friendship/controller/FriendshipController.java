@@ -35,6 +35,7 @@ public class FriendshipController {
     // 친구 페이지
     @GetMapping("/friendpage")
     public String friendList(HttpSession session, Model model) {
+    	model.addAttribute("currentPage", "friendpage");
         Integer userId = (Integer) session.getAttribute("userId");
         if (userId == null) {
             System.out.println("세션에서 userId가 없습니다. 로그인 페이지로 리다이렉트");
@@ -94,40 +95,50 @@ public class FriendshipController {
     
     // 친구 검색
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchFriends(@RequestParam("nickname") String nickname) {
-        System.out.println("검색 요청 nickname: " + nickname);
-        List<UserDto> userList = userService.searchUsersByNickname(nickname);
+    public ResponseEntity<List<UserDto>> searchFriends(@RequestParam("nickname") String nickname, HttpSession session) {
+    	Integer userId = (Integer) session.getAttribute("userId");
+        List<UserDto> userList = userService.searchUsersByNickname(nickname, userId);
         System.out.println("검색 결과: " + userList);
         return ResponseEntity.ok(userList);
     }
     
-    // 친구 요청 수락
+ // 친구 요청 수락
     @PostMapping("/accept")
-    public ResponseEntity<String> acceptFriendRequest(@RequestBody FriendshipRequestDto dto) {
+    public ResponseEntity<Map<String, String>> acceptFriendRequest(@RequestBody FriendshipRequestDto dto) {
+        Map<String, String> response = new HashMap<>();
         try {
             System.out.println("친구 요청 수락 ID: " + dto.getId() + ", 사용자 ID: " + dto.getUserId() + ", 송신자 ID: " + dto.getSenderId());
             friendshipService.acceptFriendRequest(dto.getId(), dto.getUserId(), dto.getSenderId());
             System.out.println("친구 요청을 수락했습니다.");
-            return ResponseEntity.ok("친구 요청을 수락했습니다.");
+            
+            response.put("status", "OK");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("친구 요청 수락 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("친구 요청 수락 중 오류가 발생했습니다.");
+            
+            response.put("status", "error");
+            return ResponseEntity.status(500).body(response);
         }
     }
 
     // 친구 요청 거절
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectFriendRequest(@RequestBody FriendshipRequestDto dto) {
+    public ResponseEntity<Map<String, String>> rejectFriendRequest(@RequestBody FriendshipRequestDto dto) {
+        Map<String, String> response = new HashMap<>();
         try {
             System.out.println("친구 요청 거절 ID: " + dto.getId());
             friendshipRequestService.rejectFriendRequest(dto.getId());
             System.out.println("친구 요청을 거절했습니다.");
-            return ResponseEntity.ok("친구 요청을 거절했습니다.");
+            
+            response.put("status", "OK");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.out.println("친구 요청 거절 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("친구 요청 거절 중 오류가 발생했습니다.");
+            
+            response.put("status", "error");
+            return ResponseEntity.status(500).body(response);
         }
     }
     

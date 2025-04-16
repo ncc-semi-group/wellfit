@@ -59,7 +59,7 @@
     </update>
 
     <select id="getArchivedDataByStatistics" parameterType="foodRecords" resultType="DailyStatisticsDto">
-        select recommend_kcal, target, is_achieved, user_id, date
+        select recommend_kcal, target, is_achieved, user_id, date, total_kcal, total_burned_kcal
         from daily_statistics
         where user_id = #{userId} and date = #{date}
     </select>

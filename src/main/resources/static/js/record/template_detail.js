@@ -108,13 +108,13 @@ $(document).ready(function () {
                     window.location.replace(document.referrer); // 이전 페이지로 돌아가기
                 }, 1000);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
-                } else if (error.status === 403) {
-                    window.showToast(error.responseText);
+                } else if (xhr.status === 403) {
+                    window.showToast(xhr.responseText);
                     // 버튼 활성화
                     $(this).prop('disabled', false);
                     return;

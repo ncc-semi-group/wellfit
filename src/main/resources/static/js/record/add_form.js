@@ -88,13 +88,13 @@ $(document).ready(function () {
                     window.location.replace(document.referrer);
                 }, 1000);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
-                } else if (error.status === 400) {
-                    window.showToast(error.responseText);
+                } else if (xhr.status === 400) {
+                    window.showToast(xhr.responseText);
                 } else {
                     window.showToast('식품 삭제에 실패했습니다. 다시 시도해주세요.');
                     console.error('Error:', error);
@@ -159,9 +159,9 @@ $(document).ready(function () {
                     window.location.replace(document.referrer);
                 }, 1000);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }
@@ -212,9 +212,9 @@ $(document).ready(function () {
                     window.location.replace(document.referrer);
                 }, 1000);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }

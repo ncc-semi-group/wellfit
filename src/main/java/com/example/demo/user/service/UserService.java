@@ -170,9 +170,9 @@ public class UserService {
     
     // ===================================
     
-    public List<UserDto> searchUsersByNickname(String nickname) {
+    public List<UserDto> searchUsersByNickname(String nickname, int userId) {
         try {
-            return userMapper.searchUsersByNickname(nickname);
+            return userMapper.searchUsersByNickname(nickname, userId);
         } catch (Exception e) {
             System.out.println("닉네임 검색 중 오류 발생: " + e.getMessage());
             e.printStackTrace();

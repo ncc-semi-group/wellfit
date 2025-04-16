@@ -71,4 +71,11 @@ public class MainController {
 
         return "views/mainpage/mainpage";
     }
+    
+    
+    
+    @GetMapping("/")
+    public String redirectToMain() {
+        return "redirect:/mainpage";
+    }
 }
