@@ -11,7 +11,7 @@ $(document).ready(function() {
         $('#targetLeft').text('목표 달성!');
         $('#targetEmoji').text('🏅');
     } else {
-        $('#targetLeft').text('목표까지 ' + targetLeft + ' kg');
+        $('#targetLeft').text('목표까지 ' + Math.round(targetLeft * 10) / 10 + ' kg');
         $('#targetEmoji').text('🚀');
     }
 
