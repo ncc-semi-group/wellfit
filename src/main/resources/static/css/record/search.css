@@ -403,9 +403,13 @@ body {
     margin-bottom: 20px;
     overflow: hidden;
     padding: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .quantity-btn {
+    min-width: 50px;
     width: 50px;
     height: 50px;
     border: none;
@@ -416,7 +420,9 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    flex-shrink: 0;
 }
+
 
 .quantity-value {
     flex: 1;
@@ -425,8 +431,13 @@ body {
     text-align: center;
     background: transparent;
     -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
     border: none;
     outline: none;
+    width: 100%;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 
 .modal-actions {

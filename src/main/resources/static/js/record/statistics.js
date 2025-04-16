@@ -4,8 +4,8 @@ $(document).ready(function() {
 
     // 현재 체중, 목표 체중 가져오기
     let currentWeight = parseFloat($('.goal-info').data('current_weight'));
-    $('#currentWeight').text('목표 ' + currentWeight + ' kg');
     let targetWeight = parseFloat($('.goal-info').data('target_weight'));
+    $('#targetWeight').text('목표 ' + targetWeight + ' kg');
     let targetLeft = Math.abs(currentWeight - targetWeight);
     if (targetLeft <= 1) {
         $('#targetLeft').text('목표 달성!');
