@@ -1,5 +1,5 @@
 window.addEventListener('load', function () {
-    history.replaceState(null, '', '/friends');
+    history.replaceState(null, '', '/friendrequestpage');
 });
 
 document.addEventListener("DOMContentLoaded", function () {
