@@ -7,7 +7,7 @@
 
 body {
     background-color: white;
-    max-width: 480px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -95,6 +95,10 @@ body {
     padding: 20px;
     color: #555;
     font-size: 14px;
+}
+
+.content {
+    padding-bottom: 20px;
 }
 
 /* 음식 항목 - 템플릿 탭 */

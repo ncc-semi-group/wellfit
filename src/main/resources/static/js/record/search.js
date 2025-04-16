@@ -136,12 +136,12 @@ $(document).ready(function () {
                     updateFoodCount();
                 },
                 error: function (xhr, status, error) {
-                    if (error.status === 401) {
-                        alert(error.responseText);
+                    if (xhr.status === 401) {
+                        alert(xhr.responseText);
                         window.location.href = '/loginpage';
                         return;
-                    } else if (error.status === 403) {
-                        window.showToast(error.responseText);
+                    } else if (xhr.status === 403) {
+                        window.showToast(xhr.responseText);
                         // 모달 닫기
                         closeModal();
                         return;
@@ -324,8 +324,8 @@ $(document).ready(function () {
                     $('#foodDetailModal .favorite-icon').html('<i class="bi bi-star"></i>');
                 }
             }, error: function (xhr, status, error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }
@@ -366,8 +366,8 @@ $(document).ready(function () {
                     }
                 },
                 error: function (xhr, status, error) {
-                    if (error.status === 401) {
-                        alert(error.responseText);
+                    if (xhr.status === 401) {
+                        alert(xhr.responseText);
                         window.location.href = '/loginpage';
                         return;
                     }
@@ -447,9 +447,9 @@ $(document).ready(function () {
             success: function (data) {
                 $('.bottom-button').text(data);
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }

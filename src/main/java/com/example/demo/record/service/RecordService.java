@@ -186,13 +186,14 @@ public class RecordService {
 		String target = dailyStatistics.getTarget();
 		boolean isAchieved = dailyStatistics.isAchieved();
 		int totalKcal = dailyStatistics.getTotalKcal();
+		int totalBurnedKcal = dailyStatistics.getTotalBurnedKcal();
 
 		boolean achieved = false;
 		// 목표 달성 여부 확인
 		if (target.equals("gain")) {
-			if (totalKcal >= recommendKcal * 0.9) achieved = true;
+			if (totalKcal >= (recommendKcal + totalBurnedKcal) * 0.9) achieved = true;
 		} else {
-			if (totalKcal <= recommendKcal * 1.1) achieved = true;
+			if (totalKcal != 0 && totalKcal <= (recommendKcal + totalBurnedKcal) * 1.1 ) achieved = true;
 		}
 
 		if (totalKcal == 0) {

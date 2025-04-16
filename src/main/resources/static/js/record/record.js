@@ -120,9 +120,9 @@ $(document).ready(function () {
     const userTarget = $('.nutrition-section').data('user_target');
     const userType = $('.nutrition-section').data('user_type');
 
-    // 경고 클래스 부여
-    if (userType === 'quito') $('#alertCarb').addClass('alert-value');
-    else $('#alertFat').addClass('alert-value');
+    // 경고무시 클래스 부여
+    if (userType !== 'quito') $('#alertCarb').addClass('non-alert-value');
+    else $('#alertFat').addClass('non-alert-value');
 
 
     // 상세보기 버튼과 상세 섹션 가져오기
@@ -161,7 +161,11 @@ $(document).ready(function () {
 
             // 초과 경고
             if ($(this).hasClass('alert-test') && current > target) {
-                $(this).parent().siblings().find('span:first').css('color', '#bc3657');
+                if ($(this).parent().siblings().find('span:first').hasClass('non-alert-value')) {
+                } else {
+                    $(this).parent().siblings().find('span:first').css('color', '#bc3657');
+                }
+
             }
 
         });
@@ -338,8 +342,8 @@ $(document).ready(function () {
 
     // 체중 변화량 계산
     function calculateWeightChange(weight) {
-        let weekDiff = weight - pastWeekWeight;
-        let monthDiff = weight - pastMonthWeight;
+        let weekDiff = Math.round((weight - pastWeekWeight) * 10) / 10;
+        let monthDiff = Math.round((weight - pastMonthWeight) * 10) / 10;
 
         if (pastWeekWeight !== 0) {
             if (weekDiff > 0) $('#weekDiff').text('+' + weekDiff + 'kg');
@@ -470,9 +474,9 @@ $(document).ready(function () {
                 // 모달 닫기
                 closeModal();
             },
-            error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }
@@ -533,7 +537,7 @@ $(document).ready(function () {
 
         let cheatPoint = parseInt($('#cheatPoint').text()); // 치팅포인트
         let usingCheatPoint = -leftoverKcal;
-        let leftoverCheatPoint = cheatPoint - leftoverKcal;
+        let leftoverCheatPoint = cheatPoint + leftoverKcal;
 
         $.ajax({
             url: '/api/record/use_cheat_point',
@@ -548,9 +552,9 @@ $(document).ready(function () {
                     location.reload();
                 }, 2000); // 2초 후 페이지 리로드
 
-            }, error: function (error) {
-                if (error.status === 401) {
-                    alert(error.responseText);
+            }, error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                    alert(xhr.responseText);
                     window.location.href = '/loginpage';
                     return;
                 }

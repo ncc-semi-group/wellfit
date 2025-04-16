@@ -42,7 +42,7 @@ public interface UserMapper {
 
 	public List<UserDto> getAllUsers();
 	public UserDto getUserById(@Param("id") int id);
-	public List<UserDto> searchUsersByNickname(@Param("nickname") String nickname);
+	public List<UserDto> searchUsersByNickname(@Param("nickname") String nickname, @Param("userId") int userId);
 	
 	public UserDto getUserProfile(int userId);
 	public List<UserDto> getUserFollowers(int userId);
