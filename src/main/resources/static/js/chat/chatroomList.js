@@ -68,27 +68,27 @@ $(document).ready(function () {
     };
 
     // 페이지 로드 시 기본적으로 "오픈채팅" 실행
-    loadChatRooms('http://localhost:8080/chat/list/all', false);
+    loadChatRooms('./chat/list/all', false);
     $('.btn-openchat').addClass('active');
 
     // 👉 5초마다 자동 갱신
     setInterval(() => {
         const isMyChatroom = $('.btn-mychat').hasClass('active');
         const url = isMyChatroom
-            ? 'http://localhost:8080/chat/list/my'
-            : 'http://localhost:8080/chat/list/all';
+            ? './chat/list/my'
+            : './chat/list/all';
         loadChatRooms(url, isMyChatroom);
     }, 5000);
     // 오픈채팅 버튼 클릭 이벤트
     $('.btn-openchat').click(function () {
-        loadChatRooms('http://localhost:8080/chat/list/all', false);
+        loadChatRooms('./chat/list/all', false);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });
 
     // 나의 채팅방 버튼 클릭 이벤트
     $('.btn-mychat').click(function () {
-        loadChatRooms('http://localhost:8080/chat/list/my', true);
+        loadChatRooms('./chat/list/my', true);
         $('.toggle-buttons a').removeClass('active');
         $(this).addClass('active');
     });

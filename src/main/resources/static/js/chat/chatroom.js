@@ -18,7 +18,7 @@ async function getUserList(initial) {
     return new Promise((resolve, reject) => {
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/chatroom/" + roomId + "/members",
+            url: "/chatroom/" + roomId + "/members",
             dataType: "json",
             success: function (response) {
                 const list = document.querySelector(".participants");
@@ -65,7 +65,7 @@ async function getUserList(initial) {
 function getChatroomDetail(){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/chatroom/"+roomId+"/detail",
+        url: "/chatroom/"+roomId+"/detail",
         dataType: "json",
         success: function(response){
             const roomName = document.querySelector(".roomName");
@@ -77,7 +77,7 @@ function getChatroomDetail(){
 async function getChats(){
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/chatroom/${roomId}/chats`,
+        url: `/chatroom/${roomId}/chats`,
         data:{"userId":userId},
         dataType: "json",
         success: function (response) {
@@ -255,7 +255,7 @@ function appendUser(message) {
 function getUserDetail(userId, callback){
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/user/detail/"+userId,
+        url: "/user/detail/"+userId,
         dataType: "json",
         success: function (response) {
             const user = {
@@ -564,7 +564,7 @@ function appendImage(imageUrl){
 }
 function stompConnect(){
     // 1. SockJS 및 STOMP 클라이언트 설정
-    socket = new SockJS('http://localhost:8080/ws'); // 서버의 웹소켓 엔드포인트
+    socket = new SockJS('/ws'); // 서버의 웹소켓 엔드포인트
     stompClient = Stomp.over(socket);
     // 2. STOMP 연결
     stompClient.connect({}, function (frame) {
