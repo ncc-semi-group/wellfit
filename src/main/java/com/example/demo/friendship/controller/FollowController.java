@@ -34,6 +34,7 @@ public class FollowController {
         }
 
         UserDto user = userService.getUserById(userId);
+        model.addAttribute("user", user);
 
         String userProfileImage = user.getProfileImage();
         model.addAttribute("userProfileImage", userProfileImage);
@@ -53,7 +54,8 @@ public class FollowController {
         }
 
         UserDto user = userService.getUserById(userId);
-
+        model.addAttribute("user", user);
+        
         String userProfileImage = user.getProfileImage();
         model.addAttribute("userProfileImage", userProfileImage);
 

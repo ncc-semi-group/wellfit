@@ -43,6 +43,7 @@ public class FriendshipController {
         }
         
         UserDto user = userService.getUserById(userId);
+        model.addAttribute("user", user);
 
         String userProfileImage = user.getProfileImage();
         model.addAttribute("userProfileImage", userProfileImage);
