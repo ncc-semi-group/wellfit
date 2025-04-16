@@ -380,6 +380,15 @@
 	        b.created_at DESC
 	    LIMIT 10
 	</select>
+	
+	<select id="hasUserLikedPost" resultType="boolean">
+    SELECT EXISTS (
+        SELECT 1
+        FROM board_like
+        WHERE board_id = #{boardId}
+          AND user_id = #{userId}
+    )
+</select>
 
 
 </mapper>

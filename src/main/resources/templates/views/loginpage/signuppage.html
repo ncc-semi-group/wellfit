@@ -19,19 +19,21 @@
 <div layout:fragment="content">
 	<div class="login-container">
 		<div class="comment">회원가입</div>
-		<form method="post" action="/signup">
-			<div class="mb-3">
-				<input class="input-field" type="text" name="nickname" placeholder="닉네임">
-			</div>
-			<div class="mb-3">
-				<input class="input-field" type="email" name="email" placeholder="아이디"> 
-			</div>
-			<div class="mb-3">
-				<input class="input-field" type="password" name="password" placeholder="비밀번호">
-			</div>
-			<button type="submit" class="btn-signup">회원가입</button>
-		</form>
-	</div>			
+		<div class="mb-3">
+			<input type="text" class="input-field" id="nickname" name="nickname" placeholder="닉네임" required>
+		</div>
+		<div class="mb-3">
+			<input type="email" class="input-field" id="email" placeholder="이메일" required>
+		</div>
+		<div class="mb-3">
+			<input type="password" class="input-field" id="password" placeholder="비밀번호" required>
+		</div>
+		<button type="button" class="btn btn-primary btn-signup">회원가입</button>
+	</div>		
 </div>
+<!-- JavaScript -->
+<th:block layout:fragment="script">
+    <script th:src="@{/js/loginpage/signuppage.js}"></script>
+</th:block>
 </body>
 </html>

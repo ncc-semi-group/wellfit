@@ -108,10 +108,11 @@
     </select>
 
 	<!-- 닉네임으로 유저 조회 -->
-    <select id="searchUsersByNickname" resultType="com.example.demo.dto.user.UserDto">
-	    SELECT id, email, nickname, profile_image as profileImage, my_intro as myIntro
+	<select id="searchUsersByNickname" resultType="UserDto">
+	    SELECT id, email, nickname, profile_image AS profileImage, my_intro AS myIntro
 	    FROM user
 	    WHERE nickname LIKE CONCAT('%', #{nickname}, '%')
+	      AND id != #{userId}
 	</select>
 
 <!--     유저 삽입
@@ -122,8 +123,14 @@
 
   
      <!-- 로그인: 이메일로 사용자 조회 -->
+    <select id="selectUserByEmail" parameterType="String" resultType="UserDto">
+        SELECT id, email, password, nickname
+        FROM user
+        WHERE email = #{email}
+    </select>
+    
     <select id="getUserByEmail" parameterType="String" resultType="UserDto">
-        SELECT id, email, password
+        SELECT id, email, password, nickname
         FROM user
         WHERE email = #{email}
     </select>

@@ -4,6 +4,7 @@ package com.example.demo.friendship.controller;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.friendship.service.FollowService;
 import com.example.demo.user.service.UserPageService;
+import com.example.demo.user.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class FollowController {
 
     private final FollowService followService;
     private final UserPageService userPageService;
+    private final UserService userService;
 
     @GetMapping("/followingpage")
     public String followingPage(HttpSession session, Model model) {
@@ -30,6 +32,12 @@ public class FollowController {
         if (userId == null) {
             return "redirect:/loginpage";
         }
+
+        UserDto user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
 
         List<UserDto> followingList = followService.getFollowingByUserId(userId);
         model.addAttribute("followingList", followingList);
@@ -44,6 +52,12 @@ public class FollowController {
         if (userId == null) {
             return "redirect:/loginpage";
         }
+
+        UserDto user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
 
         List<UserDto> followerList = followService.getFollowerByUserId(userId);
         model.addAttribute("followerList", followerList);

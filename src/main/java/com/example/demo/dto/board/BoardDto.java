@@ -31,4 +31,7 @@ public class BoardDto {
 	private String thumbnailImage;
 	private List<String> imageUrls;
 	
+	private boolean liked;
+
+	
 }

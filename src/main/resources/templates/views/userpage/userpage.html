@@ -18,7 +18,7 @@
 <div layout:fragment="content">
     <div class="profile-container">
     	<div class="profile-header">
-        	<i class="bi bi-arrow-left back-btn"></i>
+        	<i class="bi bi-arrow-left back-btn" onclick="history.back()"></i>
             <h3 class="profile-title" th:text="${user.nickname} + '님의 프로필'">사용자 프로필</h3>
         </div>
         

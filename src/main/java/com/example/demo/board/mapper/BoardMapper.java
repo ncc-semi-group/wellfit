@@ -69,6 +69,7 @@ public interface BoardMapper {
 
     public void insertBoardHashtag(@Param("boardId") int boardId, @Param("tagId") int tagId);
     
-    
+    public boolean hasUserLikedPost(@Param("boardId") int boardId, @Param("userId") int userId);
+
     
 }

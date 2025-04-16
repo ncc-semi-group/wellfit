@@ -3,6 +3,8 @@ package com.example.demo.chat.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 public class ChatroomDto {
@@ -15,6 +17,7 @@ public class ChatroomDto {
     private int maxUser;
     private int userCount;
     private String latestMessage;
+    private int unreadChatCount;
     @Override
     public String toString() {
         return "ChatroomDto{" +

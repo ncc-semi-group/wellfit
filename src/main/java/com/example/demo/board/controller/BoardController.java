@@ -17,6 +17,8 @@ import com.example.demo.dto.user.UserDto;
 
 import com.example.demo.user.service.UserPageService;
 
+import jakarta.servlet.http.HttpSession;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,23 +85,31 @@ public class BoardController {
     }
 
     @GetMapping("/board/detail/{boardId}")
-    public String boardDetail(@PathVariable("boardId") int boardId, Model model) {
+    public String boardDetail(@PathVariable("boardId") int boardId,
+                              HttpSession session, // 세션에서 userId 가져오기 위해 추가
+                              Model model) {
         try {
             BoardDto post = boardService.getBoardById(boardId);
-            
+
             if (post != null) {
+                int userId = (int) session.getAttribute("userId"); // 세션에서 유저 ID 꺼내기
+                boolean liked = boardService.hasUserLikedPost(boardId, userId); // 좋아요 했는지 확인
+
                 model.addAttribute("post", post);
+                model.addAttribute("liked", liked); // 좋아요 여부 전달
                 model.addAttribute("showHeader", false);
                 model.addAttribute("currentPage", "record");
+
                 return "views/board/boarddetail";
             } else {
                 model.addAttribute("error", "게시물을 찾을 수 없습니다.");
                 return "redirect:/feed/all";
             }
         } catch (Exception e) {
-            e.printStackTrace(); // 로그 확인을 위해 추가
+            e.printStackTrace();
             model.addAttribute("error", "게시물을 찾을 수 없습니다.");
             return "redirect:/feed/all";
         }
     }
+
 }

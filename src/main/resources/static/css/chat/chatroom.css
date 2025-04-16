@@ -28,7 +28,6 @@ body * {
 .message img {
     width: 100px;
     height: 100px;
-    border-radius: 10%;
 }
 .message .content {
     display: flex;
@@ -38,7 +37,7 @@ body * {
 .message.incoming .detail {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-end;
 }
 .message.outgoing .detail {
     display: flex;
@@ -56,6 +55,7 @@ body * {
 .message .content .time {
     font-size: 10px;
     color: gray;
+    margin: 0 5px 3px;
 }
 .message .nickname {
     font-size: 14px;
@@ -131,6 +131,7 @@ div.modal-content {
     overflow-y: auto; /* 모달 안 스크롤 */
     /* footer 안 가리게 */
     padding: 20px 20px 80px;
+    z-index: 999; /* 모달이 다른 요소 위에 오도록 설정 */
 }
 .modal-overlay.active {
     right: 0;
@@ -164,6 +165,7 @@ div.modal-content {
     color: gray;
     padding-right: 2px;
     padding-left: 2px;
+    margin: 0 5px ;
 }
 .upload-btn {
     display: flex;
@@ -255,6 +257,7 @@ div.modal-content {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    margin-top: 3px;
 }
 .participants .participant img {
     width: 50px;
@@ -270,14 +273,15 @@ div.modal-content {
 }
 .modal-content span {
     font-size: 16px;
-    padding-top: 10px;
-    padding-left: 10px;
+    padding-top: 5px;
+    padding-left: 5px;
     display: block;
+    margin-bottom: 3px;
 }
 
 .modal-footer {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     right: 20px;
 }
 .room-detail {
@@ -313,4 +317,22 @@ div.modal-content {
     font-size: 20px;
     font-weight: bold;
     margin-left: 10px;
+}
+
+.modal-backdrop-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* 어두운 반투명 배경 */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 998; /* 모달보다 살짝 아래 */
+}
+
+.modal-backdrop-custom.active {
+    opacity: 1;
+    visibility: visible;
 }
