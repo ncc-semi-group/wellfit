@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class MainController {
     public String searchFollower(HttpSession session, Model model) {
         model.addAttribute("showLogo", true);
         model.addAttribute("currentPage", "home");
-        
+
         Integer userId = (Integer) session.getAttribute("userId");
 
         if (userId == null) {
@@ -44,10 +45,10 @@ public class MainController {
         }
 
         UserDto user = userService.getUserById(userId);
-        
+
         String userProfileImage = user.getProfileImage();
         model.addAttribute("userProfileImage", userProfileImage);
-        
+
         int targetCalories = CalorieCalculator.calculateTargetCalories(user);
 
         model.addAttribute("targetCalories", targetCalories);
@@ -55,14 +56,22 @@ public class MainController {
         model.addAttribute("BMR", CalorieCalculator.calculateBMR(user));
         model.addAttribute("user", user);
 
-        Date date = Date.valueOf("2025-04-13");
-        Map<String, String> todayFoodRecord = recordService.getTodayFoodRecord(userId, date);
+        LocalDate today = LocalDate.now();
+        Date todaySqlDate = Date.valueOf(today);
+        Map<String, String> todayFoodRecord = recordService.getTodayFoodRecord(userId, todaySqlDate);
         model.addAttribute("kcalMap", todayFoodRecord);
 
-        date = Date.valueOf("2025-04-11");
-        int burnedKcalByExercise = exerciseDetailService.getTotalBurned(userId, date);
+        int burnedKcalByExercise = exerciseDetailService.getTotalBurned(userId, todaySqlDate);
         model.addAttribute("burnedKcalByExercise", burnedKcalByExercise);
-        model.addAttribute("leftKcal", targetCalories - Integer.parseInt(todayFoodRecord.get("total").replace("Kcal", "")) + burnedKcalByExercise);
+
+        int totalIntake = 0;
+        try {
+            totalIntake = Integer.parseInt(todayFoodRecord.get("total").replace("Kcal", "").trim());
+        } catch (Exception e) {
+            System.err.println("칼로리 파싱 에러: " + e.getMessage());
+        }
+
+        model.addAttribute("leftKcal", targetCalories - totalIntake + burnedKcalByExercise);
 
         List<BoardDto> posts = boardService.getBoardPreview();
         System.out.println(posts);
