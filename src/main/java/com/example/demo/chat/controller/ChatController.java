@@ -126,7 +126,6 @@ public class ChatController {
     }
 
     @GetMapping("/chatroom/enter/{roomId}")
-    @ResponseBody
     public String chatroom(Model model,
                            @PathVariable Long roomId,
                            HttpSession session) {
