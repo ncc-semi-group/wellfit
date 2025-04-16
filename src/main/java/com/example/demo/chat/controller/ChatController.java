@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +122,6 @@ public class ChatController {
     }
 
     @GetMapping("/chatroom/enter/{roomId}")
-    @ResponseBody
     public String chatroom(Model model,
                            @PathVariable Long roomId,
                            HttpSession session) {
@@ -289,11 +289,12 @@ public class ChatController {
     @ResponseBody
     public ResponseEntity<?> enterChatRoom(@RequestBody ChatRequestDto chatDto) {
         try {
+            log.info("enterChatRoom: {}", chatDto);
             chatService.createChatroomUser(chatDto);
             return ResponseEntity.ok("success");
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Arrays.toString(e.getStackTrace()));
         }
     }
 

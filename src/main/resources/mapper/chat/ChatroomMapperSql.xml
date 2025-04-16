@@ -38,8 +38,18 @@
                  chatroom.created_at, chatroom.reading_count, chatroom.max_user;
     </select>
     <select id="isFull" resultType="boolean" parameterType="java.lang.Long">
-        select exists(select * from chatroom where max_user = (select count(*) from chatroom_user where chatroom_id = #{roomId}));
+        SELECT EXISTS (
+        SELECT 1
+        FROM chatroom c
+        WHERE c.id = #{roomId}
+        AND c.max_user &lt;= (
+        SELECT COUNT(*)
+        FROM chatroom_user cu
+        WHERE cu.chatroom_id = #{roomId}
+        )
+        )
     </select>
+
     <update id="addReadingCount" parameterType="java.lang.Long">
         update chatroom set reading_count = reading_count+1 where id = #{roomId}
     </update>

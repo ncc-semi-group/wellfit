@@ -45,6 +45,8 @@ public class ChatService {
             chatroomUserMapper.insertChatroomUser(chat.getChatroomId(), chat.getUserId());
             simpMessagingTemplate.convertAndSend("/sub/chatroom/" + chat.getChatroomId(), chat.toResponseDto());
             createChat(chat);
+        }else{
+            log.info("채팅방이 가득 찼습니다.");
         }
     }
     public void talk(ChatRequestDto chatDto) {
