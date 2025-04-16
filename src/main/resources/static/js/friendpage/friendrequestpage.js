@@ -12,12 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ✅ 친구 요청 처리
     document.querySelectorAll('.friend-accept-wrapper').forEach(friendElement => {
         friendElement.addEventListener('click', (e) => {
-            // 버튼(수락/거절)을 누른 경우는 무시
             if (e.target.tagName === 'BUTTON') return;
-
             const userId = friendElement.getAttribute('data-user-id');
             if (userId) {
                 window.location.href = `/userpage/${userId}`;
@@ -25,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ✅ 뒤로가기 버튼
     const backBtn = document.querySelector('.back-btn');
     if (backBtn) {
         backBtn.addEventListener('click', function () {
@@ -34,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// 유저 ID 가져오는 함수
 function fetchUserIdByNickname(nickname) {
     fetch(`/user-id-by-nickname?nickname=${encodeURIComponent(nickname)}`)
         .then(res => res.json())
@@ -50,17 +45,14 @@ function fetchUserIdByNickname(nickname) {
         });
 }
 
-/* 친구 요청 페이지 */
 document.getElementById("add-friend-btn").addEventListener("click", function () {
     togglePageVisibility('add');
 });
 
-/* 친구 수락 페이지 */
 document.getElementById("accept-friend-btn").addEventListener("click", function () {
     togglePageVisibility('accept');
 });
 
-// 페이지 전환 함수
 function togglePageVisibility(page) {
     if (page === 'add') {
         document.getElementById("friends-add").classList.remove("hidden");
@@ -79,7 +71,6 @@ function togglePageVisibility(page) {
     }
 }
 
-/* 친구 검색 */
 function handleKeyDown(event) {
     if (event.key === 'Enter') {
         searchFriend();
@@ -109,7 +100,6 @@ function searchFriend() {
         });
 }
 
-// 친구 리스트 업데이트 함수
 function updateFriendList(data, listContainer) {
     if (data.length === 0) {
         listContainer.innerHTML = `<div style="padding: 1rem;">검색 결과가 없습니다.</div>`;
@@ -118,16 +108,17 @@ function updateFriendList(data, listContainer) {
 
     listContainer.innerHTML = '';
     data.forEach(user => {
-        const imageUrl = user.profileImage.startsWith('http') || user.profileImage.startsWith('/images/')
+        const imageUrl = user.profileImage && (user.profileImage.startsWith('http') || user.profileImage.startsWith('/images/'))
             ? user.profileImage
-            : `/images/${user.profileImage}`;
+            : `/images/${user.profileImage || 'default-profile.jpg'}`;
 
         const friendElement = document.createElement('div');
         friendElement.classList.add('friend-wrapper');
         friendElement.setAttribute('data-user-id', user.id);
 
         friendElement.innerHTML = `
-            <img src="${imageUrl}" />
+            <img src="${imageUrl}" alt="${user.nickname}"
+                 onerror="this.onerror=null; this.src='/static/images/default-profile.jpg';" />
             <div class="profile">
                 <div class="name">${user.nickname}</div>
                 <div class="intro">${user.myIntro}</div>
@@ -173,20 +164,13 @@ function fetchFriendRequests() {
     fetch('/friend-requests')
         .then(res => res.json())
         .then(data => {
-			const container = document.getElementById('list-container2');
-			container.innerHTML = ''; // 기존 내용 초기화
+            const container = document.getElementById('list-container2');
+            container.innerHTML = '';
 
-			if (!container) {
-			    console.error('#friends-accept 요소가 존재하지 않습니다.');
-			    return;
-			}
-
-			if (data.length === 0) {
-			    console.log('친구 요청이 없음 → 메시지 삽입');
-			    container.innerHTML = `<div style="padding: 1rem;">받은 친구 요청이 없습니다.</div>`;
-			    return;
-			}
-            container.innerHTML = ''; // 기존 내용 초기화
+            if (!container) {
+                console.error('#friends-accept 요소가 존재하지 않습니다.');
+                return;
+            }
 
             if (data.length === 0) {
                 container.innerHTML = `<div style="padding: 1rem;">받은 친구 요청이 없습니다.</div>`;
@@ -194,16 +178,17 @@ function fetchFriendRequests() {
             }
 
             data.forEach(request => {
-                const imageUrl = request.senderProfileImage.startsWith('http') || request.senderProfileImage.startsWith('/images/')
+                const imageUrl = request.senderProfileImage && (request.senderProfileImage.startsWith('http') || request.senderProfileImage.startsWith('/images/'))
                     ? request.senderProfileImage
-                    : `/images/${request.senderProfileImage}`;
+                    : `/images/${request.senderProfileImage || 'default-profile.jpg'}`;
 
                 const wrapper = document.createElement('div');
                 wrapper.classList.add('friend-accept-wrapper');
                 wrapper.setAttribute('data-user-id', request.senderId);
 
                 wrapper.innerHTML = `
-                    <img src="${imageUrl}" />
+                    <img src="${imageUrl}" alt="${request.senderNickname}"
+                         onerror="this.onerror=null; this.src='/static/images/default-profile.jpg';" />
                     <div class="profile">
                         <div class="name">${request.senderNickname}</div>
                         <div class="intro">${request.senderIntro}</div>
@@ -214,7 +199,6 @@ function fetchFriendRequests() {
                     </div>
                 `;
 
-                // 프로필 클릭 시 이동
                 wrapper.addEventListener('click', (e) => {
                     if (e.target.tagName === 'BUTTON') return;
                     window.location.href = `/userpage/${request.senderId}`;
