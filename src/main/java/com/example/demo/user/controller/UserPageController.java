@@ -50,7 +50,7 @@ public class UserPageController {
     public String userList(Model model, HttpSession session) {
         Integer loginUserId = (Integer) session.getAttribute("userId");
         if (loginUserId == null) {
-            return "redirect:/login";
+            return "redirect:/loginpage";
         }
         
         List<UserDto> otherUsers = userPageService.getOtherUsers(loginUserId);

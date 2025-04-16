@@ -52,7 +52,7 @@ public class MyPageController {
 		
 		// 로그인하지 않은 경우 로그인 페이지로 리다이렉트
 		if (userId == null) {
-			return "redirect:/login";
+			return "redirect:/loginpage";
 		}
 		
 		// 사용자 정보와 좋아요 목록을 가져옴
@@ -65,7 +65,7 @@ public class MyPageController {
 			
 			return "views/mypage/mypage";
 		} else {
-			return "redirect:/login";
+			return "redirect:/loginpage";
 		}
 	}
 	

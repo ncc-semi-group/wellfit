@@ -11,7 +11,7 @@ $(document).ready(function() {
             window.location.href = '/mypageActive?id=' + userId;
         } else {
             alert('로그인이 필요합니다.');
-            window.location.href = '/login';
+            window.location.href = '/loginpage';
         }
     });
 });
