@@ -123,8 +123,14 @@
 
   
      <!-- 로그인: 이메일로 사용자 조회 -->
+    <select id="selectUserByEmail" parameterType="String" resultType="UserDto">
+        SELECT id, email, password, nickname
+        FROM user
+        WHERE email = #{email}
+    </select>
+    
     <select id="getUserByEmail" parameterType="String" resultType="UserDto">
-        SELECT id, email, password
+        SELECT id, email, password, nickname
         FROM user
         WHERE email = #{email}
     </select>

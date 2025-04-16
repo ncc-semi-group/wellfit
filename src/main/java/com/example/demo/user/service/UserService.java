@@ -39,7 +39,6 @@ public class UserService {
 			return false;
 		}
 
-		// 이메일 중복 체크
 		if (userMapper.getUserByEmail(email) != null) {
 			return false;
 		}
@@ -52,10 +51,15 @@ public class UserService {
 		user.setPassword(hashedPassword);
 		user.setNickname(nickname);
 
-		int result = userMapper.insertUserAccount(user); // user 저장
-		userMapper.insertUserSalt(user.getId(), salt); // salt 저장
-
-		return result > 0;
+		int result = userMapper.insertUserAccount(user);
+		if (result > 0) {
+			UserDto insertedUser = userMapper.getUserByEmail(email);
+			if (insertedUser != null) {
+				userMapper.insertUserSalt(insertedUser.getId(), salt);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getSaltByUserId(int userId) {

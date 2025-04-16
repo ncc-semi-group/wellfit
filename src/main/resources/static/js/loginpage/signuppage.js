@@ -10,7 +10,7 @@ $(document).ready(function () {
 		} else if (!email) {
 			window.showToast("이메일을 입력해주세요.");
 			return;
-		} else if (!email) {
+		} else if (!password) {
 			window.showToast("비밀번호를 입력해주세요.");
 			return;
 		}
@@ -33,6 +33,7 @@ $(document).ready(function () {
 				if (err.status === 400) {
 					window.showToast(err.responseText);
 				} else {
+					window.showToast(err.responseText);
 					window.showToast('회원가입에 실패했습니다. 다시 시도해주세요.');
 				}
 			}
