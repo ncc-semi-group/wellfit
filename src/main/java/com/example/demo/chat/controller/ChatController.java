@@ -39,16 +39,23 @@ public class ChatController {
     // Template
     @GetMapping("/chat")
     public String chatroomList(HttpSession session, Model model) {
-        Long userId = ((Integer)session.getAttribute("userId")).longValue();
-        if(userId == null) {
+        try{
+            Object userIdSession = session.getAttribute("userId");
+            if(userIdSession == null) {
+                return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+            }
+            Long userId = ((Integer)userIdSession).longValue();
+
+            // 채팅방 목록을 가져와서 모델에 추가
+            chatService.findChatroomList(userId);
+            model.addAttribute("userId", userId);
+            model.addAttribute("showHeader", false);
+            model.addAttribute("currentPage", "chat");
+            return "chat/chatroomList";
+        }catch (RuntimeException e){
+            e.printStackTrace();
             return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
         }
-        // 채팅방 목록을 가져와서 모델에 추가
-        chatService.findChatroomList(userId);
-        model.addAttribute("userId", userId);
-        model.addAttribute("showHeader", false);
-        model.addAttribute("currentPage", "chat");
-        return "chat/chatroomList";
     }
     @GetMapping("/chat/list/all")
     @ResponseBody
@@ -56,6 +63,20 @@ public class ChatController {
         try {
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
             List<ChatroomDto> dto = chatService.findChatroomList(userId);
+            // Redis 에서 latestReadTime 가져오기
+            dto.forEach(chatroomDto ->{
+                Timestamp latestReadTime = redis.getLatestReadTime(chatroomDto.getRoomId(), userId);
+                if (latestReadTime == null) {
+                    // Redis에 없으면 DB에서 조회
+                    latestReadTime = chatService.findLatestReadTime(chatroomDto.getRoomId(), userId);
+                    // DB에서 가져온 값은 Redis에 저장하여 추후 빠르게 접근 가능하도록 함
+                    if (latestReadTime != null) {
+                        redis.updateLatestReadTime(chatroomDto.getRoomId(), userId, latestReadTime);
+                    }
+                }
+                // 읽지 않은 메시지 수 삽입
+                chatroomDto.setUnreadChatCount(chatService.findUnreadChatCountByRoomIdAndUserId(chatroomDto.getRoomId(), userId, latestReadTime));
+            });
             return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -90,26 +111,40 @@ public class ChatController {
     }
     @GetMapping("/chatroom/form")
     public String chatroomForm(Model model, HttpSession session) {
-        Long userId = ((Integer)session.getAttribute("userId")).longValue();
-        model.addAttribute("userId", userId);
-        if(userId == null) {
-            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        try{
+            Object userIdSession = session.getAttribute("userId");
+            if(userIdSession == null) {
+                return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+            }
+            Long userId = ((Integer)userIdSession).longValue();
+            model.addAttribute("userId", userId);
+            return "/chat/chatroomForm";
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return "redirect:/chat";
         }
-        return "/chat/chatroomForm";
     }
 
     @GetMapping("/chatroom/enter/{roomId}")
+    @ResponseBody
     public String chatroom(Model model,
                            @PathVariable Long roomId,
                            HttpSession session) {
-        Long userId = ((Integer)session.getAttribute("userId")).longValue();
-        if(userId == null) {
-            return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+        try{
+            Object userIdSession = session.getAttribute("userId");
+            if(userIdSession == null) {
+                return "redirect:/loginpage"; // 로그인 페이지로 리다이렉트
+            }
+            Long userId = ((Integer)userIdSession).longValue();
+
+            model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
+            model.addAttribute("userId", userId);
+            model.addAttribute("roomId", roomId);
+            return "chat/chatroom"; // Thymeleaf 템플릿
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            return "redirect:/chat";
         }
-        model.addAttribute("users", chatService.findChatroomUserByChatroomId(roomId));
-        model.addAttribute("userId", userId);
-        model.addAttribute("roomId", roomId);
-        return "chat/chatroom"; // Thymeleaf 템플릿
     }
 
     @MessageMapping("/chat/off")
@@ -152,6 +187,7 @@ public class ChatController {
     }
 
     @PostMapping("/chat/upload/image")
+    @ResponseBody
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
             // 파일이 존재하면 S3에 업로드
@@ -171,7 +207,7 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getStackTrace());
         }
     }
-    @PostMapping("/chatroom/create")
+    @GetMapping("/chatroom/create")
     public String createChatroom(HttpSession session ,@ModelAttribute ChatroomCreateDto dto,@RequestParam(value = "chatroomImage", required = false) MultipartFile file){
         try{
             Long userId = ((Integer)session.getAttribute("userId")).longValue();
@@ -201,6 +237,7 @@ public class ChatController {
         }
     }
     @PostMapping("/chatroom/create/1vs1")
+    @ResponseBody
     public ResponseEntity<?> create1vs1Chatroom(HttpSession session ,@RequestBody DuoChatroomCreateDto dto){
         try{
             int myId = session.getAttribute("userId") == null ? 0 : (int)session.getAttribute("userId");
@@ -239,6 +276,7 @@ public class ChatController {
         }
     }
     @PostMapping("/chatroom/exit")
+    @ResponseBody
     public ResponseEntity<?> exitChatroom(@RequestBody ChatRequestDto chatDto) {
         try {
             chatService.exitChatRoom(chatDto);
@@ -249,6 +287,7 @@ public class ChatController {
         }
     }
     @GetMapping("/chatroom/{roomId}/detail")
+    @ResponseBody
     public ResponseEntity<?> roomDetail(@PathVariable Long roomId){
         try{
             return ResponseEntity.ok(chatService.findChatroomByRoomId(roomId));
@@ -269,6 +308,7 @@ public class ChatController {
     }
 
     @PostMapping("/chatroom/talk/{roomId}")
+    @ResponseBody
     public ResponseEntity<?> talk(@PathVariable(value = "roomId") Long roomId, @RequestBody ChatRequestDto chatDto) {
         try {
             return ResponseEntity.ok("success");
