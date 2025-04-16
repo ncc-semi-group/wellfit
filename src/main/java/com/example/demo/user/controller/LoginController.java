@@ -147,7 +147,7 @@ public class LoginController {
 		}
 
 		userMapper.updateUserInitInfo2(userDto);
-		return "redirect:/friendpage";
+		return "redirect:/mainpage";
 	}
 
 	// 로그인 상태 검증 API (Ajax용)
