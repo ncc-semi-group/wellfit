@@ -41,6 +41,11 @@ public class FriendshipController {
             System.out.println("세션에서 userId가 없습니다. 로그인 페이지로 리다이렉트");
             return "redirect:/loginpage";
         }
+        
+        UserDto user = userService.getUserById(userId);
+
+        String userProfileImage = user.getProfileImage();
+        model.addAttribute("userProfileImage", userProfileImage);
 
         List<UserDto> friends = friendshipService.getFriendsByUserId(userId);
         model.addAttribute("friends", friends);
